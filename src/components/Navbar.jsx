@@ -1,5 +1,4 @@
 import {
-  faArrowDown,
   faBars,
   faBell,
   faCaretDown,
@@ -7,9 +6,60 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { navbarItems } from "../dummy/data";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import Swal from "sweetalert2";
+import axios from "axios";
+import { API_BASE_URL } from "../dummy/const";
 
 const Navbar = () => {
+  const navigate = useNavigate();
+  const handleLogout = () => {
+    Swal.fire({
+      title: "Are you sure?",
+      text: "You won't be able to revert this!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, Logout",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        const token = localStorage.getItem("token");
+        const headers = {
+          headers: { Authorization: `Bearer ${token}` },
+        };
+        axios
+          .post(API_BASE_URL + "/logout", {}, headers)
+          .then(function (response) {
+            console.log(response.data);
+            if (response.data.status === true) {
+              navigate("/login");
+              const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                  toast.onmouseenter = Swal.stopTimer;
+                  toast.onmouseleave = Swal.resumeTimer;
+                },
+              });
+              Toast.fire({
+                icon: "success",
+                title: response.data.message,
+              });
+            }
+            localStorage.clear();
+          })
+          .catch(function (error) {
+            console.log(error);
+          });
+      }
+    });
+  };
+
+  const dataBo = JSON.parse(localStorage.getItem("dataBo"));
   return (
     <div className="flex justify-between mx-10 my-10">
       <div className="drawer-content flex flex-col items-center justify-center">
@@ -41,8 +91,8 @@ const Navbar = () => {
             </li>
           </ul>
         </div>
-        <h5 className="text-right text-base font-bold">
-          Hello ,[nama]!
+        <h5 className="text-right text-base font-bold max-w-52">
+          {dataBo.name}!
           <br />
           <h6 className="text-xs font-light">Bussiness Owner</h6>
         </h5>
@@ -64,7 +114,7 @@ const Navbar = () => {
                 key={index}
                 className={`text-black  hover:rounded-md duration-300 mb-3 }`}
               >
-                <Link to={nav.path}>
+                <Link to={"/" + nav.link}>
                   <FontAwesomeIcon className="mr-1" icon={nav.icon} />
                   {nav.title}
                 </Link>
@@ -72,7 +122,7 @@ const Navbar = () => {
             ))}
             <hr></hr>
             <li className={`text-black  hover:rounded-md duration-300 my-3 }`}>
-              <Link>
+              <Link onClick={handleLogout}>
                 <FontAwesomeIcon className="mr-1" icon={faSignOut} />
                 Sign Out
               </Link>

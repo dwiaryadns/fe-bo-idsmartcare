@@ -11,9 +11,9 @@ const CreateFasyankesPage = () => {
         <Sidebar />
         <div className="w-full">
           <Navbar />
-          <div className="mx-10 ">
+          <div className="mx-10">
             <Header title="Create Fasyankes" icon={faHospital} />
-            <div className="mt-3 bg-white p-3 rounded-md shadow-lg">
+            <div className="bg-white p-3 rounded-md shadow-lg">
               <FormCreateFasyankes />
             </div>
           </div>

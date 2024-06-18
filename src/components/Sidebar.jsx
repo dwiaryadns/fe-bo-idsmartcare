@@ -5,10 +5,9 @@ import { sidebarItems } from "../dummy/data";
 
 const Sidebar = () => {
   const location = useLocation();
-
   return (
     <div className="bg-primary">
-      <div className="drawer lg:drawer-open shadow h-full z-20">
+      <div className="drawer lg:drawer-open shadow h-full z-20 top-0 left-0">
         <input id="my-drawer-2" type="checkbox" className="drawer-toggle" />
         <div className="drawer-side">
           <label

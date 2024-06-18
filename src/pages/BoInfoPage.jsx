@@ -11,15 +11,8 @@ const BoInfoPage = () => {
         <Sidebar />
         <div className="w-full">
           <Navbar />
-          <div className="mx-10 bg-white">
+          <div className="mx-10 ">
             <Header title="Business Owner Info" icon={faInfoCircle} />
-            <div>
-              <h4 className="text-lg font-bold mt-3">Business Information</h4>
-              <p className="text-sm">
-                Tell the world all about your business by entering a few
-                business details to get started
-              </p>
-            </div>
             <FormBoInfo />
           </div>
         </div>

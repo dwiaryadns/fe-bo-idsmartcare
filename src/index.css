@@ -7,3 +7,52 @@
   scroll-behavior: smooth;
   font-family: "Poppins";
 }
+
+.pagination-container {
+  display: flex;
+  justify-content: end;
+  margin-top: 10px;
+}
+
+.pagination {
+  display: flex;
+  list-style: none;
+  padding: 0;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.pagination li {
+  display: inline-block;
+  margin: 0 3px;
+}
+
+.pagination li a {
+  display: block;
+  padding: 8px 12px;
+  text-decoration: none;
+  color: #333;
+  border-radius: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.pagination li.active a {
+  font-weight: bold;
+  color: white;
+  background-color: #0663EC;
+}
+
+.pagination li.previous a,
+.pagination li.next a {
+  color: #007bff;
+}
+
+.pagination li.disabled a {
+  color: grey;
+  cursor: not-allowed;
+}
+
+.pagination li a:hover:not(.active) {
+  background-color: #e9ecef;
+}

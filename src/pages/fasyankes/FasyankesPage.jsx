@@ -4,51 +4,62 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import { useEffect, useMemo, useState } from "react";
+import DataTableFasyankes from "../../components/fasyankes/DatatableFasyankes";
+import axios from "axios";
+import { API_BASE_URL } from "../../dummy/const";
 
 const FasyankesPage = () => {
-  const listFasyankes = [
-    {
-      name: "Apotik Bahagia",
-      type: "Apotik",
-      status: "active", // pending ,expired, apply
-      expiredDate: "2022-01-01",
-    },
-    {
-      name: "Apotik Bahagia",
-      type: "Apotik",
-      status: "pending", // pending ,expired, apply
-      expiredDate: "2022-01-01",
-    },
-    {
-      name: "Apotik Bahagia",
-      type: "Apotik",
-      status: "active", // pending ,expired, apply
-      expiredDate: "2022-01-01",
-    },
-    {
-      name: "Apotik Bahagia",
-      type: "Apotik",
-      status: "apply", // pending ,expired, apply
-      expiredDate: "2022-01-01",
-    },
-    {
-      name: "Apotik Bahagia",
-      type: "Apotik",
-      status: "expired", // pending ,expired, apply
-      expiredDate: "2022-01-01",
-    },
-  ];
-  const handleBadgeStatus = (e) => {
-    if (e === "active") {
-      return <div className="badge text-white badge-success">{e}</div>;
-    } else if (e === "pending") {
-      return <div className="badge text-white badge-warning">{e}</div>;
-    } else if (e === "apply") {
-      return <div className="badge text-white badge-info">{e}</div>;
-    } else if (e === "expired") {
-      return <div className="badge text-white badge-error">{e}</div>;
-    }
+  const [loading, setLoading] = useState(true);
+  const columns = useMemo(
+    () => [
+      {
+        Header: "Name",
+        accessor: "name", // accessor is the "key" in the data
+      },
+      {
+        Header: "Type",
+        accessor: "type",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+      },
+      {
+        Header: "Expired At",
+        accessor: "expiredDate",
+      },
+      {
+        Header: "Report",
+        accessor: "report",
+      },
+      {
+        Header: "Information",
+        accessor: "information",
+      },
+    ],
+    []
+  );
+
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
   };
+
+  const [fasyankes, setFasyankes] = useState([]);
+
+  useEffect(() => {
+    axios
+      .get(API_BASE_URL + "/fasyankes", headers)
+      .then((response) => {
+        setFasyankes(response.data.data);
+        setLoading(false)
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  }, []);
+
   return (
     <div>
       <div className="flex flex-row w-full">
@@ -57,8 +68,8 @@ const FasyankesPage = () => {
           <Navbar />
           <div className="mx-10">
             <Header title="Fasyankes" icon={faHospital} />
-            <div className="mt-5">
-              <div className="card shadow-md mt-3">
+            <div className="">
+              <div className="card shadow-md ">
                 <div className="card-body">
                   <div className="card-title flex justify-between">
                     List Of Fasyankes
@@ -71,38 +82,11 @@ const FasyankesPage = () => {
                   </div>
                   <hr></hr>
                   <div className="overflow-x-auto">
-                    <div className="flex justify-end mb-3">
-                      <input
-                        className="input input-bordered rounded-md"
-                        placeholder="Search"
-                      />
-                    </div>
-                    <table className="table">
-                      <thead>
-                        <tr>
-                          <th></th>
-                          <th>Name</th>
-                          <th>Type</th>
-                          <th>Status</th>
-                          <th>Expired Date</th>
-                          <th>View Report</th>
-                          <th>View Information</th>
-                        </tr>
-                      </thead>
-                      <tbody>
-                        {listFasyankes.map((fasyankes, index) => (
-                          <tr key={index}>
-                            <th>{index + 1}</th>
-                            <td>{fasyankes.name}</td>
-                            <td>{fasyankes.type}</td>
-                            <td>{handleBadgeStatus(fasyankes.status)}</td>
-                            <td>{fasyankes.expiredDate}</td>
-                            <td>View Report</td>
-                            <td>View Information</td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                    <DataTableFasyankes
+                      columns={columns}
+                      data={fasyankes}
+                      loading={loading}
+                    />
                   </div>
                 </div>
               </div>

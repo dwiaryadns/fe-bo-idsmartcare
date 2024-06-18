@@ -8,9 +8,9 @@ const ActivityLog = () => {
     <div>
       <div className="flex flex-row w-full">
         <Sidebar />
-        <div className="w-full mx-10">
+        <div className="w-full">
           <Navbar />
-          <div className="">
+          <div className="mx-10">
             <Header title="Activity Log" icon={faHistory} />
           </div>
         </div>

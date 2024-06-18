@@ -8,7 +8,7 @@ import {
   faLegal,
   faLock,
   faMoneyBill,
-  faPersonRifle,
+  faUser,
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -40,9 +40,9 @@ export const sidebarItems = [
   },
 
   {
-    title: "Subscribtion",
+    title: "Subscription",
     icon: faMoneyBill,
-    link: "subscribtion",
+    link: "subscription",
   },
   {
     title: "Access",
@@ -65,7 +65,7 @@ export const sidebarItems = [
 export const navbarItems = [
   {
     title: "My Profile",
-    icon: faPersonRifle,
+    icon: faUser,
     link: "profile",
   },
   {
