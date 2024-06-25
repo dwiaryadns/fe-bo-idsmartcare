@@ -1,11 +1,17 @@
 import { faAngleLeft, faCreditCard } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
+import { API_BASE_URL } from "../../dummy/const";
+import axios from "axios";
+import { useNavigate } from "react-router";
+import Swal from "sweetalert2";
 
 export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const [diskon, setDiskon] = useState(0);
   const [total, setTotal] = useState(0);
+  console.log(total)
 
+  console.log(payment);
   useEffect(() => {
     let calculatedDiskon = 0;
     let calculatedTotal = 0;
@@ -15,7 +21,8 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
         calculatedDiskon = payment.price.plus - payment.price.plusAnnually;
         calculatedTotal = payment.price.plusAnnually;
       } else if (payment.package === "Advanced") {
-        calculatedDiskon = payment.price.advanced - payment.price.advancedAnnually;
+        calculatedDiskon =
+          payment.price.advanced - payment.price.advancedAnnually;
         calculatedTotal = payment.price.advancedAnnually;
       }
     } else {
@@ -31,6 +38,86 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
     setDiskon(calculatedDiskon);
     setTotal(calculatedTotal);
   }, [payment]);
+
+  console.log(payment.fasyankes);
+  const navigate = useNavigate();
+
+  const [snapToken, setSnapToken] = useState();
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const handlePayment = async () => {
+    const payload = {
+      amount: total,
+      package: payment.package,
+      type: payment.type,
+      name: payment.fasyankes.name,
+      email: payment.fasyankes.email,
+      pic_number: payment.fasyankes.pic_number,
+      subscription_plan_id: payment.subscription_id,
+    };
+    const response = await axios.post(
+      API_BASE_URL + "/create-transaction",
+      payload,
+      headers
+    );
+    setSnapToken(response.data.snap_token);
+  };
+
+  useEffect(() => {
+    if (snapToken) {
+      window.snap.pay(snapToken, {
+        onSuccess: (result) => {
+          console.log("Success:", result);
+          navigate("/fasyankes");
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "success",
+            title: "Pembayaran Berhasil",
+          });
+        },
+        onPending: (result) => {
+          console.log("Pending:", result);
+          navigate("/subscription");
+
+          const Toast = Swal.mixin({
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+          Toast.fire({
+            icon: "warning",
+            title: "Pembayaran Anda Pending",
+          });
+        },
+        onError: (result) => {
+          console.log("Error:", result);
+        },
+        onClose: () => {
+          console.log(
+            "Customer closed the popup without finishing the payment"
+          );
+        },
+      });
+    }
+  }, [snapToken]);
 
   return (
     <div>
@@ -58,12 +145,17 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
         <span className="font-bold">Rp {total}</span>
       </div>
       <hr />
-      <button className="btn btn-block btn-warning hover:btn-warning text-white rounded-md">
+
+      {snapToken && <div id="snap-checkout" />}
+      <button
+        onClick={handlePayment}
+        className="btn btn-block btn-warning hover:btn-warning text-white rounded-md"
+      >
         <FontAwesomeIcon icon={faCreditCard} /> Payment
       </button>
       <button
         onClick={handlePrevious}
-        className="mt-10 btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+        className="hidden mt-10 btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
       >
         <FontAwesomeIcon icon={faAngleLeft} /> Previous
       </button>

@@ -1,5 +1,4 @@
 import { useRef, useState } from "react";
-import { faFreebsd } from "@fortawesome/free-brands-svg-icons";
 import {
   faAngleRight,
   faHome,
@@ -8,18 +7,20 @@ import {
   faPlus,
   faSave,
   faTag,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Input from "./utils/Input";
 import InputWarehouse from "../../components/warehouse/utils/Input";
 import { FormDocument } from "./FormDocument";
 import { FormPembayaranFasyankes } from "./FormPembayaranFasyankes";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
+import Header from "../Header";
 export const FormCreateFasyankes = () => {
   const free = [
     "Maximum 2 users",
@@ -71,7 +72,6 @@ export const FormCreateFasyankes = () => {
   };
 
   const [type, setType] = useState("");
-  const [sektor, setSektor] = useState("");
   const [step, setStep] = useState(1); // Step control
   const [formData, setFormData] = useState({
     nameFasyankes: "",
@@ -109,10 +109,7 @@ export const FormCreateFasyankes = () => {
     setType(e);
     setErrors((prevErrors) => ({ ...prevErrors, type: "" }));
   };
-  const handleSektor = (e) => {
-    setSektor(e);
-    setErrors((prevErrors) => ({ ...prevErrors, sektor: "" }));
-  };
+
   const handleChangeDuration = (e) => {
     setDuration(e);
     setChoosePlan("");
@@ -138,6 +135,17 @@ export const FormCreateFasyankes = () => {
     setFormValues({ ...formValues, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
+  const Toast = Swal.mixin({
+    toast: true,
+    position: "top-end",
+    showConfirmButton: false,
+    timer: 3000,
+    timerProgressBar: true,
+    didOpen: (toast) => {
+      toast.onmouseenter = Swal.stopTimer;
+      toast.onmouseleave = Swal.resumeTimer;
+    },
+  });
   const handleSubmitWarehouse = () => {
     const payload = {
       name: formValues.warehouseName,
@@ -150,17 +158,6 @@ export const FormCreateFasyankes = () => {
       .then(function (response) {
         if (response.data.status === true) {
           navigate("/fasyankes/create");
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
           Toast.fire({
             icon: "success",
             title: response.data.message,
@@ -190,17 +187,6 @@ export const FormCreateFasyankes = () => {
           picName: apiErrors.pic ? apiErrors.pic : "",
           picNumber: apiErrors.contact ? apiErrors.contact : "",
         };
-        const Toast = Swal.mixin({
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
         Toast.fire({
           icon: "error",
           title: error.response.data.message,
@@ -216,8 +202,9 @@ export const FormCreateFasyankes = () => {
     if (step === 1) {
       const payload = {
         type: type,
-        sector: sektor,
         duration: duration,
+        price: choosePlan.price,
+        username: formData.username,
         package_plan: choosePlan.paket == undefined ? "" : choosePlan.paket,
         warehouse_id:
           formData.warehouseId == undefined ? "" : formData.warehouseId,
@@ -229,39 +216,30 @@ export const FormCreateFasyankes = () => {
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       };
-      console.log(headers);
       axios
         .post(API_BASE_URL + "/fasyankes/store", payload, headers)
         .then(function (response) {
           if (response.data.status === true) {
             const data = response.data.data;
-            const Toast = Swal.mixin({
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
+            console.log(response.data);
             Toast.fire({
               icon: "success",
               title: response.data.message,
             });
             setPayment({
-              package: data.package_plan,
-              duration: data.duration,
+              package: response.data.subscription.package_plan,
+              duration: response.data.subscription.duration,
               type: data.type,
               price: packagePrices[data.type],
+              fasyankes: data,
+              subscription_id: response.data.subscription.id,
             });
             setStep(step + 1);
           } else {
             const apiErrors = response.data.errors;
             const newApiErrors = {
               type: apiErrors.type ? apiErrors.type : "",
-              sector: apiErrors.sector ? apiErrors.sector : "",
+              username: apiErrors.username ? apiErrors.username : "",
               duration: apiErrors.duration ? apiErrors.duration : "",
               package_plan: apiErrors.package_plan
                 ? apiErrors.package_plan
@@ -285,7 +263,7 @@ export const FormCreateFasyankes = () => {
           const apiErrors = error.response.data.errors;
           const newApiErrors = {
             type: apiErrors.type ? apiErrors.type : "",
-            sektor: apiErrors.sector ? apiErrors.sector : "",
+            username: apiErrors.username ? apiErrors.username : "",
             duration: apiErrors.duration ? apiErrors.duration : "",
             package_plan: apiErrors.package_plan ? apiErrors.package_plan : "",
             nameFasyankes: apiErrors.name ? apiErrors.name : "",
@@ -300,17 +278,6 @@ export const FormCreateFasyankes = () => {
               : "",
           };
           setErrors(newApiErrors);
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
           Toast.fire({
             icon: "error",
             title: error.response.data.message,
@@ -319,6 +286,11 @@ export const FormCreateFasyankes = () => {
     } else {
       setStep(step + 1);
     }
+  };
+
+  const [checkbox, setCheckbox] = useState(false);
+  const handleCheckbox = () => {
+    setCheckbox(!checkbox);
   };
 
   const handlePrevious = () => {
@@ -409,16 +381,6 @@ export const FormCreateFasyankes = () => {
             </div>
             <div className="flex md:flex-row flex-col gap-5 justify-center  items-center">
               <button
-                onClick={() => handleType("Klinik")}
-                className={`btn rounded-md btn-sm min-w-80 ${
-                  type === "Klinik"
-                    ? "bg-primary hover:bg-primary text-white"
-                    : "bg-grey hover:bg-grey"
-                }`}
-              >
-                Klinik
-              </button>
-              <button
                 onClick={() => handleType("Apotek")}
                 className={`btn rounded-md btn-sm min-w-80 ${
                   type === "Apotek"
@@ -428,49 +390,18 @@ export const FormCreateFasyankes = () => {
               >
                 Apotek
               </button>
+              <button
+                onClick={() => handleType("Klinik")}
+                className={`btn rounded-md btn-sm min-w-80 ${
+                  type === "Klinik"
+                    ? "bg-primary hover:bg-primary text-white"
+                    : "bg-grey hover:bg-grey"
+                }`}
+              >
+                Klinik
+              </button>
             </div>
             {errors.type && <span className="text-red-600">{errors.type}</span>}
-          </div>
-          <div className="form-control w-full">
-            <div className="label">
-              <span className="label-text font-bold text-base">
-                Sektor Usaha<span className="text-red-800 mr-2">*</span>
-                <div
-                  className="tooltip tooltip-info "
-                  data-tip="pilih sektor usaha fasyankes yang sesua karena nanti akan menentukan dokumen yang diperlukan"
-                >
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    className="text-gray-500 cursor-pointer"
-                  />
-                </div>
-              </span>
-            </div>
-            <div className="flex  md:flex-row flex-col gap-5 justify-center  items-center">
-              <button
-                onClick={() => handleSektor("Perorangan")}
-                className={`btn rounded-md btn-sm min-w-80 ${
-                  sektor === "Perorangan"
-                    ? "bg-primary hover:bg-primary text-white"
-                    : "bg-grey hover:bg-grey"
-                }`}
-              >
-                Perorangan
-              </button>
-              <button
-                onClick={() => handleSektor("Perusahaan")}
-                className={`btn rounded-md btn-sm min-w-80 ${
-                  sektor === "Perusahaan"
-                    ? "bg-primary hover:bg-primary text-white"
-                    : "bg-grey hover:bg-grey"
-                }`}
-              >
-                Perusahaan
-              </button>
-            </div>
-            {errors.sektor && (
-              <span className="text-red-600">{errors.sektor}</span>
-            )}
           </div>
           <div className="w-full">
             <div className="label">
@@ -573,6 +504,15 @@ export const FormCreateFasyankes = () => {
               <div className="label min-w-72">
                 <span className="label-text font-bold text-base">
                   Select Warehouse <span className="text-red-800">*</span>
+                  <div
+                    className="tooltip tooltip-info ms-1"
+                    data-tip="Pilih Warehouse yang akan dimasukkan ke fasyankes"
+                  >
+                    <FontAwesomeIcon
+                      icon={faInfoCircle}
+                      className="text-gray-500 cursor-pointer"
+                    />
+                  </div>
                 </span>
               </div>
 
@@ -675,17 +615,7 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.nameFasyankes}
             error={errors.nameFasyankes}
-            tooltip="informasi ini digunakan untuk mendetailkan data fasyankes yang akan didaftarkan"
-          />
-          <Input
-            type="email"
-            label="Email Fasyankes"
-            placeholder="Email Fasyankes"
-            name="emailFasyankes"
-            onChange={handleInputChange}
-            value={formData.emailFasyankes}
-            error={errors.emailFasyankes}
-            tooltip="email fasyankes yang akan dikirimkan seputar informasi penting dan dijadikan username admin"
+            tooltip="Informasi ini digunakan untuk mendetailkan data fasyankes yang akan didaftarkan"
           />
           <Input
             type="text"
@@ -695,7 +625,7 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.picName}
             error={errors.picName}
-            tooltip="nama PIC ini adalah nama untuk pihak yang bertanggung jawab operational apotek"
+            tooltip="Nama PIC ini adalah nama untuk pihak yang bertanggung jawab operational apotek"
           />
           <Input
             type="text"
@@ -705,7 +635,7 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.picPhoneNumber}
             error={errors.picPhoneNumber}
-            tooltip="nomor PIC yang dapat dihubungin terkait dengan fasyankes yang didaftarkan"
+            tooltip="Nomor PIC yang dapat dihubungin terkait dengan fasyankes yang didaftarkan"
           />
           <Input
             type="text"
@@ -715,9 +645,33 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.address}
             error={errors.address}
-            tooltip="alamat fasyankes yang didaftarkan"
+            tooltip="Alamat fasyankes yang didaftarkan"
+          />
+          <Input
+            type="email"
+            label="Email Fasyankes"
+            placeholder="Email Fasyankes"
+            name="emailFasyankes"
+            onChange={handleInputChange}
+            value={formData.emailFasyankes}
+            error={errors.emailFasyankes}
+            tooltip="Email fasyankes yang akan dikirimkan seputar informasi penting dan dijadikan username admin"
           />
 
+          <div className="my-4">
+            <Header title="Credential Data" icon={faUser} />
+          </div>
+
+          <Input
+            type="text"
+            label="Username"
+            placeholder="Username"
+            name="username"
+            onChange={handleInputChange}
+            value={formData.username}
+            error={errors.username}
+            tooltip="Username untuk login masuk ke halaman admin"
+          />
           <Input
             type="password"
             label="Password"
@@ -726,7 +680,7 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.password}
             error={errors.password}
-            tooltip="password untuk login masuk ke halaman admin"
+            tooltip="Password untuk login masuk ke halaman admin"
           />
           <Input
             type="password"
@@ -736,12 +690,13 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.confirmPassword}
             error={errors.confirmPassword}
-            tooltip="confirm password untuk memastikan password yang sudah di buat"
+            tooltip="Confirm password untuk memastikan password yang sudah di buat"
           />
           <div className="form-control mt-10">
             <label className="flex items-center gap-5">
               <input
                 type="checkbox"
+                onClick={handleCheckbox}
                 className="checkbox checkbox-primary rounded-md"
               />
               <span className="label-text">
@@ -768,7 +723,8 @@ export const FormCreateFasyankes = () => {
           <div className="flex justify-end">
             <button
               onClick={handleNext}
-              className="btn bg-primary hover:bg-primary text-white rounded-md px-10"
+              disabled={!checkbox}
+              className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
             >
               Next <FontAwesomeIcon icon={faAngleRight} />
             </button>
@@ -779,6 +735,7 @@ export const FormCreateFasyankes = () => {
           handlePrevious={handlePrevious}
           handleNext={handleNext}
           typeFasyankes={type}
+          packagePlan={choosePlan.paket}
         />
       ) : (
         <FormPembayaranFasyankes

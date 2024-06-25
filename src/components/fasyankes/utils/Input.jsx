@@ -29,7 +29,6 @@ const Input = ({
 
         <div className="w-full mr-3">
           <input
-            title="informasi ini digunakan untuk mendetailkan data fasyankes yang akan didaftarkan"
             type={type}
             placeholder={placeholder}
             name={name}

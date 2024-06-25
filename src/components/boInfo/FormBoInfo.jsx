@@ -12,7 +12,7 @@ const FormBoInfo = () => {
   const [loading, setLoading] = useState(true);
   const [stateStatus, setStateStatus] = useState(null);
   const [formValues, setFormValues] = useState({
-    businessId: "",
+    // businessId: "",
     businessType: "",
     businessName: "",
     businessEmail: "",
@@ -71,7 +71,7 @@ const FormBoInfo = () => {
 
   const isFormValid = () => {
     const {
-      businessId,
+      // businessId,
       businessName,
       businessEmail,
       phoneNumber,
@@ -86,7 +86,7 @@ const FormBoInfo = () => {
       checked,
     } = formValues;
     return (
-      businessId &&
+      // businessId &&
       businessName &&
       businessEmail &&
       phoneNumber &&
@@ -134,7 +134,7 @@ const FormBoInfo = () => {
 
     e.preventDefault();
     const payload = {
-      businessId: formValues.businessId,
+      // businessId: formValues.businessId,
       businessType: formValues.businessType,
       businessName: formValues.businessName,
       businessEmail: formValues.businessEmail,
@@ -196,7 +196,7 @@ const FormBoInfo = () => {
           const message = error.response.data.errors;
           console.log(message);
           const newApiErrors = {
-            businessId: message.businessId ? message.businessId : "",
+            // businessId: message.businessId ? message.businessId : "",
             businessName: message.businessName ? message.businessName : "",
             businessEmail: message.businessEmail ? message.businessEmail : "",
             phoneNumber: message.phone ? message.phone : "",
@@ -232,14 +232,7 @@ const FormBoInfo = () => {
             get started
           </p>
           <div className="bg-[#C1DAFA] px-5 pb-8">
-            <Input
-              label="Business ID"
-              placeholder="Business ID"
-              name="businessId"
-              value={formValues.businessId}
-              onChange={handleChange}
-              errors={errors.businessId}
-            />
+            
             <div className="pb-3">
               <div className="label">
                 <span className="label-text font-bold text-base">

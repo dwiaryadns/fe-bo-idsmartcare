@@ -1,12 +1,18 @@
 import { useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faKey, faUser, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEnvelope,
+  faKey,
+  faUser,
+  faEye,
+  faEyeSlash,
+} from "@fortawesome/free-solid-svg-icons";
 import bgLogin from "../../assets/bg-login.png";
 import imgLogin from "../../assets/img-login.png";
 import logoLogin from "../../assets/logo-login.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
 import Swal from "sweetalert2";
 
 const RegisterPage = () => {
@@ -24,17 +30,41 @@ const RegisterPage = () => {
     password: "",
     confirmPassword: "",
     api: "",
-  });
-  const navigate = useNavigate();
+    });
+    const navigate = useNavigate();
+    const [otpId, setOtpId] = useState();
 
   useEffect(() => {
-    const registerId = localStorage.getItem("register_id");
-    if (registerId) {
-      navigate(`/verify-otp/${registerId}`);
+    if (otpId) {
+      const registerId = localStorage.getItem("register_id");
+      navigate(`/verify-otp/${registerId}`, { state: { otpId: otpId } });
     }
-  }, []);
+  }, [otpId, navigate]);
 
-  const handleRegister = () => {
+  const getOTP = async (email) => {
+    try {
+      const response = await axios.post(
+        API_BASE_URL + "/get-otp",
+        {
+          email: email,
+          phone: "",
+          gateway_key: GATEWAY_KEY,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_HEADER}`,
+          },
+        }
+      );
+
+      if (response.data.status === true) {
+        setOtpId(response.data.data.id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+  const handleRegister = async () => {
     setLoading(true);
     const payload = {
       email: email,
@@ -42,41 +72,46 @@ const RegisterPage = () => {
       password: password,
       password_confirmation: confirmPassword,
     };
-    axios
-      .post(API_BASE_URL + "/register", payload)
-      .then(function (response) {
-        console.log(response.data.user.email);
-        if (response.data.status === true) {
-          const registerId = response.data.register_id;
-          localStorage.setItem("register_id", registerId);
-          localStorage.setItem("email", response.data.user.email);
-          navigate(`/verify-otp/${registerId}`);
-        }
-      })
-      .catch(function (error) {
-        setLoading(false);
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.errors
-        ) {
-          const apiErrors = error.response.data.errors;
-          const newApiErrors = {
-            fullname: apiErrors.name ? apiErrors.name : "",
-            email: apiErrors.email ? apiErrors.email : "",
-            password: apiErrors.password ? apiErrors.password : "",
-            confirmPassword: "",
-            api: "",
-          };
-          setErrors(newApiErrors);
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "An error occurred. Please try again later.",
-          });
-        }
-      });
+    try {
+      const response = await axios.post(API_BASE_URL + "/register", payload);
+      if (response.data.status === true) {
+        const registerId = response.data.register_id;
+        localStorage.setItem("register_id", registerId);
+        localStorage.setItem("email", response.data.user.email);
+        Swal.fire({
+          icon: "success",
+          title: response.data.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+        await getOTP(response.data.user.email);
+      }
+    } catch (error) {
+      setLoading(false);
+      if (error.response && error.response.data && error.response.data.errors) {
+        const apiErrors = error.response.data.errors;
+        setErrors({
+          fullname: apiErrors.name ? apiErrors.name : "",
+          email: apiErrors.email ? apiErrors.email : "",
+          password: apiErrors.password ? apiErrors.password : "",
+          confirmPassword: "",
+          api: "",
+        });
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "An error occurred. Please try again later.",
+        });
+      }
+    }
   };
 
   const handleFullname = (e) => {
@@ -107,17 +142,15 @@ const RegisterPage = () => {
     }
   };
 
+
   return (
     <div className="relative">
       <img src={bgLogin} className="absolute inset-0 w-full h-full z-0" />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 space-y-4">
         <div className="hero">
-          <div className="hero-content flex flex-col lg:flex-row items-center lg:items-start">
-            <img
-              src={imgLogin}
-              className="max-w-lg hidden md:block"
-            />
-            <div className="bg-white p-6 sm:p-10 rounded-lg w-full max-w-md lg:w-[600px]">
+          <div className="hero-content bg-white flex flex-col lg:flex-row items-center lg:items-start">
+            <img src={imgLogin} className="max-w-lg hidden md:block self-center" />
+            <div className=" p-6 sm:p-10 rounded-lg w-full max-w-md lg:w-[600px]">
               <div className="flex justify-center">
                 <img src={logoLogin} className="w-32 sm:w-48 lg:w-64 mb-4" />
               </div>

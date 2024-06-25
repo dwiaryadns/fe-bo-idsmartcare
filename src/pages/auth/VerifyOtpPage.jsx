@@ -1,11 +1,11 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL, API_OTP_URL } from "../../dummy/const";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import bgLogin from "../../assets/bg-login.png";
-import logoLogin from "../../assets/logo-login.png";
+import logoLogin from "../../assets/logo.png";
 import imgOtp from "../../assets/img-otp.png";
 import Swal from "sweetalert2";
 
@@ -85,20 +85,28 @@ export const VerifyOtpPage = () => {
     ).padStart(2, "0")}`;
   };
 
+  const location = useLocation();
+  const otpId = location.state?.otpId;
   const handleSendOtp = () => {
     setLoading(true);
     const payload = {
-      email: email,
+      email: email, // Ini harus diganti dengan email atau data yang benar sesuai dengan API Anda
       otp: otp,
+      otp_id: otpId,
     };
-    console.log(payload);
     axios
-      .post(API_BASE_URL + "/store-otp", payload)
+      .post(API_BASE_URL + "/store-otp", payload, {
+        headers: {
+          Authorization: `Bearer ${ACCESS_HEADER}`,
+        },
+      })
       .then(function (response) {
         if (response.data.status === true) {
           setTimeout(() => {
             setLoading(false);
-            const Toast = Swal.mixin({
+            Swal.fire({
+              icon: "success",
+              title: "Verification Successfully",
               toast: true,
               position: "top-end",
               showConfirmButton: false,
@@ -109,16 +117,12 @@ export const VerifyOtpPage = () => {
                 toast.onmouseleave = Swal.resumeTimer;
               },
             });
-            Toast.fire({
-              icon: "success",
-              title: response.data.message,
-            });
 
             setTimeout(() => {
               localStorage.clear();
               navigate("/login");
-            }, 1500); // Delay the navigation to allow the popup to be visible for a while
-          }, 2000); // Adjust this delay as needed to match the loading spinner duration
+            }, 1500);
+          }, 2000);
         }
       })
       .catch(function (error) {
@@ -146,7 +150,6 @@ export const VerifyOtpPage = () => {
     const payload = {
       email: email,
     };
-    console.log(payload);
     axios
       .post(API_BASE_URL + "/resend-otp", payload)
       .then(function (response) {

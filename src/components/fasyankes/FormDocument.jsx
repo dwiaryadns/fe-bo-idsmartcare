@@ -2,7 +2,12 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputFile from "./utils/InputFile";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
 
-export const FormDocument = ({ typeFasyankes, handlePrevious, handleNext }) => {
+export const FormDocument = ({
+  typeFasyankes,
+  packagePlan,
+  handlePrevious,
+  handleNext,
+}) => {
   return (
     <div>
       {typeFasyankes === "Apotek" ? (
@@ -16,12 +21,18 @@ export const FormDocument = ({ typeFasyankes, handlePrevious, handleNext }) => {
             >
               <FontAwesomeIcon icon={faAngleLeft} /> Previous
             </button>
-            <button
-              onClick={handleNext}
-              className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
-            >
-              Next <FontAwesomeIcon icon={faAngleRight} />
-            </button>
+            {packagePlan === "FREE" ? (
+              <button
+                className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+              >Submit</button>
+            ) : (
+              <button
+                onClick={handleNext}
+                className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+              >
+                Next <FontAwesomeIcon icon={faAngleRight} />
+              </button>
+            )}
           </div>
         </div>
       ) : typeFasyankes === "Klinik" ? (
@@ -35,12 +46,18 @@ export const FormDocument = ({ typeFasyankes, handlePrevious, handleNext }) => {
             >
               <FontAwesomeIcon icon={faAngleLeft} /> Previous
             </button>
-            <button
-              onClick={handleNext}
-              className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
-            >
-              Next <FontAwesomeIcon icon={faAngleRight} />
-            </button>
+            {packagePlan === "FREE" ? (
+              <button
+                className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+              >Submit</button>
+            ) : (
+              <button
+                onClick={handleNext}
+                className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+              >
+                Next <FontAwesomeIcon icon={faAngleRight} />
+              </button>
+            )}
           </div>
         </div>
       ) : (
