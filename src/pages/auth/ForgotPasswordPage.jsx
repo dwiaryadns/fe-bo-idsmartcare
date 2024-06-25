@@ -63,6 +63,7 @@ const ForgotPasswordPage = () => {
         title: "Oops...",
         text: error.response.data.message,
       });
+      setLoading(false);
     }
   };
 
@@ -113,7 +114,7 @@ const ForgotPasswordPage = () => {
               <div className="mt-4">
                 <button
                   onClick={handleForgotPassword}
-                  disabled={loading} 
+                  disabled={loading}
                   className="btn btn-block bg-primary hover:bg-primary text-white rounded-md"
                 >
                   {loading ? (
