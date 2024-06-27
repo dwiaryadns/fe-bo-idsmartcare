@@ -12,7 +12,6 @@ const FormBoInfo = () => {
   const [loading, setLoading] = useState(true);
   const [stateStatus, setStateStatus] = useState(null);
   const [formValues, setFormValues] = useState({
-    // businessId: "",
     businessType: "",
     businessName: "",
     businessEmail: "",
@@ -71,7 +70,6 @@ const FormBoInfo = () => {
 
   const isFormValid = () => {
     const {
-      // businessId,
       businessName,
       businessEmail,
       phoneNumber,
@@ -86,7 +84,6 @@ const FormBoInfo = () => {
       checked,
     } = formValues;
     return (
-      // businessId &&
       businessName &&
       businessEmail &&
       phoneNumber &&
@@ -222,125 +219,146 @@ const FormBoInfo = () => {
     );
   }
 
-  return (
-    <div className="mt-3 mb-10">
-      {stateStatus === null ? (
-        <div>
-          <h4 className="text-lg font-bold mt-3">Business Information</h4>
-          <p className="text-sm mb-2">
-            Tell all about your business by entering a few business details to
-            get started
-          </p>
-          <div className="bg-[#C1DAFA] px-5 pb-8">
-            
-            <div className="pb-3">
-              <div className="label">
-                <span className="label-text font-bold text-base">
-                  Business Type<span className="text-red-800">*</span>
-                </span>
-              </div>
-              <select
-                name="businessType"
-                onChange={handleSelectType}
-                value={formValues.businessType}
-                className="select select-bordered w-full rounded-md"
-              >
-                <option value="">Select Business Type</option>
-                <option value="Perusahaan">Perusahaan</option>
-                <option value="Perorangan">Perorangan</option>
-              </select>
-            </div>
-            <Input
-              label="Business Name"
-              placeholder="Business Name"
-              name="businessName"
-              value={formValues.businessName}
-              onChange={handleChange}
-              errors={errors.businessName}
-            />
-            <Input
-              label="Business Email"
-              placeholder="Business Email"
-              name="businessEmail"
-              value={formValues.businessEmail}
-              onChange={handleChange}
-              errors={errors.businessEmail}
-            />
-            <div className="grid md:grid-cols-2 gap-3 grid-cols-1">
-              <Input
-                label="Phone Number"
-                placeholder="(021) - xxxxx"
-                name="phoneNumber"
-                value={formValues.phoneNumber}
-                onChange={handleChange}
-                errors={errors.phoneNumber}
-              />
-              <Input
-                label="Mobile Phone"
-                placeholder="+62 - xxxxx"
-                name="mobilePhone"
-                value={formValues.mobilePhone}
-                onChange={handleChange}
-                errors={errors.mobilePhone}
-              />
-            </div>
-            <Input
-              label="Street Address"
-              placeholder="Street Address"
-              name="streetAddress"
-              value={formValues.streetAddress}
-              onChange={handleChange}
-              errors={errors.streetAddress}
-            />
-            <Select
-              formValues={formValues}
-              onSelectChange={handleSelectChange}
-              errors={errors}
-            />
-            <Input
-              label="Kode Pos"
-              placeholder="Kode Pos"
-              name="kodePos"
-              value={formValues.kodePos}
-              onChange={handleChange}
-              errors={errors.kodePos}
-            />
-            <div className="form-control flex flex-row items-center mt-2">
-              <label className="label cursor-pointer">
-                <input
-                  type="checkbox"
-                  name="checked"
-                  checked={formValues.checked}
-                  onChange={() =>
-                    setFormValues((prevValues) => ({
-                      ...prevValues,
-                      checked: !prevValues.checked,
-                    }))
-                  }
-                  className="checkbox rounded-sm checkbox-info"
-                />
-              </label>
-              <span className="label-text">
-                Saya telah memeriksa ulang dan mengonfirmasi kembali semua
-                informasi sudah benar dan jelas, serta dapat
-                dipertanggungjawabkan sewaktu - waktu
+  const renderForm = () => {
+    return (
+      <div>
+        <h4 className="text-lg font-bold mt-3">Business Information</h4>
+        <p className="text-sm mb-2">
+          Tell all about your business by entering a few business details to get
+          started
+        </p>
+        <div className="bg-[#C1DAFA] px-5 pb-8">
+          <div className="pb-3">
+            <div className="label">
+              <span className="label-text font-bold text-base">
+                Business Type<span className="text-red-800">*</span>
               </span>
             </div>
-            <div className="flex justify-end">
-              <button
-                disabled={!isFormValid()}
-                onClick={handleSubmitBoInfo}
-                className="btn bg-primary text-white rounded-md btn-sm hover:bg-primary border-none"
-              >
-                Save
-              </button>
-            </div>
+            <select
+              name="businessType"
+              onChange={handleSelectType}
+              value={formValues.businessType}
+              className="select select-bordered w-full rounded-md"
+            >
+              <option value="">Select Business Type</option>
+              <option value="Perusahaan">Perusahaan</option>
+              <option value="Perorangan">Perorangan</option>
+            </select>
+          </div>
+          <Input
+            label="Business Name"
+            placeholder="Business Name"
+            name="businessName"
+            value={formValues.businessName}
+            onChange={handleChange}
+            errors={errors.businessName}
+          />
+          <Input
+            label="Business Email"
+            placeholder="Business Email"
+            name="businessEmail"
+            value={formValues.businessEmail}
+            onChange={handleChange}
+            errors={errors.businessEmail}
+          />
+          <div className="grid md:grid-cols-2 gap-3 grid-cols-1">
+            <Input
+              label="Phone Number"
+              placeholder="(021) - xxxxx"
+              name="phoneNumber"
+              value={formValues.phoneNumber}
+              onChange={handleChange}
+              errors={errors.phoneNumber}
+            />
+            <Input
+              label="Mobile Phone"
+              placeholder="+62 - xxxxx"
+              name="mobilePhone"
+              value={formValues.mobilePhone}
+              onChange={handleChange}
+              errors={errors.mobilePhone}
+            />
+          </div>
+          <Input
+            label="Street Address"
+            placeholder="Street Address"
+            name="streetAddress"
+            value={formValues.streetAddress}
+            onChange={handleChange}
+            errors={errors.streetAddress}
+          />
+          <Select
+            formValues={formValues}
+            onSelectChange={handleSelectChange}
+            errors={errors}
+          />
+          <Input
+            label="Kode Pos"
+            placeholder="Kode Pos"
+            name="kodePos"
+            value={formValues.kodePos}
+            onChange={handleChange}
+            errors={errors.kodePos}
+          />
+          <div className="form-control flex flex-row items-center mt-2">
+            <label className="label cursor-pointer">
+              <input
+                type="checkbox"
+                name="checked"
+                checked={formValues.checked}
+                onChange={() =>
+                  setFormValues((prevValues) => ({
+                    ...prevValues,
+                    checked: !prevValues.checked,
+                  }))
+                }
+                className="checkbox rounded-sm checkbox-info"
+              />
+            </label>
+            <span className="label-text">
+              Saya telah memeriksa ulang dan mengonfirmasi kembali semua
+              informasi sudah benar dan jelas, serta dapat dipertanggungjawabkan
+              sewaktu - waktu
+            </span>
+          </div>
+          <div className="flex justify-end">
+            <button
+              disabled={!isFormValid()}
+              onClick={handleSubmitBoInfo}
+              className="btn bg-primary text-white rounded-md btn-sm hover:bg-primary border-none"
+            >
+              Save
+            </button>
           </div>
         </div>
-      ) : (
-        ""
-      )}
-      {stateStatus === "apply" ? (
+      </div>
+    );
+  };
+
+  const InputApproved = ({ label, value }) => {
+    return (
+      <div className="form-control w-full flex md:flex-row flex-col  md:items-center mb-5">
+        <div className="label min-w-52">
+          <span className="label-text font-bold text-base">{label}</span>
+        </div>
+
+        <div className="w-full mr-3">
+          <input
+            type="text"
+            value={value}
+            disabled
+            className={`input disabled:bg-blue-100 disabled:text-black disabled:border-gray-200 disabled:shadow-none input-bordered w-full input-primary rounded-md `}
+          />
+        </div>
+      </div>
+    );
+  };
+
+  const renderStateStatus = () => {
+    if (stateStatus === null || stateStatus === undefined) {
+      return renderForm();
+    } else if (stateStatus === "apply") {
+      return (
         <StateStatus
           icon={faSave}
           message="Data has been Submitted"
@@ -349,21 +367,59 @@ const FormBoInfo = () => {
             "Data-data akan dicocokan dengan Legal Doc yang diupload silahkan upload "
           }
         />
-      ) : (
-        ""
-      )}
-      {stateStatus === "on review" ? (
+      );
+    } else if (stateStatus == "on review") {
+      return (
         <StateStatus
           icon={faHourglass}
           message="On Review"
           status="on review"
           desc={"Data-data anda sedang direview"}
         />
-      ) : (
-        ""
-      )}
-    </div>
-  );
+      );
+    } else if (stateStatus === "approved") {
+      const addressFormat =
+        boInfo.address +
+        ", " +
+        boInfo.village +
+        ", " +
+        boInfo.subdistrict +
+        ", " +
+        boInfo.city +
+        ", Indonesia, " +
+        boInfo.postal_code;
+      return (
+        <div className="flex mt-3 flex-col">
+          <InputApproved label={"Business ID"} value={boInfo.businessId} />
+          <InputApproved label={"Business Type"} value={boInfo.businessType} />
+          <InputApproved label={"Business Name"} value={boInfo.businessName} />
+          <InputApproved
+            label={"Business Email"}
+            value={boInfo.businessEmail}
+          />
+          <InputApproved label={"Phone Number"} value={boInfo.phone} />
+          <InputApproved label={"Mobile Phone"} value={boInfo.mobile} />
+          <div className="form-control w-full flex md:flex-row flex-col  md:items-center">
+            <div className="label min-w-52">
+              <span className="label-text font-bold text-base">
+                Street Address
+              </span>
+            </div>
+
+            <div className="w-full mr-3">
+              <textarea
+                value={addressFormat}
+                disabled
+                className="textarea resize-none disabled:bg-blue-100 disabled:text-black disabled:border-gray-200 disabled:shadow-none w-full textarea-bordered rounded-md textarea-primary textarea-sm"
+              ></textarea>
+            </div>
+          </div>
+        </div>
+      );
+    }
+  };
+
+  return <div className="mt-3 mb-10">{renderStateStatus()}</div>;
 };
 
 export default FormBoInfo;

@@ -167,6 +167,7 @@ export const FormCreateFasyankes = () => {
           console.log(response.data.data);
         } else {
           const apiErrors = response.data.errors;
+          console.log(apiErrors);
           const newApiErrors = {
             warehouseName: apiErrors.name ? apiErrors.name : "",
             warehouseAddress: apiErrors.address ? apiErrors.address : "",
@@ -197,6 +198,15 @@ export const FormCreateFasyankes = () => {
 
   const [loading, setLoading] = useState(true);
   const [payment, setPayment] = useState({});
+  const [files, setFiles] = useState({});
+
+  const [password, setPassword] = useState("");
+
+  const handleChangePassword = (e) => {
+    setPassword(e.target.value);
+  };
+
+  const [fasyankesId, setFasyankesId] = useState();
 
   const handleNext = () => {
     if (step === 1) {
@@ -226,6 +236,7 @@ export const FormCreateFasyankes = () => {
               icon: "success",
               title: response.data.message,
             });
+            setFasyankesId(data.fasyankesId);
             setPayment({
               package: response.data.subscription.package_plan,
               duration: response.data.subscription.duration,
@@ -237,6 +248,7 @@ export const FormCreateFasyankes = () => {
             setStep(step + 1);
           } else {
             const apiErrors = response.data.errors;
+            console.log(apiErrors);
             const newApiErrors = {
               type: apiErrors.type ? apiErrors.type : "",
               username: apiErrors.username ? apiErrors.username : "",
@@ -284,7 +296,47 @@ export const FormCreateFasyankes = () => {
           });
         });
     } else {
-      setStep(step + 1);
+      setLoading(true)
+      const formData = new FormData();
+      Object.keys(files).forEach((label) => {
+        formData.append(label, files[label]);
+      });
+      formData.append("type", type);
+      formData.append("password", password);
+      formData.append("fasyankes_id", fasyankesId);
+
+      axios
+        .post(API_BASE_URL + "/legal-document-fasyankes/upload", formData, {
+          headers: {
+            ...headers.headers,
+            "Content-Type": "multipart/form-data",
+          },
+        })
+        .then((response) => {
+          if (response.status === 200) {
+            setLoading(false)
+            Toast.fire({
+              icon: "success",
+              title: "Upload Legal Doc Successfully",
+            });
+            setStep(step + 1);
+          }
+        })
+        .catch((error) => {
+          setLoading(false)
+          const errApi = error.response.data.errors;
+          setErrors({
+            sia: errApi.sia,
+            sipa: errApi.sipa,
+            simk: errApi.simk,
+            siok: errApi.siok,
+            password: errApi.password,
+          });
+          Toast.fire({
+            icon: "error",
+            title: error.response.data.message,
+          });
+        });
     }
   };
 
@@ -736,6 +788,12 @@ export const FormCreateFasyankes = () => {
           handleNext={handleNext}
           typeFasyankes={type}
           packagePlan={choosePlan.paket}
+          files={files}
+          setFiles={setFiles}
+          handleChangePassword={handleChangePassword}
+          password={password}
+          errors={errors}
+          loading={loading}
         />
       ) : (
         <FormPembayaranFasyankes

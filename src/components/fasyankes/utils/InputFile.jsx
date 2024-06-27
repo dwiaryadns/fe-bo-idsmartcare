@@ -11,8 +11,14 @@ const InputFile = (props) => {
       </div>
       <input
         type="file"
-        className="file-input file-input-bordered file-input-info w-full rounded-md "
+        className={`file-input file-input-bordered file-input-info w-full rounded-md ${
+          props.error ? "file-input-error" : ""
+        }`}
+        onChange={props.onFileChange}
       />
+      {props.error && (
+        <p className="text-red-500 text-xs mt-1">{props.error}</p>
+      )}
     </div>
   );
 };

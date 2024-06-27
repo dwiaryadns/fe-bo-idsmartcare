@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
-import { ACCESS_HEADER, API_BASE_URL, API_OTP_URL } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
 import bgLogin from "../../assets/bg-login.png";
@@ -87,13 +87,17 @@ export const VerifyOtpPage = () => {
 
   const location = useLocation();
   const otpId = location.state?.otpId;
+  const [resendOtpId, setResentOtpId] = useState();
+  console.log(resendOtpId);
   const handleSendOtp = () => {
     setLoading(true);
     const payload = {
       email: email, // Ini harus diganti dengan email atau data yang benar sesuai dengan API Anda
       otp: otp,
-      otp_id: otpId,
+      otp_id:
+        resendOtpId == null || resendOtpId == undefined ? otpId : resendOtpId,
     };
+    console.log(payload);
     axios
       .post(API_BASE_URL + "/store-otp", payload, {
         headers: {
@@ -123,6 +127,21 @@ export const VerifyOtpPage = () => {
               navigate("/login");
             }, 1500);
           }, 2000);
+        } else {
+          setLoading(false);
+          Swal.fire({
+            icon: "error",
+            title: response.data.message,
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
         }
       })
       .catch(function (error) {
@@ -138,6 +157,30 @@ export const VerifyOtpPage = () => {
       });
   };
 
+  const getOTP = async (email) => {
+    try {
+      const response = await axios.post(
+        API_BASE_URL + "/get-otp",
+        {
+          email: email,
+          phone: "",
+          gateway_key: GATEWAY_KEY,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_HEADER}`,
+          },
+        }
+      );
+
+      if (response.data.status === true) {
+        setResentOtpId(response.data.data.id);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   const handleResendOtp = () => {
     localStorage.setItem(
       "resend_countdown_start_time",
@@ -146,20 +189,7 @@ export const VerifyOtpPage = () => {
     setCountdownSendOtp(120);
     setIsSendButtonActive(false);
     setOtp("");
-
-    const payload = {
-      email: email,
-    };
-    axios
-      .post(API_BASE_URL + "/resend-otp", payload)
-      .then(function (response) {
-        if (response.data.status === true) {
-          console.log(response);
-        }
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
+    getOTP(email);
   };
 
   return (

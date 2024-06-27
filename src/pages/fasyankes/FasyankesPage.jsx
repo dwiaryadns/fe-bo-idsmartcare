@@ -22,14 +22,6 @@ const FasyankesPage = () => {
         accessor: "type",
       },
       {
-        Header: "Status",
-        accessor: "status",
-      },
-      {
-        Header: "Expired At",
-        accessor: "expiredDate",
-      },
-      {
         Header: "Report",
         accessor: "report",
       },
@@ -52,6 +44,7 @@ const FasyankesPage = () => {
     axios
       .get(API_BASE_URL + "/fasyankes", headers)
       .then((response) => {
+        console.log(response.data.data)
         setFasyankes(response.data.data);
         setLoading(false)
       })
@@ -59,6 +52,7 @@ const FasyankesPage = () => {
         console.log(error);
       });
   }, []);
+  
 
   return (
     <div>
