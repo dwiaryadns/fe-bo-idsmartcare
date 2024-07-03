@@ -296,7 +296,7 @@ export const FormCreateFasyankes = () => {
           });
         });
     } else {
-      setLoading(true)
+      setLoading(true);
       const formData = new FormData();
       Object.keys(files).forEach((label) => {
         formData.append(label, files[label]);
@@ -314,16 +314,20 @@ export const FormCreateFasyankes = () => {
         })
         .then((response) => {
           if (response.status === 200) {
-            setLoading(false)
+            setLoading(false);
             Toast.fire({
               icon: "success",
               title: "Upload Legal Doc Successfully",
             });
-            setStep(step + 1);
+            if (choosePlan.paket === "FREE") {
+              navigate("/fasyankes");
+            } else {
+              setStep(step + 1);
+            }
           }
         })
         .catch((error) => {
-          setLoading(false)
+          setLoading(false);
           const errApi = error.response.data.errors;
           setErrors({
             sia: errApi.sia,
@@ -752,7 +756,7 @@ export const FormCreateFasyankes = () => {
                 className="checkbox checkbox-primary rounded-md"
               />
               <span className="label-text">
-                Dengan membuat akun, kamu setuju dengan{" "}
+                Dengan membuat akun, Anda setuju dengan{" "}
                 <a
                   href="/syarat-dan-ketentuan"
                   target="_blank"

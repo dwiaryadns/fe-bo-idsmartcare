@@ -103,7 +103,7 @@ const LegalDocumentPage = () => {
       );
 
       if (response.status === 200) {
-        setStatus('apply')
+        setStatus("apply");
         setLoading(false);
         Toast.fire({
           icon: "success",
@@ -252,6 +252,30 @@ const LegalDocumentPage = () => {
     }
   };
 
+  const InputApprovedLegal = ({ label, link }) => {
+    const redirectLink = () => {
+      window.open(link, "_blank");
+    };
+    return (
+      <div className="mb-3">
+        <div className="label flex flex-col justify-start items-start">
+          <span className="label-text font-bold text-base">{label}</span>
+        </div>
+        <div className="flex">
+          <input
+            onClick={redirectLink}
+            value={"Click Here"}
+            readOnly
+            className="w-full items-center text-center cursor-pointer hover:bg-blue-100 duration-300 rounded-r-none rounded-l-md input input-bordered"
+          />
+          <button className="btn bg-primary hover:bg-primary rounded-l-none rounded-r-md text-white font-bold">
+            Change File
+          </button>
+        </div>
+      </div>
+    );
+  };
+
   const renderPage = () => {
     if (status == null) {
       return renderInput();
@@ -273,76 +297,49 @@ const LegalDocumentPage = () => {
       );
     } else if (status === "approved") {
       const dataFix = JSON.parse(dataLegal);
+      console.log(dataFix);
       return (
         <div>
           {type === "Perorangan" ? (
             <div>
-              <div>
-                <a
-                  href={`${dataFix.ktp}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File KTP
-                </a>
-              </div>
-              <div>
-                <a
-                  href={`${dataFix.npwp}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File NPWP
-                </a>
-              </div>
+              <InputApprovedLegal label={"KTP"} link={dataFix.ktp} />
+              <InputApprovedLegal label={"NPWP"} link={dataFix.npwp} />
+              {dataFix.iso != null ? (
+                <InputApprovedLegal
+                  label={"Sertifikasi ISO"}
+                  link={dataFix.iso}
+                />
+              ) : (
+                ""
+              )}
             </div>
           ) : (
             <div>
-              <div>
-                <a
-                  href={`${dataFix.ktp}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File KTP
-                </a>
-              </div>
-              <div>
-                <a
-                  href={`${dataFix.npwp}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File NPWP
-                </a>
-              </div>
-              <div>
-                <a
-                  href={`${dataFix.akta}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File Akta
-                </a>
-              </div>
-              <div>
-                <a
-                  href={`${dataFix.sk_kemenkumhan}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File SK Kemenkumham
-                </a>
-              </div>
-              <div>
-                <a
-                  href={`${dataFix.nib}`}
-                  target="_blank"
-                  className="underline"
-                >
-                  File NIB
-                </a>
-              </div>
+              <InputApprovedLegal
+                label="KTP Direktur Berdasarkan Akta"
+                link={dataFix.ktp}
+              />
+              <InputApprovedLegal
+                label="Akta Perusahaan (Perubahan/Terbaru)"
+                link={dataFix.akta}
+              />
+              <InputApprovedLegal
+                label="SK Kemenkumham Akta (Perubahan/Terbaru)"
+                link={dataFix.sk_kemenkumham}
+              />
+              <InputApprovedLegal label="NPWP Perusahaan" link={dataFix.npwp} />
+              <InputApprovedLegal
+                label="Nomor Induk Berusaha (NIB)"
+                link={dataFix.nib}
+              />
+              {dataFix.iso != null ? (
+                <InputApprovedLegal
+                  label={"Sertifikasi ISO"}
+                  link={dataFix.iso}
+                />
+              ) : (
+                ""
+              )}
             </div>
           )}
         </div>

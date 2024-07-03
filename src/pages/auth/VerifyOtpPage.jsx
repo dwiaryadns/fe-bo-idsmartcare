@@ -263,9 +263,9 @@ export const VerifyOtpPage = () => {
                     ""
                   )}
                   <p className="text-xs mt-5">
-                    <span className="font-bold">Click here</span>
-                    if you did not receive an email or would like to change the
-                    email address you signed up with.
+                    <span className="font-bold">Click here</span> if you did not
+                    receive an email or would like to change the email address
+                    you signed up with.
                   </p>
                 </div>
               </div>

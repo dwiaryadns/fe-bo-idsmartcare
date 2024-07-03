@@ -50,7 +50,7 @@ export const FormDocument = ({
               </span>
             </div>
             <input
-              type="text"
+              type="password"
               placeholder="Password File"
               name="password"
               value={password}
@@ -107,7 +107,7 @@ export const FormDocument = ({
               </span>
             </div>
             <input
-              type="text"
+              type="password"
               placeholder="Password File"
               name="password"
               value={password}

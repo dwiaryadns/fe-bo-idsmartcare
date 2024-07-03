@@ -1,4 +1,8 @@
-import { faAngleLeft, faCreditCard } from "@fortawesome/free-solid-svg-icons";
+import {
+  faAngleLeft,
+  faCreditCard,
+  faFileInvoice,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
@@ -9,7 +13,7 @@ import Swal from "sweetalert2";
 export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const [diskon, setDiskon] = useState(0);
   const [total, setTotal] = useState(0);
-  console.log(total)
+  console.log(total);
 
   console.log(payment);
   useEffect(() => {
@@ -119,6 +123,11 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
     }
   }, [snapToken]);
 
+  const [checkbox, setCheckbox] = useState(false);
+  const handleCheckbox = () => {
+    setCheckbox(!checkbox);
+  };
+
   return (
     <div>
       <div className="font-bold text-xl">Payment</div>
@@ -147,6 +156,20 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
       <hr />
 
       {snapToken && <div id="snap-checkout" />}
+      <div className="flex">
+        <input
+          type="checkbox"
+          onClick={handleCheckbox}
+          className="checkbox checkbox-primary rounded-md"
+        />
+        <p className="text-sm">
+          Dengan melakukan pembayaran, kamu setuju dengan Syarat dan Ketentuan
+          pembelian di idSmartCare.
+        </p>
+      </div>
+      <button className="btn btn-block btn-primary hover:btn-primary text-white rounded-md my-4">
+        <FontAwesomeIcon icon={faFileInvoice} /> View Invoice
+      </button>
       <button
         onClick={handlePayment}
         className="btn btn-block btn-warning hover:btn-warning text-white rounded-md"
@@ -162,3 +185,4 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
     </div>
   );
 };
+ 

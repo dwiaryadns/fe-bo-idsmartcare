@@ -16,6 +16,7 @@ import WarehousePage from "./pages/warehouse/WarehousePage";
 import { CreateWarehousePage } from "./pages/warehouse/CreateWarehousePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { PrivateRoute } from "./route/PrivateRoute";
+import { PublicRoute } from "./route/PublicRoute";
 import { VerifyOtpPage } from "./pages/auth/VerifyOtpPage";
 import { TermsPage } from "./pages/TermsPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
@@ -26,12 +27,54 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/" element={<LoginPage />} />
-          <Route path="/login" element={<LoginPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-          <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-          <Route path="/verify-otp/:register_id" element={<VerifyOtpPage />} />
-          <Route path="/reset-password" element={<ResetPasswordPage />} />
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <LoginPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/register"
+            element={
+              <PublicRoute>
+                <RegisterPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/forgot-password"
+            element={
+              <PublicRoute>
+                <ForgotPasswordPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/verify-otp/:register_id"
+            element={
+              <PublicRoute>
+                <VerifyOtpPage />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/reset-password"
+            element={
+              <PublicRoute>
+                <ResetPasswordPage />
+              </PublicRoute>
+            }
+          />
 
           <Route
             path="/dashboard"

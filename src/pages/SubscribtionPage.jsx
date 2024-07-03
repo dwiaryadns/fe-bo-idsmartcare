@@ -1,9 +1,158 @@
+import React, { useEffect, useMemo, useState } from "react";
+import axios from "axios";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
+import { API_BASE_URL } from "../dummy/const"; // Adjust the path if needed
+import DataTableSubscription from "../components/subscription/DatatableSubscription";
+import { ModalPayNow } from "../components/subscription/ModalPayNow";
 
-const SubscribtionPage = () => {
+const SubscriptionPage = () => {
+  const [loading, setLoading] = useState(true);
+  const [needPayData, setNeedPayData] = useState([]);
+  const [historyData, setHistoryData] = useState([]);
+
+  const fetchData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const headers = { Authorization: `Bearer ${token}` };
+
+      const [needPayResponse, historyResponse] = await Promise.all([
+        axios.get(`${API_BASE_URL}/subscription/need-pay`, { headers }),
+        axios.get(`${API_BASE_URL}/subscription/history`, { headers }),
+      ]);
+
+      setNeedPayData(needPayResponse.data.data);
+      setHistoryData(historyResponse.data.data);
+      setLoading(false);
+    } catch (error) {
+      console.error("Error fetching data:", error);
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchData();
+  }, []);
+
+  const needPayColumns = useMemo(
+    () => [
+      {
+        Header: "Fasyankes",
+        accessor: "fasyankes",
+      },
+
+      {
+        Header: "Description",
+        accessor: "plan",
+      },
+      {
+        Header: "Payment Type",
+        accessor: "payment_type",
+      },
+      {
+        Header: "Transaction Date",
+        accessor: "transaction_time",
+      },
+      {
+        Header: "Expired at",
+        accessor: "expired_at",
+      },
+      {
+        Header: "Amount",
+        accessor: "amount",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ row }) => (
+          <div className="indicator">
+            <span
+              className={`indicator-item h-5 indicator-middle indicator-start badge badge-warning`}
+            ></span>
+            <div className=" ml-3 place-items-center">
+              {row.original.status}
+            </div>
+          </div>
+        ),
+      },
+      {
+        Header: "",
+        accessor: "pay_now",
+        Cell: ({ row }) => (
+          <div>
+            <ModalPayNow
+              id={row.original.transaction_id}
+              qr={row.original.qr_code}
+              type={row.original.payment_type}
+              va={row.original.va_number}
+              refreshData={fetchData}
+            />
+            <button
+              onClick={() =>
+                document.getElementById(row.original.transaction_id).showModal()
+              }
+              className="btn bg-primary text-white hover:bg-primary rounded-md btn-sm"
+            >
+              Pay Now
+            </button>
+          </div>
+        ),
+      },
+    ],
+    [fetchData]
+  );
+
+  const historyColumns = useMemo(
+    () => [
+      {
+        Header: "Fasyankes",
+        accessor: "fasyankes",
+      },
+
+      {
+        Header: "Description",
+        accessor: "plan",
+      },
+      {
+        Header: "Payment Type",
+        accessor: "payment_type",
+      },
+      {
+        Header: "Transaction Date",
+        accessor: "transaction_time",
+      },
+      {
+        Header: "Expired Date",
+        accessor: "expired_at",
+      },
+      {
+        Header: "Amount",
+        accessor: "amount",
+      },
+      {
+        Header: "Status",
+        accessor: "status",
+        Cell: ({ row }) => (
+          <div className="indicator">
+            <span
+              className={`indicator-item h-5 indicator-middle indicator-start badge ${
+                row.original.status === "success"
+                  ? "badge-success"
+                  : "badge-error"
+              }`}
+            ></span>
+            <div className=" ml-3 place-items-center">
+              {row.original.status}
+            </div>
+          </div>
+        ),
+      },
+    ],
+    []
+  );
+
   return (
     <div>
       <div className="flex flex-row w-full">
@@ -15,63 +164,19 @@ const SubscribtionPage = () => {
             <div>
               <h3 className="font-bold text-lg mt-5">Need Pay</h3>
               <div className="overflow-x-auto">
-                <table className="table">
-                  {/* head */}
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Expired at</th>
-                      <th>Description</th>
-                      <th>Payment Type</th>
-                      <th>Amount</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* row 1 */}
-                    <tr>
-                      <th>1</th>
-                      <td>24 Mei 2024</td>
-                      <td>Apotik Plus Plan - 1 bulan</td>
-                      <td>BCA</td>
-                      <td>Rp 290.000</td>
-                      <td>
-                        <button className="btn bg-primary text-white hover:bg-primary rounded-md btn-sm">
-                          Pay Now
-                        </button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
+                <DataTableSubscription
+                  columns={needPayColumns}
+                  data={needPayData}
+                  loading={loading}
+                />
               </div>
               <h3 className="font-bold text-lg mt-10">Subscription History</h3>
               <div className="overflow-x-auto">
-                <table className="table">
-                  {/* head */}
-                  <thead>
-                    <tr>
-                      <th></th>
-                      <th>Transaction Date</th>
-                      <th>Description</th>
-                      <th>Payment Type</th>
-                      <th>Expired At</th>
-                      <th>Amount</th>
-                      <th></th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {/* row 1 */}
-                    <tr>
-                      <th>1</th>
-                      <td>24 Mei 2024</td>
-                      <td>Apotik Plus Plan - 1 bulan</td>
-                      <td>BCA</td>
-                      <td>24 Mei 2024</td>
-
-                      <td>Rp 290.000</td>
-                    </tr>
-                  </tbody>
-                </table>
+                <DataTableSubscription
+                  columns={historyColumns}
+                  data={historyData}
+                  loading={loading}
+                />
               </div>
             </div>
           </div>
@@ -81,4 +186,4 @@ const SubscribtionPage = () => {
   );
 };
 
-export default SubscribtionPage;
+export default SubscriptionPage;

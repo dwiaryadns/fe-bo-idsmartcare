@@ -50,7 +50,8 @@ const Navbar = () => {
                 title: response.data.message,
               });
             }
-            localStorage.clear();
+            localStorage.removeItem("token");
+            localStorage.removeItem("dataBo");
           })
           .catch(function (error) {
             console.log(error);

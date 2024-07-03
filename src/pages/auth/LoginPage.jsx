@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
@@ -21,34 +21,45 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({ email: "", password: "" });
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [rememberMe, setRememberMe] = useState(false);
 
-  const handleLogin = () => {
+  useEffect(() => {
+    const storedEmail = localStorage.getItem("email");
+    if (storedEmail) {
+      setEmail(storedEmail);
+      setRememberMe(true);
+    }
+  }, []);
+
+  const handleLogin = async () => {
     setLoading(true);
-    const payload = {
-      email: email,
-      password: password,
-    };
+
+    const payload = { email, password };
     axios
       .post(API_BASE_URL + "/login", payload)
-      .then(function (response) {
+      .then((response) => {
         if (response.data.status === true) {
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("dataBo", JSON.stringify(response.data.data));
+
+          if (rememberMe) {
+            localStorage.setItem("email", email);
+          } else {
+            localStorage.removeItem("email");
+          }
           navigate("/dashboard");
-          const Toast = Swal.mixin({
+          Swal.fire({
+            icon: "success",
+            title: response.data.message,
             toast: true,
             position: "top-end",
             showConfirmButton: false,
             timer: 3000,
             timerProgressBar: true,
             didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
+              toast.addEventListener("mouseenter", Swal.stopTimer);
+              toast.addEventListener("mouseleave", Swal.resumeTimer);
             },
-          });
-          Toast.fire({
-            icon: "success",
-            title: response.data.message,
           });
         } else {
           Swal.fire({
@@ -59,13 +70,8 @@ const LoginPage = () => {
           setLoading(false);
         }
       })
-      .catch(function (error) {
-        if (
-          error.response &&
-          error.response.data &&
-          error.response.data.errors &&
-          error.response.data.message
-        ) {
+      .catch((error) => {
+        if (error.response && error.response.data) {
           const message = error.response.data.errors;
           if (message) {
             const newApiErrors = {
@@ -73,21 +79,17 @@ const LoginPage = () => {
               password: message.password ? message.password[0] : "",
             };
             setErrors(newApiErrors);
-            setLoading(false);
+          } else {
+            Swal.fire({
+              icon: "error",
+              title: "Oops...",
+              text: error.response.data.message,
+            });
+            setErrors({ email: error.response.data.message, password: "" });
+            setPassword("");
           }
-        } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: error.response.data.message,
-          });
-          const newApiErrors = {
-            email: error.response.data.message,
-          };
-          setErrors(newApiErrors);
-          setPassword("");
-          setLoading(false);
         }
+        setLoading(false);
       });
   };
 
@@ -107,14 +109,26 @@ const LoginPage = () => {
 
   return (
     <div className="relative">
-      <img src={bgLogin} className="absolute inset-0 w-full h-full z-0" />
+      <img
+        src={bgLogin}
+        className="absolute inset-0 w-full h-full z-0"
+        alt="Background"
+      />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 space-y-4">
         <div className="hero">
           <div className="bg-white hero-content flex flex-col lg:flex-row-reverse items-center lg:items-start">
-            <img src={imgLogin} className="max-w-lg hidden md:block self-center" />
+            <img
+              src={imgLogin}
+              className="max-w-lg hidden md:block self-center"
+              alt="Login Illustration"
+            />
             <div className="p-6 sm:p-10 rounded-lg w-full max-w-md lg:w-[600px]">
               <div className="flex justify-center">
-                <img src={logoLogin} className="w-32 sm:w-48 lg:w-64 mb-4" />
+                <img
+                  src={logoLogin}
+                  className="w-32 sm:w-48 lg:w-64 mb-4"
+                  alt="Logo"
+                />
               </div>
               <h6 className="text-2xl sm:text-3xl text-primary font-extrabold mb-3">
                 Login
@@ -165,7 +179,6 @@ const LoginPage = () => {
                     className="cursor-pointer"
                   />
                 </label>
-
                 {errors.password && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.password}
@@ -177,6 +190,8 @@ const LoginPage = () => {
                   <input
                     type="checkbox"
                     className="checkbox checkbox-primary rounded-md"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
                   />
                   <span className="label-text">Remember me</span>
                 </div>
