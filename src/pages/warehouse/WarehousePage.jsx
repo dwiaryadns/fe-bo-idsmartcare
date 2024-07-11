@@ -46,7 +46,7 @@ const WarehousePage = () => {
     axios
       .get(API_BASE_URL + "/warehouses", headers)
       .then(function (response) {
-        setLoading(false)
+        setLoading(false);
         setWarehouse(response.data.data);
       })
       .catch(function (err) {
@@ -64,18 +64,22 @@ const WarehousePage = () => {
             <Header title="Warehouse" icon={faWarehouse} />
             <div className="card shadow-md ">
               <div className="card-body">
-                <div className="card-title flex justify-between">
-                  List Of Warehouse
-                  <Link to={"/warehouse/create"}>
-                    <button className="btn bg-primary btn-md hover:bg-primary text-white rounded-md">
+                <div className="card-title flex md:flex-row flex-col justify-between">
+                  <p className="md:text-lg text-sm">List Of Warehouse</p>
+                  <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
+                    <Link to={"/warehouse/create"}>
                       <FontAwesomeIcon icon={faPlus} />
                       Add Warehouse
-                    </button>
-                  </Link>
+                    </Link>
+                  </button>
                 </div>
                 <hr></hr>
-                <div className="overflow-x-auto">
-                  <DataTableWarehouse columns={columns} data={warehouse} loading={loading} />
+                <div className="overflow-x-auto table-pin-rows">
+                  <DataTableWarehouse
+                    columns={columns}
+                    data={warehouse}
+                    loading={loading}
+                  />
                 </div>
               </div>
             </div>

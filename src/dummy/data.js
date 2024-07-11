@@ -1,4 +1,5 @@
 import {
+  faBox,
   faChartBar,
   faGear,
   faHistory,
@@ -8,6 +9,8 @@ import {
   faLegal,
   faLock,
   faMoneyBill,
+  faReceipt,
+  faTag,
   faUser,
   faWarehouse,
 } from "@fortawesome/free-solid-svg-icons";
@@ -59,6 +62,21 @@ export const sidebarItems = [
     title: "Activity Log",
     icon: faHistory,
     link: "activity-log",
+  },
+  {
+    title: "Inventory",
+    icon: faBox,
+    link: "inventory",
+  },
+  {
+    title: "Purchase",
+    icon: faTag,
+    link: "purchase",
+  },
+  {
+    title: "Good Receipt",
+    icon: faReceipt,
+    link: "good-receipt",
   },
 ];
 

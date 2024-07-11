@@ -87,6 +87,7 @@ const SubscriptionPage = () => {
               qr={row.original.qr_code}
               type={row.original.payment_type}
               va={row.original.va_number}
+              amount={row.original.amount}
               refreshData={fetchData}
             />
             <button
@@ -162,21 +163,29 @@ const SubscriptionPage = () => {
           <div className="mx-10">
             <Header title="Subscription" icon={faMoneyBill} />
             <div>
-              <h3 className="font-bold text-lg mt-5">Need Pay</h3>
-              <div className="overflow-x-auto">
-                <DataTableSubscription
-                  columns={needPayColumns}
-                  data={needPayData}
-                  loading={loading}
-                />
+              <div className="shadow-md rounded-md p-5">
+                <h3 className="font-bold text-lg mt-5 text-primary">
+                  Need Pay
+                </h3>
+                <div className="overflow-x-auto table-pin-rows">
+                  <DataTableSubscription
+                    columns={needPayColumns}
+                    data={needPayData}
+                    loading={loading}
+                  />
+                </div>
               </div>
-              <h3 className="font-bold text-lg mt-10">Subscription History</h3>
-              <div className="overflow-x-auto">
-                <DataTableSubscription
-                  columns={historyColumns}
-                  data={historyData}
-                  loading={loading}
-                />
+              <div className="shadow-md rounded-md p-5 mt-5 mb-10">
+                <h3 className="font-bold text-lg text-primary">
+                  Subscription History
+                </h3>
+                <div className="overflow-x-auto table-pin-rows">
+                  <DataTableSubscription
+                    columns={historyColumns}
+                    data={historyData}
+                    loading={loading}
+                  />
+                </div>
               </div>
             </div>
           </div>

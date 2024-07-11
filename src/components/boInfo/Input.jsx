@@ -1,4 +1,4 @@
-const Input = ({ label, placeholder, name, value, onChange, errors }) => {
+const Input = ({ label, placeholder, name, value, onChange, errors,max }) => {
   return (
     <div className="pb-3">
       <label className="form-control w-full">
@@ -13,6 +13,7 @@ const Input = ({ label, placeholder, name, value, onChange, errors }) => {
           name={name}
           value={value}
           onChange={onChange}
+          maxLength={max}
           className={`input input-bordered w-full rounded-md ${
             errors ? "border-red-500" : ""
           }`}

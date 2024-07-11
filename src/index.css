@@ -20,7 +20,7 @@
   padding: 0;
   background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
 }
 
 .pagination li {
@@ -40,7 +40,7 @@
 .pagination li.active a {
   font-weight: bold;
   color: white;
-  background-color: #0663EC;
+  background-color: #0663ec;
 }
 
 .pagination li.previous a,
@@ -55,4 +55,26 @@
 
 .pagination li a:hover:not(.active) {
   background-color: #e9ecef;
+}
+
+.overflow-x-auto::-webkit-scrollbar {
+  height: 8px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb {
+  background-color: #888;
+  border-radius: 10px;
+}
+
+.overflow-x-auto::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
+
+.overflow-x-auto {
+  -ms-overflow-style: scrollbar;
+  scrollbar-width: thin;
+}
+.tooltip {
+  --tooltip-color: #01CDFF;
+  --tooltip-text-color: #fff;
 }

@@ -30,9 +30,9 @@ const RegisterPage = () => {
     password: "",
     confirmPassword: "",
     api: "",
-    });
-    const navigate = useNavigate();
-    const [otpId, setOtpId] = useState();
+  });
+  const navigate = useNavigate();
+  const [otpId, setOtpId] = useState();
 
   useEffect(() => {
     if (otpId) {
@@ -115,15 +115,19 @@ const RegisterPage = () => {
   };
 
   const handleFullname = (e) => {
-    setFullname(e.target.value);
-    if (e.target.value) {
+    const value = e.target.value;
+    const nameRegex = /^[A-Za-z\s]+$/;
+    setFullname(value);
+    if (nameRegex.test(value)) {
       setErrors((prevErrors) => ({ ...prevErrors, fullname: "" }));
     }
   };
 
   const handleEmail = (e) => {
-    setEmail(e.target.value);
-    if (e.target.value) {
+    const value = e.target.value;
+    const emailRegex = /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i;
+    setEmail(value);
+    if (emailRegex.test(value)) {
       setErrors((prevErrors) => ({ ...prevErrors, email: "" }));
     }
   };
@@ -142,14 +146,16 @@ const RegisterPage = () => {
     }
   };
 
-
   return (
     <div className="relative">
       <img src={bgLogin} className="absolute inset-0 w-full h-full z-0" />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 space-y-4">
         <div className="hero">
           <div className="hero-content bg-white flex flex-col lg:flex-row items-center lg:items-start">
-            <img src={imgLogin} className="max-w-lg hidden md:block self-center" />
+            <img
+              src={imgLogin}
+              className="max-w-lg hidden md:block self-center"
+            />
             <div className=" p-6 sm:p-10 rounded-lg w-full max-w-md lg:w-[600px]">
               <div className="flex justify-center">
                 <img src={logoLogin} className="w-32 sm:w-48 lg:w-64 mb-4" />
@@ -206,7 +212,7 @@ const RegisterPage = () => {
                 <label
                   className={`input ${
                     errors.password ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full`}
+                  } flex rounded-md items-center gap-2 w-full relative`}
                 >
                   <FontAwesomeIcon icon={faKey} />
                   <input
@@ -219,7 +225,7 @@ const RegisterPage = () => {
                   <FontAwesomeIcon
                     icon={showPassword ? faEyeSlash : faEye}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="cursor-pointer"
+                    className="cursor-pointer absolute right-3"
                   />
                 </label>
                 {errors.password && (
@@ -233,7 +239,7 @@ const RegisterPage = () => {
                 <label
                   className={`input ${
                     errors.confirmPassword ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full`}
+                  } flex rounded-md items-center gap-2 w-full relative`}
                 >
                   <FontAwesomeIcon icon={faKey} />
                   <input
@@ -246,7 +252,7 @@ const RegisterPage = () => {
                   <FontAwesomeIcon
                     icon={showConfirmPassword ? faEyeSlash : faEye}
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="cursor-pointer"
+                    className="cursor-pointer absolute right-3"
                   />
                 </label>
                 {errors.confirmPassword && (

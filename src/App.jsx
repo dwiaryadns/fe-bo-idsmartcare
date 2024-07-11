@@ -21,6 +21,10 @@ import { VerifyOtpPage } from "./pages/auth/VerifyOtpPage";
 import { TermsPage } from "./pages/TermsPage";
 import { PrivacyPage } from "./pages/PrivacyPage";
 import ResetPasswordPage from "./pages/auth/ResetPasswordPage";
+import { PurchasePage } from "./pages/purchase/PurchasePage";
+import { ReceiptionPage } from "./pages/receiption/ReceiptionPage";
+import { InventoryPage } from "./pages/inventory/InventoryPage";
+import { CreateReceiptPage } from "./pages/receiption/CreateReceiptPage";
 
 function App() {
   return (
@@ -153,6 +157,38 @@ function App() {
             element={
               <PrivateRoute>
                 <CreateFasyankesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/purchase"
+            element={
+              <PrivateRoute>
+                <PurchasePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/good-receipt"
+            element={
+              <PrivateRoute>
+                <ReceiptionPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/good-receipt/create"
+            element={
+              <PrivateRoute>
+                <CreateReceiptPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/inventory"
+            element={
+              <PrivateRoute>
+                <InventoryPage />
               </PrivateRoute>
             }
           />

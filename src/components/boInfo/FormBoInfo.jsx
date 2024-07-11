@@ -299,6 +299,7 @@ const FormBoInfo = () => {
             value={formValues.kodePos}
             onChange={handleChange}
             errors={errors.kodePos}
+            max={6}
           />
           <div className="form-control flex flex-row items-center mt-2">
             <label className="label cursor-pointer">

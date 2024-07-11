@@ -419,14 +419,15 @@ export const FormCreateFasyankes = () => {
         </li>
       </ul>
       {step === 1 ? (
-        <div className="pb-96">
+        <div className="pb-10">
           <div className="form-control w-full">
             <div className="label">
               <span className="label-text font-bold text-base">
                 Type Of Fasyankes<span className="text-red-800 mr-2">*</span>
                 <div
-                  className="tooltip tooltip-info "
-                  data-tip="pilih tipe fasyankes yang akan Anda daftarkan ke idSmartCare"
+                  className="tooltip tooltip-info"
+                  data-tip="Pilih tipe fasyankes yang akan Anda daftarkan ke idSmartCare"
+                  style={{ color: "white" }}
                 >
                   <FontAwesomeIcon
                     icon={faInfoCircle}
@@ -465,7 +466,7 @@ export const FormCreateFasyankes = () => {
                 Package Plan<span className="text-red-800 mr-2">*</span>
                 <div
                   className="tooltip tooltip-info "
-                  data-tip="pilih plan sesuai dengan kebutuhan"
+                  data-tip="Pilih plan sesuai dengan kebutuhan"
                 >
                   <FontAwesomeIcon
                     icon={faInfoCircle}
@@ -691,7 +692,7 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.picPhoneNumber}
             error={errors.picPhoneNumber}
-            tooltip="Nomor PIC yang dapat dihubungin terkait dengan fasyankes yang didaftarkan"
+            tooltip="Nomor PIC yang dapat dihubungi terkait dengan fasyankes yang didaftarkan"
           />
           <Input
             type="text"
@@ -776,7 +777,7 @@ export const FormCreateFasyankes = () => {
               </span>
             </label>
           </div>
-          <div className="flex justify-end">
+          <div className="flex justify-end mt-5">
             <button
               onClick={handleNext}
               disabled={!checkbox}

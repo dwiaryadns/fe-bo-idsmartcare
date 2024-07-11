@@ -103,8 +103,8 @@ export const FormCreateWarehouse = () => {
         errors={errors.picName}
       />
       <Input
-        label="PIC Number"
-        placeholder="PIC Number"
+        label="PIC Phone Number"
+        placeholder="PIC Phone Number"
         name="picNumber"
         value={formValues.picNumber}
         onChange={handleChange}

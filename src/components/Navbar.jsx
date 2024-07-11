@@ -2,6 +2,8 @@ import {
   faBars,
   faBell,
   faCaretDown,
+  faCaretLeft,
+  faCaretUp,
   faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,6 +12,7 @@ import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
 import { API_BASE_URL } from "../dummy/const";
+import { useState } from "react";
 
 const Navbar = () => {
   const navigate = useNavigate();
@@ -60,6 +63,11 @@ const Navbar = () => {
     });
   };
 
+  const [isOpen, setIsOpen] = useState(false);
+  const handleOpenArrow = () => {
+    setIsOpen(!isOpen);
+  };
+
   const dataBo = JSON.parse(localStorage.getItem("dataBo"));
   return (
     <div className="flex justify-between mx-10 my-10">
@@ -72,7 +80,7 @@ const Navbar = () => {
         </label>
       </div>
       <div className="flex align-middle content-center items-center gap-3">
-        <div className="dropdown dropdown-end">
+        <div className="dropdown md:dropdown-end dropdown-bottom">
           <div
             tabIndex={0}
             role="button"
@@ -85,7 +93,7 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-72"
+            className="dropdown-content z-[1]  menu p-2 shadow-md rounded-md bg-base-100 border mt-3 md:min-w-96 min-w-60"
           >
             <li>
               <a>Item 1</a>
@@ -93,7 +101,7 @@ const Navbar = () => {
           </ul>
         </div>
         <h5 className="text-right text-base font-bold max-w-52">
-          {dataBo.name}!
+          {dataBo.name}
           <br />
           <h6 className="text-xs font-light">Bussiness Owner</h6>
         </h5>
@@ -103,32 +111,50 @@ const Navbar = () => {
           </div>
         </div>
         <div className="dropdown dropdown-bottom dropdown-end">
-          <div tabIndex={0} role="button">
-            <FontAwesomeIcon icon={faCaretDown} />
-          </div>
-          <ul
+          <div
             tabIndex={0}
-            className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-7"
+            role="button"
+            onClick={handleOpenArrow}
+            className="hover:text-primary transition duration-300 ease-in-out cursor-pointer flex items-center"
           >
-            {navbarItems.map((nav, index) => (
-              <li
-                key={index}
-                className={`text-black  hover:rounded-md duration-300 mb-3 }`}
-              >
-                <Link to={"/" + nav.link}>
-                  <FontAwesomeIcon className="mr-1" icon={nav.icon} />
-                  {nav.title}
+            <FontAwesomeIcon
+              icon={faCaretDown}
+              className={`transition-transform duration-300 ${
+                isOpen ? "rotate-0" : "rotate-90"
+              }`}
+            />
+          </div>
+          <div
+            className={`absolute z-10 transition-all duration-300 ease-in-out transform ${
+              isOpen
+                ? "opacity-100 max-h-96 scale-100"
+                : "opacity-0 max-h-0 scale-95"
+            }`}
+          >
+            <ul
+              tabIndex={0}
+              className="dropdown-content z-[1] menu p-2 shadow bg-base-100 rounded-box w-52 mt-7"
+            >
+              {navbarItems.map((nav, index) => (
+                <li
+                  key={index}
+                  className="text-black hover:rounded-md duration-300 mb-3"
+                >
+                  <Link to={`/${nav.link}`}>
+                    <FontAwesomeIcon className="mr-1" icon={nav.icon} />
+                    {nav.title}
+                  </Link>
+                </li>
+              ))}
+              <hr />
+              <li className="text-black hover:rounded-md duration-300 my-3">
+                <Link onClick={handleLogout}>
+                  <FontAwesomeIcon className="mr-1" icon={faSignOut} />
+                  Sign Out
                 </Link>
               </li>
-            ))}
-            <hr></hr>
-            <li className={`text-black  hover:rounded-md duration-300 my-3 }`}>
-              <Link onClick={handleLogout}>
-                <FontAwesomeIcon className="mr-1" icon={faSignOut} />
-                Sign Out
-              </Link>
-            </li>
-          </ul>
+            </ul>
+          </div>
         </div>
       </div>
     </div>

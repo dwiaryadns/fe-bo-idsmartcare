@@ -3,7 +3,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router";
 
-export const ModalPayNow = ({ id, qr, type, va, refreshData }) => {
+export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
   const modalRef = useRef();
   const navigate = useNavigate();
 
@@ -14,7 +14,7 @@ export const ModalPayNow = ({ id, qr, type, va, refreshData }) => {
     modalRef.current.close();
   };
 
-  const handleCopy = (e) => {
+  const handleCopy = () => {
     setIsCopy(true);
     setTimeout(() => {
       setIsCopy(false);
@@ -26,17 +26,11 @@ export const ModalPayNow = ({ id, qr, type, va, refreshData }) => {
       <dialog id={id} className="modal" ref={modalRef}>
         <div className="modal-box w-11/12 max-w-lg px-10">
           <form method="dialog">
-            <button
-              onClick={handlePayment}
-              className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2"
-            >
-              ✕
-            </button>
             {type === "qris" ? (
               <div>
                 <div className="flex justify-between mt-10 items-center text-md border-b-2">
                   <p>Total Pembayaran</p>
-                  <p>Rp 199.000</p>
+                  <p>{amount}</p>
                 </div>
                 <div className="flex justify-between mt-5 items-center text-md border-b-2">
                   <p>Jatuh Tempo</p>
@@ -51,7 +45,7 @@ export const ModalPayNow = ({ id, qr, type, va, refreshData }) => {
                 <div className="">
                   <div className="flex justify-between mt-10 items-center text-md border-b-2">
                     <p>Total Pembayaran</p>
-                    <p>Rp 199.000</p>
+                    <p>{amount}</p>
                   </div>
                   <div className="flex justify-between mt-5 items-center text-md border-b-2">
                     <p>Jatuh Tempo</p>

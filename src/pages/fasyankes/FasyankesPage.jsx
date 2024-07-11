@@ -44,15 +44,14 @@ const FasyankesPage = () => {
     axios
       .get(API_BASE_URL + "/fasyankes", headers)
       .then((response) => {
-        console.log(response.data.data)
+        console.log(response.data.data);
         setFasyankes(response.data.data);
-        setLoading(false)
+        setLoading(false);
       })
       .catch(function (error) {
         console.log(error);
       });
   }, []);
-  
 
   return (
     <div>
@@ -65,17 +64,17 @@ const FasyankesPage = () => {
             <div className="">
               <div className="card shadow-md ">
                 <div className="card-body">
-                  <div className="card-title flex justify-between">
-                    List Of Fasyankes
-                    <Link to={"/fasyankes/create"}>
-                      <button className="btn bg-primary btn-md hover:bg-primary text-white rounded-md">
+                  <div className="card-title flex md:flex-row flex-col justify-between">
+                    <p className="md:text-lg text-sm">List Of Fasyankes</p>
+                    <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
+                      <Link to={"/fasyankes/create"}>
                         <FontAwesomeIcon icon={faPlus} />
                         Add Fasyankes
-                      </button>
-                    </Link>
+                      </Link>
+                    </button>
                   </div>
                   <hr></hr>
-                  <div className="overflow-x-auto">
+                  <div className="overflow-x-auto table-pin-rows">
                     <DataTableFasyankes
                       columns={columns}
                       data={fasyankes}
