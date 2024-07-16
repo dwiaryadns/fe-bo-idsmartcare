@@ -34,7 +34,6 @@ const Navbar = () => {
         axios
           .post(API_BASE_URL + "/logout", {}, headers)
           .then(function (response) {
-            console.log(response.data);
             if (response.data.status === true) {
               navigate("/login");
               const Toast = Swal.mixin({

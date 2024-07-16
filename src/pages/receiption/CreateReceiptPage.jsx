@@ -144,7 +144,17 @@ export const CreateReceiptPage = () => {
   };
 
   const handleChangeTanggal = (e) => {
-    setTanggal(e.target.value);
+    const inputDate = e.target.value;
+    const maxDate = new Date().toISOString().split("T")[0];
+    const minDate = getTenYearsAgoDate();
+
+    if (inputDate > maxDate) {
+      setTanggal(maxDate);
+    } else if (inputDate < minDate) {
+      setTanggal(maxDate);
+    } else {
+      setTanggal(inputDate);
+    }
     setError((prevError) => ({ ...prevError, tanggal: "" }));
   };
 
@@ -205,14 +215,14 @@ export const CreateReceiptPage = () => {
   const detailPembelian = () => {
     return (
       <div className="bg-slate-100 rounded-md">
-        <div className="flex flex-col">
+        <div className="flex flex-col items-center">
           <div className="collapse bg-blue-100">
             <input type="checkbox" checked={isOpen} onChange={toggleOpen} />
             <div
-              className="collapse-title text-xl font-medium flex justify-between items-center cursor-pointer"
+              className="collapse-title text-xl font-medium flex justify-between items-center place-items-center cursor-pointer"
               onClick={toggleOpen}
             >
-              <p className="mb-3 font-bold text-lg">Detail Pembelian</p>
+              <p className=" font-bold text-lg text-center">Detail Pembelian</p>
               <FontAwesomeIcon
                 icon={faChevronDown}
                 className={`transition-transform duration-300 transform ${
@@ -248,6 +258,12 @@ export const CreateReceiptPage = () => {
         </div>
       </div>
     );
+  };
+
+  const getTenYearsAgoDate = () => {
+    const today = new Date();
+    const tenYearsAgo = new Date(today.setFullYear(today.getFullYear() - 10));
+    return tenYearsAgo.toISOString().split("T")[0];
   };
 
   const detailPenerimaan = () => {
@@ -334,6 +350,8 @@ export const CreateReceiptPage = () => {
                   placeholder="Tanggal Penerimaan"
                   value={tanggal} // value diambil dari state tanggal
                   onChange={handleChangeTanggal} // onChange menggunakan fungsi handleChangeTanggal
+                  max={new Date().toISOString().split("T")[0]}
+                  min={getTenYearsAgoDate()}
                 />
                 {error.tanggal && (
                   <div className="text-xs text-error">{error.tanggal}</div>
@@ -349,107 +367,132 @@ export const CreateReceiptPage = () => {
   const detailBarang = () => {
     return (
       <div className="overflow-x-auto">
-        <div className="overflow-x-auto">
-          <table className="table">
-            <thead>
-              <tr>
-                <th>Nama Barang</th>
-                <th>Jml Pembeliaan</th>
-                <th>Barang Datang</th>
-                <th>Jml Kekurangan</th>
-                <th>Action</th>
-                <th>Kondisi</th>
-              </tr>
-            </thead>
-            <tbody>
-              {data &&
-                data.barangs &&
-                data.barangs.map((barang, index) => (
-                  <tr key={index}>
-                    <td>{barang.nama}</td>
-                    <td>{barang.qty}</td>
-                    <td>
-                      <button
-                        className="btn btn-sm"
-                        onClick={() => handleDecrement(index)}
-                      >
-                        -
-                      </button>
-                      <input
-                        className="input input-sm max-w-14 rounded-md input-bordered"
-                        type="text"
-                        value={barang.barangDatang || 0}
-                        onChange={(e) =>
-                          handleBarangDatangChange(
-                            index,
-                            parseInt(e.target.value)
-                          )
-                        }
-                      />
-                      <button
-                        className="btn btn-sm"
-                        onClick={() => handleIncrement(index)}
-                      >
-                        +
-                      </button>
-                    </td>
-                    <td>{barang.jml_kekurangan}</td>
-                    <td>
-                      <div>
+        <div className="card bg-white rounded-md shadow-md">
+          <div className="card-body">
+            <p className="mb-3 font-bold text-lg">Detail Barang</p>
+            <div role="alert" className="alert alert-warning">
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                className="h-6 w-6 shrink-0 stroke-current"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  strokeWidth="2"
+                  d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+                />
+              </svg>
+              <span>
+                Wajib diisi! Jika kosong berikan tanda {" "}
+                <span className="font-extrabold"> {" - "} </span>{" "}
+              </span>
+            </div>
+
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Nama Barang</th>
+                  <th>Jumlah Pembeliaan</th>
+                  <th>Barang Datang</th>
+                  <th>Jumlah Kekurangan</th>
+                  <th>Action</th>
+                  <th>Kondisi</th>
+                </tr>
+              </thead>
+              <tbody>
+                {data &&
+                  data.barangs &&
+                  data.barangs.map((barang, index) => (
+                    <tr key={index}>
+                      <td>{barang.nama}</td>
+                      <td>{barang.qty}</td>
+                      <td>
                         <button
-                          onClick={() => handleChangeStatus(index, "Received")}
-                          className={`btn btn-sm ${
-                            status[index] === "Received"
-                              ? "bg-primary hover:bg-primary text-white"
-                              : ""
-                          }`}
+                          className="btn btn-sm"
+                          onClick={() => handleDecrement(index)}
                         >
-                          Received
+                          -
                         </button>
+                        <input
+                          className="input input-sm max-w-14 rounded-md input-bordered"
+                          type="text"
+                          value={barang.barangDatang || 0}
+                          onChange={(e) =>
+                            handleBarangDatangChange(
+                              index,
+                              parseInt(e.target.value)
+                            )
+                          }
+                        />
                         <button
-                          onClick={() => handleChangeStatus(index, "Retur")}
-                          className={`btn btn-sm ${
-                            status[index] === "Retur"
-                              ? "bg-primary hover:bg-primary text-white"
-                              : ""
-                          }`}
+                          className="btn btn-sm"
+                          onClick={() => handleIncrement(index)}
                         >
-                          Retur
+                          +
                         </button>
-                        <span className="text-red-500">
-                          <div className="text-xs text-error"></div>
-                        </span>
-                      </div>
-                    </td>
-                    <td>
-                      <input
-                        className="input input-bordered rounded-md"
-                        type="text"
-                        placeholder="Kondisi"
-                        value={conditions[index] || ""}
-                        onChange={(e) =>
-                          handleChangeCondition(index, e.target.value)
-                        }
-                      />
-                    </td>
-                  </tr>
-                ))}
-            </tbody>
-          </table>
-          <div className="mt-5">
-            <textarea
-              className={`textarea resize-none rounded-md textarea-bordered w-full`}
-              placeholder="Note"
-              onChange={(e) => handleChangeNote(e)}
-            ></textarea>
-          </div>
-          <div className=" justify-end flex mt-5">
-            <button
-              onClick={handleSave}
-              className="btn self-end bg-primary hover:bg-primary text-white px-10 rounded-md"
-            >
-              Simpan
-            </button>
+                      </td>
+                      <td>{barang.jml_kekurangan}</td>
+                      <td>
+                        <div>
+                          <button
+                            onClick={() =>
+                              handleChangeStatus(index, "Received")
+                            }
+                            className={`btn btn-sm ${
+                              status[index] === "Received"
+                                ? "bg-primary hover:bg-primary text-white"
+                                : ""
+                            }`}
+                          >
+                            Received
+                          </button>
+                          <button
+                            onClick={() => handleChangeStatus(index, "Retur")}
+                            className={`btn btn-sm ${
+                              status[index] === "Retur"
+                                ? "bg-primary hover:bg-primary text-white"
+                                : ""
+                            }`}
+                          >
+                            Retur
+                          </button>
+                          <span className="text-red-500">
+                            <div className="text-xs text-error"></div>
+                          </span>
+                        </div>
+                      </td>
+                      <td>
+                        <input
+                          className="input input-bordered rounded-md"
+                          type="text"
+                          placeholder="Kondisi"
+                          value={conditions[index] || ""}
+                          onChange={(e) =>
+                            handleChangeCondition(index, e.target.value)
+                          }
+                        />
+                      </td>
+                    </tr>
+                  ))}
+              </tbody>
+            </table>
+            <div className="mt-5">
+              <textarea
+                className={`textarea resize-none rounded-md textarea-bordered w-full`}
+                placeholder="Note"
+                onChange={(e) => handleChangeNote(e)}
+              ></textarea>
+            </div>
+            <div className=" justify-end flex mt-5">
+              <button
+                onClick={handleSave}
+                className="btn self-end bg-primary hover:bg-primary text-white px-10 rounded-md"
+              >
+                Simpan
+              </button>
+            </div>
           </div>
         </div>
       </div>

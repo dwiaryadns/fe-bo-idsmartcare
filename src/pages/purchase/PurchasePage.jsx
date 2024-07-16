@@ -3,28 +3,38 @@ import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import DatatablesPurchase from "../../components/purchase/DatatablesPurchase";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import { ModalDetail } from "../../components/purchase/ModalDetail";
 
 export const PurchasePage = () => {
   const [loading, setLoading] = useState(true);
+  const modalRef = useRef();
 
   const columns = useMemo(
     () => [
       {
-        Header: "GRN ID",
-        accessor: "grn_id", // accessor is the "key" in the data
+        Header: "PO ID",
+        accessor: "po_id", // accessor is the "key" in the data
       },
       {
         Header: "Nama PO",
         accessor: "po_name",
       },
       {
-        Header: "Tanggal Penerimaan",
-        accessor: "tanggal_penerimaan",
+        Header: "Warehouse",
+        accessor: "warehouse",
+      },
+      {
+        Header: "Tanggal Pesanan",
+        accessor: "tanggal_po",
+      },
+      {
+        Header: "Supplier",
+        accessor: "supplier",
       },
       {
         Header: "Status",
@@ -33,12 +43,12 @@ export const PurchasePage = () => {
           <div className="indicator">
             <span
               className={`indicator-item h-5 indicator-middle indicator-start badge ${
-                row.original.status === "Pending"
+                row.original.status === "Order"
                   ? "badge-warning"
                   : "badge-success"
               }`}
             ></span>
-            <div className=" ml-3 place-items-center">
+            <div className=" ml-4 place-items-center">
               {row.original.status}
             </div>
           </div>
@@ -48,24 +58,20 @@ export const PurchasePage = () => {
         Header: "Action",
         accessor: "action",
         Cell: ({ row }) => (
-          <div className="text-xl hover:cursor-pointer">
-            {row.original.status === "Pending" ? (
-              <div>
-                <FontAwesomeIcon
-                  className="bg-warning p-3 rounded-md"
-                  icon={faEdit}
-                />
-              </div>
-            ) : (
-              <div>
-                <a href={row.original.url_file} target="_blank">
-                  <FontAwesomeIcon
-                    className="bg-success text-white p-3 rounded-md"
-                    icon={faFile}
-                  ></FontAwesomeIcon>
-                </a>
-              </div>
-            )}
+          <div>
+            <ModalDetail
+              total={row.original.total}
+              poId={row.original.po_id}
+              data={row.original.detail}
+            />
+            <button
+              onClick={() =>
+                document.getElementById(row.original.po_id).showModal()
+              }
+              className="bg-primary btn btn-sm hover:bg-primary text-white"
+            >
+              View Detail
+            </button>
           </div>
         ),
       },
@@ -79,12 +85,9 @@ export const PurchasePage = () => {
   };
   const [goodReceipt, setGoodReceipt] = useState([]);
   useEffect(() => {
-    const fetchGoodReceipts = async () => {
+    const fetchPurchase = async () => {
       try {
-        const response = await axios.get(
-          API_BASE_URL + "/good-receipt",
-          headers
-        );
+        const response = await axios.get(API_BASE_URL + "/purchase", headers);
         setGoodReceipt(response.data.data);
         setLoading(false);
       } catch (error) {
@@ -92,7 +95,7 @@ export const PurchasePage = () => {
       }
     };
 
-    fetchGoodReceipts();
+    fetchPurchase();
   }, []);
   return (
     <div>
@@ -106,15 +109,13 @@ export const PurchasePage = () => {
               <div className="card-body">
                 <div className="card-title flex justify-between">
                   <p className="md:text-lg text-sm">List Of Purchase</p>
-                  <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
-                    <Link
-                      to={"/good-receipt/create"}
-                      className="cursor-pointer"
-                    >
-                      <FontAwesomeIcon icon={faPlus} />
-                      Add Purchase
-                    </Link>
-                  </button>
+                  <Link
+                    className="btn cursor-pointer bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
+                    to={"/purchase/create"}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                    Add Purchase
+                  </Link>
                 </div>
                 <hr></hr>
                 <div className="table-pin-rows overflow-x-auto">

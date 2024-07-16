@@ -27,7 +27,7 @@ const Sidebar = () => {
                     : ""
                 }`}
               >
-                <Link to={`/${sidebar.link}`}>
+                <Link to={`/${sidebar.link}`} className="hover:bg-secondary rounded-md">
                   <FontAwesomeIcon className="mr-3" icon={sidebar.icon} />
                   {sidebar.title}
                 </Link>

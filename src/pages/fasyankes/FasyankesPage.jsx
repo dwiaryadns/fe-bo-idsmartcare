@@ -66,12 +66,12 @@ const FasyankesPage = () => {
                 <div className="card-body">
                   <div className="card-title flex md:flex-row flex-col justify-between">
                     <p className="md:text-lg text-sm">List Of Fasyankes</p>
-                    <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
-                      <Link to={"/fasyankes/create"}>
+                    <Link to={"/fasyankes/create"}>
+                      <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
                         <FontAwesomeIcon icon={faPlus} />
                         Add Fasyankes
-                      </Link>
-                    </button>
+                      </button>
+                    </Link>
                   </div>
                   <hr></hr>
                   <div className="overflow-x-auto table-pin-rows">

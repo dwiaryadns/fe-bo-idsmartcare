@@ -25,6 +25,7 @@ import { PurchasePage } from "./pages/purchase/PurchasePage";
 import { ReceiptionPage } from "./pages/receiption/ReceiptionPage";
 import { InventoryPage } from "./pages/inventory/InventoryPage";
 import { CreateReceiptPage } from "./pages/receiption/CreateReceiptPage";
+import { CreatePurchasePage } from "./pages/purchase/CreatePurchasePage";
 
 function App() {
   return (
@@ -165,6 +166,14 @@ function App() {
             element={
               <PrivateRoute>
                 <PurchasePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/purchase/create"
+            element={
+              <PrivateRoute>
+                <CreatePurchasePage />
               </PrivateRoute>
             }
           />

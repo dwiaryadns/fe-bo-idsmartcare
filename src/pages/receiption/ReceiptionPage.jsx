@@ -46,7 +46,7 @@ export const ReceiptionPage = () => {
                   : "badge-success"
               }`}
             ></span>
-            <div className=" ml-3 place-items-center">
+            <div className=" ml-4 place-items-center">
               {row.original.status}
             </div>
           </div>

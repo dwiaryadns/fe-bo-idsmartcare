@@ -164,10 +164,8 @@ export const FormCreateFasyankes = () => {
           });
           modalRef.current.close();
           setWarehouse([response.data.data]);
-          console.log(response.data.data);
         } else {
           const apiErrors = response.data.errors;
-          console.log(apiErrors);
           const newApiErrors = {
             warehouseName: apiErrors.name ? apiErrors.name : "",
             warehouseAddress: apiErrors.address ? apiErrors.address : "",
@@ -178,7 +176,6 @@ export const FormCreateFasyankes = () => {
         }
       })
       .catch(function (error) {
-        console.log(error);
         modalRef.current.close();
 
         const apiErrors = error.response.data.errors;

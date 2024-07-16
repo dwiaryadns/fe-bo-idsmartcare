@@ -66,7 +66,6 @@ const FormBoInfo = () => {
     }));
   };
 
-  console.log(selectedNames);
 
   const isFormValid = () => {
     const {
@@ -175,7 +174,6 @@ const FormBoInfo = () => {
             .catch((getError) => {
               console.log(getError);
             });
-          console.log(response.data.message);
         } else {
           Swal.fire({
             icon: "error",
