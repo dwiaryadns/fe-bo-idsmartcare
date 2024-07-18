@@ -4,6 +4,7 @@ import {
   faGear,
   faHistory,
   faHospital,
+  faIndustry,
   faInfoCircle,
   faKey,
   faLegal,
@@ -62,6 +63,11 @@ export const sidebarItems = [
     title: "Activity Log",
     icon: faHistory,
     link: "activity-log",
+  },
+  {
+    title: "Supplier",
+    icon: faIndustry,
+    link: "supplier",
   },
   {
     title: "Inventory",

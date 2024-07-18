@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import ReactPaginate from "react-paginate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -6,87 +6,41 @@ import {
   faAngleDoubleLeft,
   faAngleDoubleRight,
 } from "@fortawesome/free-solid-svg-icons";
-import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
 
-export const DatatablesInventory = ({ columns }) => {
-  const [data, setData] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [pageCount, setPageCount] = useState(0);
-  const [pageIndex, setPageIndex] = useState(0);
-  const [localPageSize, setLocalPageSize] = useState(10);
-  const [globalFilter, setGlobalFilter] = useState("");
-
-  const token = localStorage.getItem("token");
-  const config = {
-    headers: { Authorization: `Bearer ${token}` },
-    params: {
-      page: pageIndex + 1,
-      per_page: localPageSize,
-      search: globalFilter,
-    },
-  };
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setLoading(true);
-      try {
-        const response = await axios.get(
-          `${API_BASE_URL}/purchase/get-barang-supplier`,
-          config
-        );
-        console.log(response);
-        console.log(localPageSize);
-        console.log(pageIndex + 1);
-
-        setData(response.data.data.data);
-        setPageCount(response.data.data.last_page);
-      } catch (error) {
-        console.error("Error fetching data: ", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [pageIndex, localPageSize, globalFilter]);
-
-  const handlePageClick = ({ selected }) => {
-    setPageIndex(selected);
-  };
-
+export const DatatableSupplier = ({ columns, data, loading }) => {
   const {
     getTableProps,
     getTableBodyProps,
     headerGroups,
     prepareRow,
-    page, // 'page' here is controlled by react-table but we'll override its data with our fetched data
-    setPageSize, // useTable hook's setPageSize function
+    page, // Instead of using 'rows', we use page, which has only the rows for the active page
+    pageCount,
+    gotoPage,
+    setPageSize,
+    state: { pageIndex, pageSize, globalFilter },
+    setGlobalFilter,
   } = useTable(
     {
       columns,
       data,
-      manualPagination: true,
-      pageCount, // Total number of pages (controlled pagination)
-      initialState: { pageIndex, pageSize: localPageSize },
+      initialState: { pageIndex: 0, pageSize: 10 }, // set initial pageSize here
     },
     useGlobalFilter,
     usePagination
   );
 
-  // Sync localPageSize with useTable's setPageSize
-  useEffect(() => {
-    setPageSize(localPageSize);
-  }, [localPageSize, setPageSize]);
+  const handlePageClick = (data) => {
+    gotoPage(data.selected);
+  };
 
   return (
     <div>
       <div className="flex justify-between">
         <select
           className="select select-bordered rounded-md select-sm mt-3"
-          value={localPageSize}
+          value={pageSize}
           onChange={(e) => {
-            setLocalPageSize(Number(e.target.value));
+            setPageSize(Number(e.target.value));
           }}
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
@@ -128,22 +82,17 @@ export const DatatablesInventory = ({ columns }) => {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {loading ? (
+          {page.length === 0 ? (
             <tr>
               <td
                 colSpan={columns.length}
                 style={{ textAlign: "center", padding: "10px" }}
               >
-                <span className="loading loading-dots loading-md"></span>
-              </td>
-            </tr>
-          ) : page.length === 0 ? (
-            <tr>
-              <td
-                colSpan={columns.length}
-                style={{ textAlign: "center", padding: "10px" }}
-              >
-                No records found
+                {loading ? (
+                  <span className="loading loading-dots loading-md"></span>
+                ) : (
+                  "No records found"
+                )}
               </td>
             </tr>
           ) : (
@@ -151,18 +100,20 @@ export const DatatablesInventory = ({ columns }) => {
               prepareRow(row);
               return (
                 <tr key={index} {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => (
-                    <td
-                      key={index}
-                      {...cell.getCellProps()}
-                      style={{
-                        padding: "10px",
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  ))}
+                  {row.cells.map((cell, index) => {
+                    return (
+                      <td
+                        key={index}
+                        {...cell.getCellProps()}
+                        style={{
+                          padding: "10px",
+                          whiteSpace: "nowrap",
+                        }}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    );
+                  })}
                 </tr>
               );
             })
@@ -190,4 +141,4 @@ export const DatatablesInventory = ({ columns }) => {
   );
 };
 
-export default DatatablesInventory;
+export default DatatableSupplier;

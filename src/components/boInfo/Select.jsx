@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import axios from "axios";
 
-const Select = ({ formValues, onSelectChange, errors }) => {
+const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
   const [provinsi, setProvinsi] = useState([]);
   const [kabupaten, setKabupaten] = useState([]);
   const [kecamatan, setKecamatan] = useState([]);
@@ -80,11 +80,14 @@ const Select = ({ formValues, onSelectChange, errors }) => {
         <div className="form-control w-full">
           <div className="label">
             <span className="label-text font-bold text-base">
-              Province <span className="text-red-800">*</span>
+              {isSupplier ? "Provinsi" : "Province"}
+              <span className="text-red-800">*</span>
             </span>
           </div>
           <select
-            className="select select-bordered rounded-md"
+            className={`select select-bordered ${
+              isSupplier ? "select-primary" : ""
+            } rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("provinsi", e.target.value, selectedOption.text);
@@ -92,7 +95,9 @@ const Select = ({ formValues, onSelectChange, errors }) => {
             name="provinsi"
             value={formValues.provinsi}
           >
-            <option value="">Select Province</option>
+            <option value="">
+              {isSupplier ? "Pilih Provinsi" : "Select Province"}
+            </option>
             {provinsi.map((prov) => (
               <option key={prov.id} value={prov.id}>
                 {prov.nama}
@@ -104,11 +109,14 @@ const Select = ({ formValues, onSelectChange, errors }) => {
         <div className="form-control w-full">
           <div className="label">
             <span className="label-text font-bold text-base">
-              City <span className="text-red-800">*</span>
+              {isSupplier ? "Kota" : "City"}
+              <span className="text-red-800">*</span>
             </span>
           </div>
           <select
-            className="select select-bordered rounded-md"
+            className={`select select-bordered ${
+              isSupplier ? "select-primary" : ""
+            } rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("kabupaten", e.target.value, selectedOption.text);
@@ -117,7 +125,10 @@ const Select = ({ formValues, onSelectChange, errors }) => {
             value={formValues.kabupaten}
             disabled={!formValues.provinsi}
           >
-            <option value="">Select City</option>
+            <option value="">
+              {" "}
+              {isSupplier ? "Pilih Kota" : "Select City"}
+            </option>
             {kabupaten.map((kab) => (
               <option key={kab.id} value={kab.id}>
                 {kab.nama}
@@ -131,11 +142,14 @@ const Select = ({ formValues, onSelectChange, errors }) => {
         <div className="form-control w-full">
           <div className="label">
             <span className="label-text font-bold text-base">
-              SubDistrict <span className="text-red-800">*</span>
+              {isSupplier ? "Kecamatan" : "Subdisrict"}
+              <span className="text-red-800">*</span>
             </span>
           </div>
           <select
-            className="select select-bordered rounded-md"
+            className={`select select-bordered ${
+              isSupplier ? "select-primary" : ""
+            } rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("kecamatan", e.target.value, selectedOption.text);
@@ -144,7 +158,10 @@ const Select = ({ formValues, onSelectChange, errors }) => {
             value={formValues.kecamatan}
             disabled={!formValues.kabupaten}
           >
-            <option value="">Select SubDistrict</option>
+            <option value="">
+              {" "}
+              {isSupplier ? "Pilih Kecamatan" : "Select Subdisrict"}
+            </option>
             {kecamatan.map((kec) => (
               <option key={kec.id} value={kec.id}>
                 {kec.nama}
@@ -156,11 +173,15 @@ const Select = ({ formValues, onSelectChange, errors }) => {
         <div className="form-control w-full">
           <div className="label">
             <span className="label-text font-bold text-base">
-              Village <span className="text-red-800">*</span>
+              {isSupplier ? "Kelurahan" : "Village"}
+
+              <span className="text-red-800">*</span>
             </span>
           </div>
           <select
-            className="select select-bordered rounded-md"
+            className={`select select-bordered ${
+              isSupplier ? "select-primary" : ""
+            } rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("desa", e.target.value, selectedOption.text);
@@ -169,7 +190,9 @@ const Select = ({ formValues, onSelectChange, errors }) => {
             value={formValues.desa}
             disabled={!formValues.kecamatan}
           >
-            <option value="">Select Village</option>
+            <option value="">
+              {isSupplier ? "Pilih Kelurahan" : "Select Village"}
+            </option>
             {desa.map((des) => (
               <option key={des.id} value={des.id}>
                 {des.nama}

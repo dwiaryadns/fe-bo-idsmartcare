@@ -14,6 +14,7 @@ import DatatablesReceiption from "../../components/receiption/DatatablesReceipti
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
+import { ModalUpdateStock } from "../../components/receiption/ModalUpdateStock";
 
 export const ReceiptionPage = () => {
   const [loading, setLoading] = useState(true);
@@ -24,7 +25,7 @@ export const ReceiptionPage = () => {
     () => [
       {
         Header: "GRN ID",
-        accessor: "grn_id", // accessor is the "key" in the data
+        accessor: "penerimaan_id", // accessor is the "key" in the data
       },
       {
         Header: "Nama PO",
@@ -59,7 +60,16 @@ export const ReceiptionPage = () => {
           <div className="text-xl hover:cursor-pointer">
             {row.original.status === "Pending" ? (
               <div>
+                <ModalUpdateStock
+                  grn_id={row.original.penerimaan_id}
+                  data={row.original.pending}
+                />
                 <FontAwesomeIcon
+                  onClick={() =>
+                    document
+                      .getElementById(row.original.penerimaan_id)
+                      .showModal()
+                  }
                   className="bg-warning p-3 rounded-md"
                   icon={faEdit}
                 />

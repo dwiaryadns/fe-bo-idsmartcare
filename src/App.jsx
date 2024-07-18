@@ -26,6 +26,8 @@ import { ReceiptionPage } from "./pages/receiption/ReceiptionPage";
 import { InventoryPage } from "./pages/inventory/InventoryPage";
 import { CreateReceiptPage } from "./pages/receiption/CreateReceiptPage";
 import { CreatePurchasePage } from "./pages/purchase/CreatePurchasePage";
+import { SupplierPage } from "./pages/supplier/SupplierPage";
+import { CreateSupplierPage } from "./pages/supplier/CreateSupplierPage";
 
 function App() {
   return (
@@ -174,6 +176,22 @@ function App() {
             element={
               <PrivateRoute>
                 <CreatePurchasePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/supplier"
+            element={
+              <PrivateRoute>
+                <SupplierPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/supplier/create"
+            element={
+              <PrivateRoute>
+                <CreateSupplierPage />
               </PrivateRoute>
             }
           />

@@ -385,7 +385,7 @@ export const CreateReceiptPage = () => {
                 />
               </svg>
               <span>
-                Wajib diisi! Jika kosong berikan tanda {" "}
+                Wajib diisi! Jika kosong berikan tanda{" "}
                 <span className="font-extrabold"> {" - "} </span>{" "}
               </span>
             </div>
@@ -416,7 +416,7 @@ export const CreateReceiptPage = () => {
                           -
                         </button>
                         <input
-                          className="input input-sm max-w-14 rounded-md input-bordered"
+                          className="input input-sm max-w-14 text-center rounded-md input-bordered"
                           type="text"
                           value={barang.barangDatang || 0}
                           onChange={(e) =>
