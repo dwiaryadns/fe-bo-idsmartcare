@@ -1,4 +1,4 @@
-import { faEye, faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import DataTableWarehouse from "../../components/warehouse/DatatableWarehouse";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL, GetToken, headers } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import { ModalDetailWarehouse } from "../../components/warehouse/ModalDetailWarehouse";
 import axiosInstance from "../../dummy/axiosInstance";
 
