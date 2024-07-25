@@ -10,7 +10,7 @@ import Sidebar from "../components/Sidebar";
 import InputFile from "../components/legaldoc/InputFile";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../dummy/const";
+import { API_BASE_URL, headers } from "../dummy/const";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import StatusLegal from "../components/legaldoc/StatusLegal";
@@ -26,11 +26,7 @@ const LegalDocumentPage = () => {
 
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${localStorage.getItem("token")}`,
-    },
-  };
+
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -354,7 +350,7 @@ const LegalDocumentPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Legal Document" icon={faLegal} />
+            <Header title="Dokumen Legal" icon={faLegal} />
             {loading ? (
               <div className="flex justify-center mt-32">
                 <span className="loading loading-spinner text-primary loading-lg"></span>

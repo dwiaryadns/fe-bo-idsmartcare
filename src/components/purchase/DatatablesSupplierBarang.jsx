@@ -35,9 +35,6 @@ export const DatatablesSupplierBarang = ({ columns }) => {
           `${API_BASE_URL}/purchase/get-barang-supplier`,
           config
         );
-        console.log(response);
-        console.log(localPageSize);
-        console.log(pageIndex + 1);
 
         setData(response.data.data.data);
         setPageCount(response.data.data.last_page);

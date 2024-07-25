@@ -24,11 +24,13 @@ export const PieStockReports = () => {
   };
 
   return (
-    <div
-      className="bg-white mt-10 rounded-lg shadow-lg p-4"
-      style={{ width: "600px", height: "300px" }}
-    >
-      <Pie data={data} options={options} width={400} height={200} />
+    <div className="bg-white mt-10 rounded-lg shadow-lg p-4">
+      <h1 className="font-bold">Monitoring medical equipment stock reports</h1>
+      <div className="grid md:grid-cols-2 grid-cols-1">
+        <div className=" ">
+          <Pie data={data} options={options} width={400} height={200} />
+        </div>
+      </div>
     </div>
   );
 };

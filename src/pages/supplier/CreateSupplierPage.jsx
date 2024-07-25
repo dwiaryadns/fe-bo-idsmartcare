@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Input } from "../../components/supplier/Input";
 import Select from "../../components/boInfo/Select";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
@@ -31,7 +31,8 @@ export const CreateSupplierPage = () => {
     kontak_person: "",
     nomor_kontak_person: "",
     email_kontak_person: "",
-    tanggal_kerjasama: "",
+    start_pks_date: "",
+    end_pks_date: "",
     provinsi: "",
     kabupaten: "",
     kecamatan: "",
@@ -75,11 +76,6 @@ export const CreateSupplierPage = () => {
     }));
   };
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
   const handleSubmit = async () => {
     const updatedFormValues = {
       ...formValues,
@@ -118,7 +114,8 @@ export const CreateSupplierPage = () => {
           kontak_person: "",
           nomor_kontak_person: "",
           email_kontak_person: "",
-          tanggal_kerjasama: "",
+          start_pks_date: "",
+          end_pks_date: "",
           provinsi: "",
           kabupaten: "",
           kecamatan: "",
@@ -129,6 +126,7 @@ export const CreateSupplierPage = () => {
         navigate("/supplier");
       }
     } catch (error) {
+      console.log(error.response)
       setErrors({
         nama_supplier: error.response.data.errors.nama_supplier,
         alamat: error.response.data.errors.alamat,
@@ -312,16 +310,26 @@ export const CreateSupplierPage = () => {
                     onChange={handleChange}
                   />
 
-                  <Input
-                    value={formValues.tanggal_kerjasama}
-                    errors={errors.tanggal_kerjasama}
-                    type={"date"}
-                    label={"Tanggal Kerjasama"}
-                    placeholder={"Tanggal Kerjasama"}
-                    name={"tanggal_kerjasama"}
-                    onChange={handleChange}
-                  />
-
+                  <div className="grid md:grid-cols-2 grid-cols-1 gap-3">
+                    <Input
+                      value={formValues.start_pks_date}
+                      errors={errors.start_pks_date}
+                      type={"date"}
+                      label={"Tanggal Kerjasama"}
+                      placeholder={"Tanggal Kerjasama"}
+                      name={"start_pks_date"}
+                      onChange={handleChange}
+                    />
+                    <Input
+                      value={formValues.end_pks_date}
+                      errors={errors.end_pks_date}
+                      type={"date"}
+                      label={"Tanggal Selesai Kerjasama"}
+                      placeholder={"Tanggal Kerjasama"}
+                      name={"end_pks_date"}
+                      onChange={handleChange}
+                    />
+                  </div>
                   <button
                     onClick={handleSubmit}
                     className="btn btn-block mt-5 rounded-md mb-10 bg-primary hover:bg-primary text-white"

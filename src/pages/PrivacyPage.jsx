@@ -2,7 +2,6 @@ import { TopBar } from "../components/terms-privacy/TopBar";
 import { privacyList } from "../dummy/privacy";
 
 export const PrivacyPage = () => {
-  console.log(privacyList);
   return (
     <div>
       <TopBar title={"Kebijakan Privasi"} subtitle={"Privacy Policy"} />

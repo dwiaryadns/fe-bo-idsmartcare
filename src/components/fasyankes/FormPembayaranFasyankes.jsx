@@ -5,7 +5,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
@@ -47,10 +47,7 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const navigate = useNavigate();
 
   const [snapToken, setSnapToken] = useState();
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  
   const handlePayment = async () => {
     const payload = {
       amount: total,

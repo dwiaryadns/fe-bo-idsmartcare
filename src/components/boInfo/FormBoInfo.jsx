@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Input from "./Input";
 import Select from "./Select";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { StateStatus } from "./StateStatus";
@@ -65,8 +65,7 @@ const FormBoInfo = () => {
       [name]: "",
     }));
   };
-
-
+  console.log(selectedNames);
   const isFormValid = () => {
     const {
       businessName,
@@ -98,12 +97,6 @@ const FormBoInfo = () => {
     );
   };
 
-  const token = localStorage.getItem("token");
-
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -127,7 +120,7 @@ const FormBoInfo = () => {
 
   const handleSubmitBoInfo = async (e) => {
     setLoading(true);
-
+    console.log(formValues);
     e.preventDefault();
     const payload = {
       // businessId: formValues.businessId,
@@ -172,7 +165,11 @@ const FormBoInfo = () => {
               });
             })
             .catch((getError) => {
-              console.log(getError);
+              Swal.fire({
+                icon: "error",
+                title: "Oops...",
+                text: getError.response.data.message,
+              });
             });
         } else {
           Swal.fire({
@@ -183,31 +180,43 @@ const FormBoInfo = () => {
         }
       })
       .catch((error) => {
+        Swal.fire({
+          icon: "error",
+          title: error.response.data.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
         if (
           error.response &&
           error.response.data &&
           error.response.data.errors
         ) {
           const message = error.response.data.errors;
-          console.log(message);
           const newApiErrors = {
-            // businessId: message.businessId ? message.businessId : "",
-            businessName: message.businessName ? message.businessName : "",
-            businessEmail: message.businessEmail ? message.businessEmail : "",
-            phoneNumber: message.phone ? message.phone : "",
-            mobilePhone: message.mobile ? message.mobile : "",
-            streetAddress: message.address ? message.address : "",
-            provinsi: message.province ? message.province : "",
-            kabupaten: message.city ? message.city : "",
-            kecamatan: message.subdistrict ? message.subdistrict : "",
-            desa: message.village ? message.village : "",
-            kodePos: message.postal_code ? message.postal_code : "",
+            businessName: message.businessName || "",
+            businessEmail: message.businessEmail || "",
+            phoneNumber: message.phone || "",
+            mobilePhone: message.mobile || "",
+            streetAddress: message.address || "",
+            provinsi: message.province || "",
+            kabupaten: message.city || "",
+            kecamatan: message.subdistrict || "",
+            desa: message.village || "",
+            kodePos: message.postal_code || "",
           };
           setErrors(newApiErrors);
         }
         setLoading(false);
       });
   };
+  console.log(formValues);
 
   if (loading) {
     return (
@@ -297,7 +306,7 @@ const FormBoInfo = () => {
             value={formValues.kodePos}
             onChange={handleChange}
             errors={errors.kodePos}
-            max={6}
+            max={5}
           />
           <div className="form-control flex flex-row items-center mt-2">
             <label className="label cursor-pointer">

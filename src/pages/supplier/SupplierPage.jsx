@@ -1,6 +1,8 @@
 import {
   faBox,
   faEdit,
+  faEllipsis,
+  faEllipsisV,
   faIndustry,
   faPlus,
   faTrash,
@@ -10,11 +12,12 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import DatatableSupplier from "../../components/supplier/DatatableSupplier";
 import { useEffect, useMemo, useState } from "react";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { ModalDetailSupplier } from "../../components/supplier/ModalDetailSupplier";
 import { Link } from "react-router-dom";
+import Swal from "sweetalert2";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
@@ -42,9 +45,38 @@ export const SupplierPage = () => {
       },
       {
         Header: "Aksi",
-        accessor: "id",
+        accessor: "aksi",
         Cell: ({ row }) => (
-          <div className="flex gap-2">
+          <div className="">
+            <div className="dropdown dropdown-left dropdown-end">
+              <div tabIndex={0} role="button" className="m-1">
+                <FontAwesomeIcon icon={faEllipsisV} />
+              </div>
+              <ul
+                tabIndex={0}
+                className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+              >
+                <li>
+                  <a
+                    onClick={() =>
+                      document
+                        .getElementById(row.original.supplier_id)
+                        .showModal()
+                    }
+                  >
+                    Detail
+                  </a>
+                </li>
+                <li>
+                  <a>Edit</a>
+                </li>
+                <li>
+                  <a onClick={() => handleDelete(row.original.supplier_id)}>
+                    Hapus
+                  </a>
+                </li>
+              </ul>
+            </div>
             <ModalDetailSupplier
               supplierId={row.original.supplier_id}
               data={{
@@ -62,22 +94,12 @@ export const SupplierPage = () => {
                 pic_contact: row.original.nomor_kontak_person,
                 pic_email: row.original.email_kontak_person,
                 npwp: row.original.nomor_npwp,
-                tgl_pks: row.original.tanggal_kerjasama,
+                start_pks_date: row.original.start_pks_date,
+                end_pks_date: row.original.end_pks_date,
                 desa: row.original.desa,
                 kecamatan: row.original.kecamatan,
               }}
             />
-            <button
-              onClick={() =>
-                document.getElementById(row.original.supplier_id).showModal()
-              }
-              className="btn btn-sm btn-success text-white"
-            >
-              <FontAwesomeIcon icon={faEdit} />
-            </button>
-            <button className="btn btn-sm btn-error text-white">
-              <FontAwesomeIcon icon={faTrash} />
-            </button>
           </div>
         ),
       },
@@ -85,10 +107,6 @@ export const SupplierPage = () => {
     []
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   const [supplier, setSupplier] = useState([]);
   useEffect(() => {
     const fetchSupplier = async () => {
@@ -100,9 +118,42 @@ export const SupplierPage = () => {
         console.log(error);
       }
     };
-
     fetchSupplier();
   }, []);
+  const handleDelete = async (supplierId) => {
+    const result = await Swal.fire({
+      title: "Yakin?",
+      text: "Data yang terhubung dengan supplier ini akan ikut terhapus!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonColor: "#3085d6",
+      cancelButtonColor: "#d33",
+      confirmButtonText: "Yes, delete it!",
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const response = await axios.delete(
+          `${API_BASE_URL}/supplier/delete/${supplierId}`,
+          headers
+        );
+        setSupplier((prevSuppliers) =>
+          prevSuppliers.filter(
+            (supplier) => supplier.supplier_id !== supplierId
+          )
+        );
+        console.log(response.data);
+        Swal.fire("Deleted!", "The supplier has been deleted.", "success");
+      } catch (error) {
+        console.log(error);
+        Swal.fire(
+          "Error!",
+          "There was an issue deleting the supplier.",
+          "error"
+        );
+      }
+    }
+  };
   return (
     <div>
       <div className="flex flex-row w-full">
@@ -114,13 +165,13 @@ export const SupplierPage = () => {
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Of Supplier</p>
+                  <p className="md:text-lg text-sm">List Supplier</p>
                   <Link
                     to={"/supplier/create"}
                     className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                   >
                     <FontAwesomeIcon icon={faPlus} />
-                    Add Supplier
+                    Tambah Supplier
                   </Link>
                 </div>
                 <hr></hr>

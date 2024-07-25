@@ -12,7 +12,7 @@ export const CreateWarehousePage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10 ">
-            <Header title="Create Warehouse" icon={faWarehouse} />
+            <Header title="Tambah Gudang" icon={faWarehouse} />
             <div className=" bg-white p-3 rounded-md shadow-lg">
               <FormCreateWarehouse />
             </div>

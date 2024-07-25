@@ -12,7 +12,7 @@ const BoInfoPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10 ">
-            <Header title="Business Owner Info" icon={faInfoCircle} />
+            <Header title="Informasi Bisnis Owner" icon={faInfoCircle} />
             <FormBoInfo />
           </div>
         </div>

@@ -29,13 +29,17 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
           setKabupaten(response.data.kota_kabupaten);
           setKecamatan([]);
           setDesa([]);
-          onSelectChange("kabupaten", formValues.kabupaten || "");
-          onSelectChange("kecamatan", formValues.kecamatan || "");
-          onSelectChange("desa", formValues.desa || "");
+          onSelectChange("kabupaten", "");
+          onSelectChange("kecamatan", "");
+          onSelectChange("desa", "");
         })
         .catch((error) => {
           setError("Failed to fetch kabupaten" + error);
         });
+    } else {
+      setKabupaten([]);
+      setKecamatan([]);
+      setDesa([]);
     }
   }, [formValues.provinsi]);
 
@@ -48,12 +52,15 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
         .then((response) => {
           setKecamatan(response.data.kecamatan);
           setDesa([]);
-          onSelectChange("kecamatan", formValues.kecamatan || "");
-          onSelectChange("desa", formValues.desa || "");
+          onSelectChange("kecamatan", "");
+          onSelectChange("desa", "");
         })
         .catch((error) => {
           setError("Failed to fetch kecamatan" + error);
         });
+    } else {
+      setKecamatan([]);
+      setDesa([]);
     }
   }, [formValues.kabupaten]);
 
@@ -65,17 +72,18 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
         )
         .then((response) => {
           setDesa(response.data.kelurahan);
-          onSelectChange("desa", formValues.desa || "");
+          onSelectChange("desa", "");
         })
         .catch((error) => {
           setError("Failed to fetch desa" + error);
         });
+    } else {
+      setDesa([]);
     }
   }, [formValues.kecamatan]);
 
   return (
     <div>
-      {errors.provinsi && <p>{errors.provinsi}</p>}
       <div className="grid md:grid-cols-2 gap-3 grid-cols-1">
         <div className="form-control w-full">
           <div className="label">
@@ -104,6 +112,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
+          {errors.provinsi && <p>{errors.provinsi}</p>}
         </div>
 
         <div className="form-control w-full">
@@ -135,6 +144,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
+          {errors.kabupaten && <p>{errors.kabupaten}</p>}
         </div>
       </div>
 
@@ -142,7 +152,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
         <div className="form-control w-full">
           <div className="label">
             <span className="label-text font-bold text-base">
-              {isSupplier ? "Kecamatan" : "Subdisrict"}
+              {isSupplier ? "Kecamatan" : "Subdistrict"}
               <span className="text-red-800">*</span>
             </span>
           </div>
@@ -160,7 +170,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
           >
             <option value="">
               {" "}
-              {isSupplier ? "Pilih Kecamatan" : "Select Subdisrict"}
+              {isSupplier ? "Pilih Kecamatan" : "Select Subdistrict"}
             </option>
             {kecamatan.map((kec) => (
               <option key={kec.id} value={kec.id}>
@@ -168,6 +178,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
+          {errors.kecamatan && <p>{errors.kecamatan}</p>}
         </div>
 
         <div className="form-control w-full">
@@ -199,6 +210,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
+          {errors.desa && <p>{errors.desa}</p>}
         </div>
       </div>
     </div>

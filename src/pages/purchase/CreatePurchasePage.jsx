@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import DatatablesSupplierBarang from "../../components/purchase/DatatablesSupplierBarang";
 import Swal from "sweetalert2";
 import { RincianPembelianPage } from "./RincianPembelianPage";
@@ -22,11 +22,7 @@ export const CreatePurchasePage = () => {
     JSON.parse(localStorage.getItem("selectedItems")) || []
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
+  
   const handleChangeCheckbox = (item) => {
     if (selectedSupplier && item.supplier.nama_supplier !== selectedSupplier) {
       Swal.fire({
@@ -59,7 +55,12 @@ export const CreatePurchasePage = () => {
       return updatedItems;
     });
   };
-
+  const formatRupiah = (number) => {
+    return new Intl.NumberFormat("id-ID", {
+      style: "currency",
+      currency: "IDR",
+    }).format(number);
+  };
   const columns = useMemo(
     () => [
       {
@@ -99,7 +100,7 @@ export const CreatePurchasePage = () => {
       {
         Header: "Harga",
         accessor: "harga",
-        Cell: ({ row }) => <p>Rp {row.original.barang.harga_beli}</p>,
+        Cell: ({ row }) => <p> {formatRupiah(row.original.barang.harga_beli)}</p>,
       },
     ],
     [selectedItems, selectedSupplier]
@@ -108,10 +109,7 @@ export const CreatePurchasePage = () => {
   useEffect(() => {
     const fetchWarehouse = async () => {
       try {
-        const response = await axios.get(
-          `${API_BASE_URL}/purchase/get-fasyankes-warehouse`,
-          headers
-        );
+        const response = await axios.get(`${API_BASE_URL}/warehouses`, headers);
         setWarehouses(response.data.data);
       } catch (error) {
         console.error(error);
@@ -228,8 +226,8 @@ export const CreatePurchasePage = () => {
                       Pilih Warehouse
                     </option>
                     {warehouses.map((warehouse) => (
-                      <option key={warehouse.id} value={warehouse.wfid}>
-                        {warehouse.warehouse_name} - {warehouse.fasyankes_name}
+                      <option key={warehouse.id} value={warehouse.id}>
+                        {warehouse.name}
                       </option>
                     ))}
                   </select>

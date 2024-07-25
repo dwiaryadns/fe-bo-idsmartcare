@@ -2,8 +2,6 @@ import {
   faBars,
   faBell,
   faCaretDown,
-  faCaretLeft,
-  faCaretUp,
   faSignOut,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -11,28 +9,26 @@ import { navbarItems } from "../dummy/data";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 import axios from "axios";
-import { API_BASE_URL } from "../dummy/const";
+import { API_BASE_URL, headers } from "../dummy/const";
 import { useState } from "react";
+import axiosInstance from "../dummy/axiosInstance";
 
 const Navbar = () => {
   const navigate = useNavigate();
   const handleLogout = () => {
     Swal.fire({
-      title: "Are you sure?",
-      text: "You won't be able to revert this!",
+      title: "Yakin?",
+      text: "Kamu Yakin ingin Keluar?",
       icon: "warning",
       showCancelButton: true,
       confirmButtonColor: "#3085d6",
       cancelButtonColor: "#d33",
-      confirmButtonText: "Yes, Logout",
+      confirmButtonText: "Ya",
+      cancelButtonText: "Tidak",
     }).then((result) => {
       if (result.isConfirmed) {
-        const token = localStorage.getItem("token");
-        const headers = {
-          headers: { Authorization: `Bearer ${token}` },
-        };
-        axios
-          .post(API_BASE_URL + "/logout", {}, headers)
+        axiosInstance
+          .post(API_BASE_URL + "/logout", {})
           .then(function (response) {
             if (response.data.status === true) {
               navigate("/login");
@@ -106,7 +102,7 @@ const Navbar = () => {
         </h5>
         <div className="avatar">
           <div className="w-10 rounded-full">
-            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+            <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
           </div>
         </div>
         <div className="dropdown dropdown-bottom dropdown-end">
@@ -149,7 +145,7 @@ const Navbar = () => {
               <li className="text-black hover:rounded-md duration-300 my-3">
                 <Link onClick={handleLogout}>
                   <FontAwesomeIcon className="mr-1" icon={faSignOut} />
-                  Sign Out
+                  Keluar
                 </Link>
               </li>
             </ul>

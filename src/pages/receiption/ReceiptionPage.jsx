@@ -2,6 +2,7 @@ import {
   faEdit,
   faEye,
   faFile,
+  faPencil,
   faPlus,
   faReceipt,
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,7 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import DatatablesReceiption from "../../components/receiption/DatatablesReceiption";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import { ModalUpdateStock } from "../../components/receiption/ModalUpdateStock";
 
 export const ReceiptionPage = () => {
@@ -24,7 +25,7 @@ export const ReceiptionPage = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "GRN ID",
+        Header: "Penerimaan ID",
         accessor: "penerimaan_id", // accessor is the "key" in the data
       },
       {
@@ -58,32 +59,22 @@ export const ReceiptionPage = () => {
         accessor: "action",
         Cell: ({ row }) => (
           <div className="text-xl hover:cursor-pointer">
-            {row.original.status === "Pending" ? (
-              <div>
-                <ModalUpdateStock
-                  grn_id={row.original.penerimaan_id}
-                  data={row.original.pending}
-                />
-                <FontAwesomeIcon
-                  onClick={() =>
-                    document
-                      .getElementById(row.original.penerimaan_id)
-                      .showModal()
-                  }
-                  className="bg-warning p-3 rounded-md"
-                  icon={faEdit}
-                />
-              </div>
-            ) : (
-              <div>
-                <a href={row.original.url_file} target="_blank">
-                  <FontAwesomeIcon
-                    className="bg-success text-white p-3 rounded-md"
-                    icon={faFile}
-                  ></FontAwesomeIcon>
-                </a>
-              </div>
-            )}
+            <div>
+              <ModalUpdateStock
+                grn_id={row.original.penerimaan_id}
+                data={row.original.pending}
+                file_grn={row.original.grn}
+              />
+              <FontAwesomeIcon
+                onClick={() =>
+                  document
+                    .getElementById(row.original.penerimaan_id)
+                    .showModal()
+                }
+                className="text-white bg-primary p-3 rounded-md text-sm"
+                icon={faEye}
+              />
+            </div>
           </div>
         ),
       },
@@ -91,10 +82,6 @@ export const ReceiptionPage = () => {
     []
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   const [goodReceipt, setGoodReceipt] = useState([]);
   useEffect(() => {
     const fetchGoodReceipts = async () => {
@@ -120,17 +107,17 @@ export const ReceiptionPage = () => {
         <div className="w-full ">
           <Navbar />
           <div className="mx-10">
-            <Header title="Good Receipt" icon={faReceipt} />
+            <Header title="Penerimaan Barang" icon={faReceipt} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Of Good Receipt</p>
+                  <p className="md:text-lg text-sm">List Penerimaan</p>
                   <Link
                     to={"/good-receipt/create"}
                     className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                   >
                     <FontAwesomeIcon icon={faPlus} />
-                    Add Good Receipt
+                    Tambah Penerimaan
                   </Link>
                 </div>
                 <hr></hr>

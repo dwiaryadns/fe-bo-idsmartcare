@@ -9,11 +9,12 @@ import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
 export const CreateReceiptPage = () => {
+  const listKondisiBarang = ["Sesuai Pesanan", "Tidak Sesuai Pesanan"];
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -120,6 +121,7 @@ export const CreateReceiptPage = () => {
   const [penerima, setPenerima] = useState();
   const [pengirim, setPengirim] = useState();
   const [pengecek, setPengecek] = useState();
+  const [supplierInvoice, setSupplierInvoice] = useState();
   const [tanggal, setTanggal] = useState();
   const [note, setNote] = useState("");
   const [error, setError] = useState({});
@@ -142,6 +144,10 @@ export const CreateReceiptPage = () => {
     setPengecek(e.target.value);
     setError((prevError) => ({ ...prevError, pengecek: "" }));
   };
+  const handleChangeSupplierInvoice = (e) => {
+    setSupplierInvoice(e.target.value);
+    setError((prevError) => ({ ...prevError, supplier_invoice: "" }));
+  };
 
   const handleChangeTanggal = (e) => {
     const inputDate = e.target.value;
@@ -162,10 +168,11 @@ export const CreateReceiptPage = () => {
     const payload = {
       po_id: data.po_id,
       warehouse: data.warehouse,
-      wfid: data.wfid,
+      warehouse_id: data.warehouse_id,
       penerima: penerima,
       pengirim: pengirim,
       pengecek: pengecek,
+      supplier_invoice: supplierInvoice,
       tanggal: tanggal,
       note: note,
       barangs: data.barangs.map((barang, index) => ({
@@ -174,26 +181,30 @@ export const CreateReceiptPage = () => {
         qty: barang.qty,
         barangDatang: barang.barangDatang,
         jml_kekurangan: barang.jml_kekurangan,
-        status: status[index],
+        // status: status[index],
         kondisi: conditions[index],
       })),
     };
-    console.log(payload);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/good-receipt/save`,
         payload,
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
-        }
+        headers
       );
 
-      Toast.fire({
-        icon: "success",
-        title: response.data.message,
-      });
-
-      navigate("/good-receipt");
+      console.log(response);
+      if (response.data.status === true) {
+        navigate("/good-receipt");
+        Toast.fire({
+          icon: "success",
+          title: response.data.message,
+        });
+      } else {
+        Toast.fire({
+          icon: "error",
+          title: response.data.message,
+        });
+      }
     } catch (err) {
       if (err.response) {
         const errors = err.response.data.errors;
@@ -209,6 +220,11 @@ export const CreateReceiptPage = () => {
           title: "Something went wrong",
         });
       }
+    }
+  };
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleClickSearch();
     }
   };
 
@@ -271,7 +287,7 @@ export const CreateReceiptPage = () => {
       <div className="mt-5">
         <div className="flex flex-col">
           <p className="mb-3 font-bold text-lg">Detail Penerimaan</p>
-          <div className="grid md:grid-cols-4 gap-5">
+          <div className="grid md:grid-cols-4 grid-cols-1 gap-5">
             <div className="pb-3">
               <label className="form-control w-full">
                 <div className="label">
@@ -306,8 +322,8 @@ export const CreateReceiptPage = () => {
                     error.pengirim ? "input-error" : ""
                   }`}
                   placeholder="Nama Pengirim"
-                  value={pengirim} // value diambil dari state pengirim
-                  onChange={handleChangePengirim} // onChange menggunakan fungsi handleChangePengirim
+                  value={pengirim}
+                  onChange={handleChangePengirim}
                 />
                 {error.pengirim && (
                   <div className="text-xs text-error">{error.pengirim}</div>
@@ -359,6 +375,31 @@ export const CreateReceiptPage = () => {
               </label>
             </div>
           </div>
+          <div className="flex">
+            <div className="pb-3  w-full">
+              <label className="form-control">
+                <div className="label">
+                  <span className="label-text font-bold text-base">
+                    Supplier Invoice <span className="text-red-800">*</span>
+                  </span>
+                </div>
+                <input
+                  type="text"
+                  className={`input input-bordered rounded-md  ${
+                    error.supplier_invoice ? "input-error" : ""
+                  }`}
+                  placeholder="Supplier Invoice"
+                  value={supplierInvoice}
+                  onChange={handleChangeSupplierInvoice}
+                />
+                {error.supplier_invoice && (
+                  <div className="text-xs text-error">
+                    {error.supplier_invoice}
+                  </div>
+                )}
+              </label>
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -390,15 +431,14 @@ export const CreateReceiptPage = () => {
               </span>
             </div>
 
-            <table className="table">
+            <table className="table overflow-x-auto table-pin-rows">
               <thead>
                 <tr>
                   <th>Nama Barang</th>
                   <th>Jumlah Pembeliaan</th>
                   <th>Barang Datang</th>
                   <th>Jumlah Kekurangan</th>
-                  <th>Action</th>
-                  <th>Kondisi</th>
+                  <th>Catatan</th>
                 </tr>
               </thead>
               <tbody>
@@ -434,35 +474,7 @@ export const CreateReceiptPage = () => {
                         </button>
                       </td>
                       <td>{barang.jml_kekurangan}</td>
-                      <td>
-                        <div>
-                          <button
-                            onClick={() =>
-                              handleChangeStatus(index, "Received")
-                            }
-                            className={`btn btn-sm ${
-                              status[index] === "Received"
-                                ? "bg-primary hover:bg-primary text-white"
-                                : ""
-                            }`}
-                          >
-                            Received
-                          </button>
-                          <button
-                            onClick={() => handleChangeStatus(index, "Retur")}
-                            className={`btn btn-sm ${
-                              status[index] === "Retur"
-                                ? "bg-primary hover:bg-primary text-white"
-                                : ""
-                            }`}
-                          >
-                            Retur
-                          </button>
-                          <span className="text-red-500">
-                            <div className="text-xs text-error"></div>
-                          </span>
-                        </div>
-                      </td>
+
                       <td>
                         <input
                           className="input input-bordered rounded-md"
@@ -513,6 +525,7 @@ export const CreateReceiptPage = () => {
                   <input
                     type="text"
                     onChange={handleSearchChange}
+                    onKeyDown={handleEnter}
                     className="grow"
                     placeholder="Search by PO ID"
                   />

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
 import Header from "../components/Header";
@@ -161,11 +161,11 @@ const SubscriptionPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Subscription" icon={faMoneyBill} />
+            <Header title="Layanan Berlangganan" icon={faMoneyBill} />
             <div>
               <div className="shadow-md rounded-md p-5">
                 <h3 className="font-bold text-lg mt-5 text-primary">
-                  Need Pay
+                  Belum Bayar
                 </h3>
                 <div className="overflow-x-auto table-pin-rows">
                   <DataTableSubscription
@@ -177,7 +177,7 @@ const SubscriptionPage = () => {
               </div>
               <div className="shadow-md rounded-md p-5 mt-5 mb-10">
                 <h3 className="font-bold text-lg text-primary">
-                  Subscription History
+                  Histori Langganan
                 </h3>
                 <div className="overflow-x-auto table-pin-rows">
                   <DataTableSubscription

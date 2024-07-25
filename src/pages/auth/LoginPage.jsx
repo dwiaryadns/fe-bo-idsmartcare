@@ -108,25 +108,21 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="relative">
-      <img
-        src={bgLogin}
-        className="absolute inset-0 w-full h-full z-0"
-        alt="Background"
-      />
+    <div className="relative min-h-screen">
+      <img src={bgLogin} className="absolute inset-0 w-full h-full z-0" />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 space-y-4">
         <div className="hero">
-          <div className="bg-white hero-content flex flex-col lg:flex-row-reverse items-center lg:items-start">
+          <div className="bg-white rounded-lg md:p-12 hero-content flex flex-col lg:flex-row-reverse items-center lg:items-start">
             <img
               src={imgLogin}
               className="max-w-lg hidden md:block self-center"
               alt="Login Illustration"
             />
-            <div className="p-6 sm:p-10 rounded-lg w-full max-w-md lg:w-[600px]">
+            <div className="w-full max-w-sm md:max-w-md mt-6 md:mt-0 md:ml-10">
               <div className="flex justify-center">
                 <img
                   src={logoLogin}
-                  className="w-32 sm:w-48 lg:w-64 mb-4"
+                  className="w-56 md:w-64 mb-4"
                   alt="Logo"
                 />
               </div>

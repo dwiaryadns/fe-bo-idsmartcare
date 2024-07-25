@@ -1,4 +1,4 @@
-import { faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
@@ -7,10 +7,11 @@ import { Link } from "react-router-dom";
 import DataTableWarehouse from "../../components/warehouse/DatatableWarehouse";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, GetToken, headers } from "../../dummy/const";
+import { ModalDetailWarehouse } from "../../components/warehouse/ModalDetailWarehouse";
+import axiosInstance from "../../dummy/axiosInstance";
 
 const WarehousePage = () => {
-  const [loading, setLoading] = useState(true);
   const columns = useMemo(
     () => [
       {
@@ -32,28 +33,46 @@ const WarehousePage = () => {
       {
         Header: "Action",
         accessor: "action",
+        Cell: ({ row }) => (
+          <div>
+            <ModalDetailWarehouse
+              warehouse={row.original.name}
+              fasyankes={row.original.fasyankes}
+            />
+            <button
+              onClick={() =>
+                document.getElementById(row.original.name).showModal()
+              }
+              className="btn bg-primary hover:bg-primary text-white btn-sm rounded-md "
+            >
+              View Detail
+            </button>
+          </div>
+        ),
       },
     ],
     []
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   const [warehouse, setWarehouse] = useState([]);
-  useEffect(() => {
-    axios
-      .get(API_BASE_URL + "/warehouses", headers)
-      .then(function (response) {
-        setLoading(false);
-        setWarehouse(response.data.data);
-      })
-      .catch(function (err) {
-        console.log(err);
-      });
-  }, []);
+  const [loading, setLoading] = useState(true);
 
+  console.log(headers);
+  useEffect(() => {
+    const fetchWarehouse = async () => {
+      try {
+        const response = await axiosInstance.get("/warehouses");
+        setWarehouse(response.data.data);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchWarehouse();
+  }, []);
   return (
     <div>
       <div className="flex flex-row w-full">
@@ -61,17 +80,17 @@ const WarehousePage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Warehouse" icon={faWarehouse} />
+            <Header title="Informasi Gudang" icon={faWarehouse} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Of Warehouse</p>
+                  <p className="md:text-lg text-sm">List Gudang</p>
                   <Link
                     className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                     to={"/warehouse/create"}
                   >
                     <FontAwesomeIcon icon={faPlus} />
-                    Add Warehouse
+                    Tambah Gudang
                   </Link>
                 </div>
                 <hr></hr>

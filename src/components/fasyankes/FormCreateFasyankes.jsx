@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import Swal from "sweetalert2";
 import Header from "../Header";
 export const FormCreateFasyankes = () => {
@@ -88,10 +88,7 @@ export const FormCreateFasyankes = () => {
     setFormData({ ...formData, warehouseId: e.target.value });
     setErrors((prevErrors) => ({ ...prevErrors, warehouseId: "" }));
   };
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  
   useEffect(() => {
     axios
       .get(API_BASE_URL + "/warehouses", headers)
@@ -679,7 +676,7 @@ export const FormCreateFasyankes = () => {
             onChange={handleInputChange}
             value={formData.picName}
             error={errors.picName}
-            tooltip="Nama PIC ini adalah nama untuk pihak yang bertanggung jawab operational apotek"
+            tooltip="Nama PIC ini adalah nama untuk pihak yang bertanggung jawab operasional apotek"
           />
           <Input
             type="text"

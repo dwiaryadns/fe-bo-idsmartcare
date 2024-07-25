@@ -8,11 +8,12 @@ export const ModalDetailSupplier = ({ supplierId, data }) => {
   const [copiedField, setCopiedField] = useState(null);
 
   const handleCopy = (value, field) => {
-    window.navigator.clipboard.writeText(value);
-    setCopiedField(field);
-    setTimeout(() => {
-      setCopiedField(null);
-    }, 3000);
+    window.navigator.clipboard.writeText(value).then(() => {
+      setCopiedField(field);
+      setTimeout(() => {
+        setCopiedField(null);
+      }, 3000);
+    });
   };
 
   const renderCopyIcon = (field, value) => (
@@ -44,7 +45,7 @@ export const ModalDetailSupplier = ({ supplierId, data }) => {
           <div className="flex justify-between bg-primary text-white rounded-md p-4 items-center text-md border-b-2">
             <p>Detail Supplier ( {data.supplier_id} )</p>
           </div>
-          <div className="overflow-x-auto ">
+          <div className="overflow-x-auto">
             <table className="table text-lg">
               <tbody>
                 <tr>
@@ -58,8 +59,8 @@ export const ModalDetailSupplier = ({ supplierId, data }) => {
                 <tr>
                   <td>Alamat Supplier</td>
                   <td>
-                    {data.alamat}, {data.desa} , {data.kecamatan} ,{data.kota} ,
-                    {data.provinsi} ,{data.kode_pos}
+                    {data.alamat}, {data.desa}, {data.kecamatan}, {data.kota},{" "}
+                    {data.provinsi}, {data.kode_pos}
                   </td>
                 </tr>
                 <tr>
@@ -108,7 +109,9 @@ export const ModalDetailSupplier = ({ supplierId, data }) => {
                 </tr>
                 <tr>
                   <td>Tanggal Kerjasama</td>
-                  <td>{data.tgl_pks}</td>
+                  <td>
+                    {data.start_pks_date} s.d. {data.end_pks_date}
+                  </td>
                 </tr>
               </tbody>
             </table>

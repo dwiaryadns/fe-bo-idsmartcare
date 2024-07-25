@@ -6,7 +6,12 @@ import { data } from "autoprefixer";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../dummy/const";
+import {
+  ACCESS_HEADER,
+  API_BASE_URL,
+  GATEWAY_KEY,
+  headers,
+} from "../dummy/const";
 import Swal from "sweetalert2";
 
 const PasswordSecurityPage = () => {
@@ -62,7 +67,7 @@ const PasswordSecurityPage = () => {
       //
     }
   };
-  const handleSendOtp = () => {
+  const handleSendOtp = async () => {
     setLoading(true);
     const payload = {
       email: email,
@@ -71,7 +76,7 @@ const PasswordSecurityPage = () => {
         resendOtpId == null || resendOtpId == undefined ? otpId : resendOtpId,
     };
     console.log(payload);
-    axios
+    await axios
       .post(API_BASE_URL + "/store-otp", payload, {
         headers: {
           Authorization: `Bearer ${ACCESS_HEADER}`,
@@ -131,10 +136,6 @@ const PasswordSecurityPage = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errors, setError] = useState({});
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   const handleChangePassword = async () => {
     try {
       const response = await axios.post(

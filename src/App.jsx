@@ -28,6 +28,9 @@ import { CreateReceiptPage } from "./pages/receiption/CreateReceiptPage";
 import { CreatePurchasePage } from "./pages/purchase/CreatePurchasePage";
 import { SupplierPage } from "./pages/supplier/SupplierPage";
 import { CreateSupplierPage } from "./pages/supplier/CreateSupplierPage";
+import { CreateBarangPage } from "./pages/inventory/CreateBarangPage";
+import NotFound from "./components/404Page";
+import { StockWarehousePage } from "./pages/warehouse/StockWarehousePage";
 
 function App() {
   return (
@@ -148,6 +151,15 @@ function App() {
             }
           />
           <Route
+            path="/warehouse/stok"
+            element={
+              <PrivateRoute>
+                <StockWarehousePage />
+              </PrivateRoute>
+            }
+          />
+
+          <Route
             path="/fasyankes"
             element={
               <PrivateRoute>
@@ -220,6 +232,14 @@ function App() {
             }
           />
           <Route
+            path="/inventory/create"
+            element={
+              <PrivateRoute>
+                <CreateBarangPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/syarat-dan-ketentuan"
             element={
               <PrivateRoute>
@@ -251,6 +271,7 @@ function App() {
               </PrivateRoute>
             }
           />
+          <Route path="*" element={<NotFound />} />
         </Routes>
       </Router>
     </div>

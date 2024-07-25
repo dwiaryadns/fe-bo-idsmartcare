@@ -1,9 +1,10 @@
 import { useState } from "react";
 import Input from "./utils/Input";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import axiosInstance from "../../dummy/axiosInstance";
 
 export const FormCreateWarehouse = () => {
   const [formValues, setFormValues] = useState({
@@ -22,19 +23,15 @@ export const FormCreateWarehouse = () => {
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     const payload = {
       name: formValues.warehouseName,
       address: formValues.warehouseAddress,
       pic: formValues.picName,
       contact: formValues.picNumber,
     };
-    axios
-      .post(API_BASE_URL + "/warehouses/store", payload, headers)
+    await axiosInstance
+      .post("/warehouses/store", payload)
       .then(function (response) {
         if (response.data.status === true) {
           navigate("/warehouse");

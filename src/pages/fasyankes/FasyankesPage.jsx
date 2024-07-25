@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import DataTableFasyankes from "../../components/fasyankes/DatatableFasyankes";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 
 const FasyankesPage = () => {
   const [loading, setLoading] = useState(true);
@@ -33,10 +33,7 @@ const FasyankesPage = () => {
     []
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  
 
   const [fasyankes, setFasyankes] = useState([]);
 
@@ -65,11 +62,11 @@ const FasyankesPage = () => {
               <div className="card shadow-md ">
                 <div className="card-body">
                   <div className="card-title flex md:flex-row flex-col justify-between">
-                    <p className="md:text-lg text-sm">List Of Fasyankes</p>
+                    <p className="md:text-lg text-sm">List Fasyankes</p>
                     <Link to={"/fasyankes/create"}>
                       <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
                         <FontAwesomeIcon icon={faPlus} />
-                        Add Fasyankes
+                        Tambah Fasyankes
                       </button>
                     </Link>
                   </div>

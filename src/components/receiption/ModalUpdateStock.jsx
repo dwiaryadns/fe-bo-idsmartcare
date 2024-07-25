@@ -1,9 +1,11 @@
 import axios from "axios";
 import { useEffect, useRef, useState } from "react";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import Swal from "sweetalert2";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilePdf } from "@fortawesome/free-solid-svg-icons";
 
-export const ModalUpdateStock = ({ grn_id, data }) => {
+export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
   const modalRef = useRef();
 
   const [conditions, setConditions] = useState("");
@@ -54,11 +56,6 @@ export const ModalUpdateStock = ({ grn_id, data }) => {
     });
   };
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
-
   const [loading, setLoading] = useState(false);
 
   const handleUpdate = async () => {
@@ -72,7 +69,7 @@ export const ModalUpdateStock = ({ grn_id, data }) => {
         barang_id: barang.barang_id,
         jml_datang: barang.jml_datang,
         jml_kurang: barang.jml_kurang,
-        status: status[index],
+        // status: status[index],
         kondisi: conditions[index],
       })),
     };
@@ -125,10 +122,41 @@ export const ModalUpdateStock = ({ grn_id, data }) => {
   return (
     <div>
       <dialog id={grn_id} className="modal" ref={modalRef}>
-        <div className="modal-box w-11/12 max-w-7xl px-10">
+        <div className="modal-box w-11/12 max-w-7xl md:min-h-20 px-10">
+          <div className="bg-primary rounded-md p-5 text-white">
+            <p>{grn_id}</p>
+          </div>
+          <div className="p-5 rounded-md">
+            <p className="font-bold ">List GRN</p>
+            <hr className="mb-3"></hr>
+            {file_grn.map((grn, index) => (
+              <div className="text-lg my-2" key={index}>
+                <div className="grid md:grid-cols-3 justify-start items-start">
+                  <div className="flex items-center">
+                    <FontAwesomeIcon
+                      className="text-red-700"
+                      icon={faFilePdf}
+                    />
+                    {grn.url_file === null || grn.url_file === "" ? (
+                      <p className="text-sm ml-1">Sedang dalam proses...</p>
+                    ) : (
+                      <a
+                        className="text-sm underline ml-1"
+                        href={grn.url_file}
+                        target="_blank"
+                        key={index}
+                      >
+                        {grn.grn_id}
+                      </a>
+                    )}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
           {loading ? (
             <span className="loading loading-spinner loading-lg"></span>
-          ) : (
+          ) : data.length >= 1 ? (
             <div className="overflow-x-auto">
               <table className="table">
                 <thead>
@@ -220,6 +248,8 @@ export const ModalUpdateStock = ({ grn_id, data }) => {
                 </button>
               </div>
             </div>
+          ) : (
+            ""
           )}
         </div>
         {loading ? (

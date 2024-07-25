@@ -32,7 +32,7 @@ export const DatatablesInventory = ({ columns }) => {
       setLoading(true);
       try {
         const response = await axios.get(
-          `${API_BASE_URL}/purchase/get-barang-supplier`,
+          `${API_BASE_URL}/inventory/get-stock-barang`,
           config
         );
         console.log(response);

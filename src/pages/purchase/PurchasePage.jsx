@@ -4,7 +4,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import DatatablesPurchase from "../../components/purchase/DatatablesPurchase";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
@@ -12,7 +12,6 @@ import { ModalDetail } from "../../components/purchase/ModalDetail";
 
 export const PurchasePage = () => {
   const [loading, setLoading] = useState(true);
-  const modalRef = useRef();
 
   const columns = useMemo(
     () => [
@@ -79,10 +78,6 @@ export const PurchasePage = () => {
     []
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   const [goodReceipt, setGoodReceipt] = useState([]);
   useEffect(() => {
     const fetchPurchase = async () => {
@@ -104,17 +99,17 @@ export const PurchasePage = () => {
         <div className="w-full ">
           <Navbar />
           <div className="mx-10">
-            <Header title="Purchase" icon={faTag} />
+            <Header title="Pemesanan Barang" icon={faTag} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex justify-between">
-                  <p className="md:text-lg text-sm">List Of Purchase</p>
+                  <p className="md:text-lg text-sm">List Pemesanan</p>
                   <Link
                     className="btn cursor-pointer bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                     to={"/purchase/create"}
                   >
                     <FontAwesomeIcon icon={faPlus} />
-                    Add Purchase
+                    Tambah Pemesanan
                   </Link>
                 </div>
                 <hr></hr>

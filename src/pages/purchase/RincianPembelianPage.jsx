@@ -5,7 +5,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useState } from "react";
-import { API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL, headers } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
@@ -58,10 +58,7 @@ export const RincianPembelianPage = ({
       currency: "IDR",
     }).format(number);
   };
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
+  
   const handleSave = async () => {
     const payload = {
       barang: data.map((barang, index) => ({
@@ -69,7 +66,7 @@ export const RincianPembelianPage = ({
         qty: quantities[index],
         notes: descriptions[index],
       })),
-      wfid: warehouse,
+      warehouse_id: warehouse,
       supplier_id: data[0].supplier_id,
       po_name: po,
       total: calculateTotal(),

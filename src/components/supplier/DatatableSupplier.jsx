@@ -57,7 +57,7 @@ export const DatatableSupplier = ({ columns, data, loading }) => {
         />
       </div>
       <table
-        className="table table-zebra"
+        className="table table-zebra "
         {...getTableProps()}
         style={{
           width: "100%",
