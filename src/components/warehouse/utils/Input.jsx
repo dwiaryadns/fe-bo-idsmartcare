@@ -4,7 +4,7 @@ const Input = ({ label, placeholder, name, value, onChange, errors }) => {
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text font-bold text-base">
-            {label} <span className="text-red-800">*</span>
+            {label} <span className="text-red-600">*</span>
           </span>
         </div>
         <input

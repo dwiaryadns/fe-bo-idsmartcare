@@ -1,9 +1,9 @@
-import logo from "../../assets/logo.png";
+import logo from "../assets/logo.png";
 
 export const TopBar = ({ title, subtitle }) => {
   return (
     <div>
-      <div className="navbar bg-gradient-to-l fixed shadow-md from-blue-500 to-cyan-400   text-primary-content px-10 md:px-32">
+      <div className="navbar bg-gradient-to-l fixed shadow-md from-blue-500 to-cyan-400 text-primary-content px-10 md:px-32">
         <div className=" w-full flex justify-between">
           <div>
             <h3 className="md:text-3xl text-lg font-bold text-white">

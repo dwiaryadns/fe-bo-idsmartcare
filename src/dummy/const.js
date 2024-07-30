@@ -1,5 +1,3 @@
-import { useEffect } from "react";
-
 export const API_BASE_URL = "https://gwbo.idsmartcare.com/api";
 // export const API_BASE_URL = "http://103.172.205.204:8081/api";
 // export const API_BASE_URL = "http://localhost:8000/api";

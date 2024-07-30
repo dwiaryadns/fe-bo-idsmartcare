@@ -5,8 +5,8 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { API_BASE_URL } from "../dummy/const"; // Adjust the path if needed
-import DataTableSubscription from "../components/subscription/DatatableSubscription";
-import { ModalPayNow } from "../components/subscription/ModalPayNow";
+import { ModalPayNow } from "../components/Modal";
+import { Datatable } from "../components/Datatable";
 
 const SubscriptionPage = () => {
   const [loading, setLoading] = useState(true);
@@ -168,7 +168,7 @@ const SubscriptionPage = () => {
                   Belum Bayar
                 </h3>
                 <div className="overflow-x-auto table-pin-rows">
-                  <DataTableSubscription
+                  <Datatable
                     columns={needPayColumns}
                     data={needPayData}
                     loading={loading}
@@ -180,7 +180,7 @@ const SubscriptionPage = () => {
                   Histori Langganan
                 </h3>
                 <div className="overflow-x-auto table-pin-rows">
-                  <DataTableSubscription
+                  <Datatable
                     columns={historyColumns}
                     data={historyData}
                     loading={loading}

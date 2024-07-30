@@ -89,7 +89,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
           <div className="label">
             <span className="label-text font-bold text-base">
               {isSupplier ? "Provinsi" : "Province"}
-              <span className="text-red-800">*</span>
+              <span className="text-red-600">*</span>
             </span>
           </div>
           <select
@@ -119,7 +119,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
           <div className="label">
             <span className="label-text font-bold text-base">
               {isSupplier ? "Kota" : "City"}
-              <span className="text-red-800">*</span>
+              <span className="text-red-600">*</span>
             </span>
           </div>
           <select
@@ -153,7 +153,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
           <div className="label">
             <span className="label-text font-bold text-base">
               {isSupplier ? "Kecamatan" : "Subdistrict"}
-              <span className="text-red-800">*</span>
+              <span className="text-red-600">*</span>
             </span>
           </div>
           <select
@@ -186,7 +186,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             <span className="label-text font-bold text-base">
               {isSupplier ? "Kelurahan" : "Village"}
 
-              <span className="text-red-800">*</span>
+              <span className="text-red-600">*</span>
             </span>
           </div>
           <select

@@ -1,4 +1,4 @@
-import { TopBar } from "../components/terms-privacy/TopBar";
+import { TopBar } from "../components/TopBar";
 import { privacyList } from "../dummy/privacy";
 
 export const PrivacyPage = () => {

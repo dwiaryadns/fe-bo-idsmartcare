@@ -1,4 +1,4 @@
-import { TopBar } from "../components/terms-privacy/TopBar";
+import { TopBar } from "../components/TopBar";
 import { termsList } from "../dummy/terms";
 
 export const TermsPage = () => {

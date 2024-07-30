@@ -1,10 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputFile from "./utils/InputFile";
 import { faAngleLeft, faAngleRight } from "@fortawesome/free-solid-svg-icons";
-import { useState } from "react";
-import { API_BASE_URL } from "../../dummy/const";
-import axios from "axios";
-import Swal from "sweetalert2";
 
 export const FormDocument = ({
   typeFasyankes,
@@ -16,7 +12,7 @@ export const FormDocument = ({
   handleChangePassword,
   password,
   errors,
-  loading
+  loading,
 }) => {
   const type = "Apotek";
   const handleFileChange = (label) => (event) => {
@@ -43,7 +39,7 @@ export const FormDocument = ({
           <label className="form-control w-full mb-3">
             <div className=" flex flex-col justify-start text-start">
               <span className="label-text font-bold text-base">
-                Password <span className="text-red-800">*</span>
+                Password <span className="text-red-600">*</span>
               </span>
               <span className="text-xs text-gray-500 mb-1">
                 Password untuk melindungi data pribadi anda.
@@ -100,7 +96,7 @@ export const FormDocument = ({
           <label className="form-control w-full mb-3">
             <div className=" flex flex-col justify-start text-start">
               <span className="label-text font-bold text-base">
-                Password <span className="text-red-800">*</span>
+                Password <span className="text-red-600">*</span>
               </span>
               <span className="text-xs text-gray-500 mb-1">
                 Password untuk melindungi data pribadi anda.

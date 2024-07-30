@@ -36,8 +36,14 @@ export const CreateBarangPage = () => {
       ...prev,
       isKfa: e,
     }));
+    if (e != "KFA") {
+      setFormValues((prev) => ({
+        ...prev,
+        nama_barang: "",
+      }));
+    }
   };
- 
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues((prevValues) => ({
@@ -60,7 +66,7 @@ export const CreateBarangPage = () => {
       ...prevErrors,
       [name]: "",
     }));
-    console.log(errors)
+    console.log(errors);
   };
   useEffect(() => {
     const fetchKategori = async () => {
@@ -90,6 +96,17 @@ export const CreateBarangPage = () => {
     fetchSupplier();
   }, []);
 
+  const handleAsyncPaginateChange = (selectedOption) => {
+    setValue(selectedOption);
+    if (selectedOption) {
+      setFormValues((prevValues) => ({
+        ...prevValues,
+        nama_barang: selectedOption.label,
+        kfa_poa_code: selectedOption.value,
+      }));
+    }
+  };
+
   const [inputValue, setInputValue] = useState("");
   const [value, setValue] = useState(null);
 
@@ -107,11 +124,14 @@ export const CreateBarangPage = () => {
     });
 
     const { data, current_page, last_page } = responseKfa.data.data;
+    const options = data.map((item) => ({
+      value: item.kfa_poa_code,
+      label: item.poa_desc,
+    }));
+
+    console.log(value);
     return {
-      options: data.map((item) => ({
-        value: item.kfa_poa_code,
-        label: item.poa_desc,
-      })),
+      options,
       hasMore: current_page < last_page,
       additional: {
         page: current_page + 1,
@@ -119,7 +139,6 @@ export const CreateBarangPage = () => {
     };
   };
   const handleSubmit = async () => {
-    console.log(errors)
     try {
       const resSubmit = await axios.post(
         API_BASE_URL + "/inventory/store-barang",
@@ -149,6 +168,7 @@ export const CreateBarangPage = () => {
         });
       }
     } catch (error) {
+      console.log(error);
       Swal.fire({
         icon: "error",
         title: error.response.data.message,
@@ -175,13 +195,13 @@ export const CreateBarangPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Inventory" icon={faBox} />
+            <Header title="Daftar Produk" icon={faBox} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="w-full">
                   <div className="label">
                     <span className="label-text font-bold text-base">
-                      Sumber Data <span className="text-red-800">*</span>
+                      Sumber Data <span className="text-red-600">*</span>
                     </span>
                   </div>
                   <div className="grid md:grid-cols-2 gap-3 border-red-600">
@@ -211,13 +231,13 @@ export const CreateBarangPage = () => {
                   <div className="w-full">
                     <div className="label">
                       <span className="label-text font-bold text-base">
-                        DATA KFA <span className="text-red-800">*</span>
+                        DATA KFA <span className="text-red-600">*</span>
                       </span>
                     </div>
                     <AsyncPaginate
                       value={value}
                       loadOptions={loadOptions}
-                      onChange={setValue}
+                      onChange={handleAsyncPaginateChange}
                       additional={{
                         page: 1,
                       }}
@@ -241,7 +261,7 @@ export const CreateBarangPage = () => {
                 <div className="w-full">
                   <div className="label">
                     <span className="label-text font-bold text-base">
-                      Kategori Barang <span className="text-red-800">*</span>
+                      Kategori Barang <span className="text-red-600">*</span>
                     </span>
                   </div>
                   <select
@@ -270,7 +290,7 @@ export const CreateBarangPage = () => {
                 <div className="w-full">
                   <div className="label">
                     <span className="label-text font-bold text-base">
-                      Supplier Barang <span className="text-red-800">*</span>
+                      Supplier Barang <span className="text-red-600">*</span>
                     </span>
                   </div>
                   <div className="flex">
@@ -308,7 +328,7 @@ export const CreateBarangPage = () => {
                   <div className="w-full">
                     <div className="label">
                       <span className="label-text font-bold text-base">
-                        Harga Beli <span className="text-red-800">*</span>
+                        Harga Beli <span className="text-red-600">*</span>
                       </span>
                     </div>
                     <label
@@ -334,7 +354,7 @@ export const CreateBarangPage = () => {
                   <div className="w-full">
                     <div className="label">
                       <span className="label-text font-bold text-base">
-                        Harga Jual <span className="text-red-800">*</span>
+                        Harga Jual <span className="text-red-600">*</span>
                       </span>
                     </div>
                     <label
@@ -361,7 +381,7 @@ export const CreateBarangPage = () => {
                 <div className="w-full">
                   <div className="label">
                     <span className="label-text font-bold text-base">
-                      Satuan Barang <span className="text-red-800">*</span>
+                      Satuan Barang <span className="text-red-600">*</span>
                     </span>
                   </div>
                   <select
@@ -393,54 +413,11 @@ export const CreateBarangPage = () => {
                   label={"Tanggal Kadaluarsa"}
                   onChange={handleChange}
                 />
+
                 <div className="flex flex-col">
                   <div className="label">
                     <span className="label-text font-bold text-base">
-                      Jumlah Stok Barang <span className="text-red-800">*</span>
-                    </span>
-                  </div>
-                  <div className="flex md:flex-row flex-col gap-3 items-center">
-                    <div className="w-full">
-                      <input
-                        value={formValues.stok}
-                        onChange={handleChange}
-                        name="stok"
-                        type="number"
-                        className={`input w-full input-bordered rounded-md input-sm ${
-                          errors.stok ? "input-error" : "input-primary"
-                        }`}
-                        placeholder="Stok Awal/Sisa"
-                      />
-                      {errors.stok && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.stok}
-                        </p>
-                      )}
-                    </div>
-                    <span>/</span>
-                    <div className="w-full">
-                      <input
-                        value={formValues.stok_min}
-                        onChange={handleChange}
-                        name="stok_min"
-                        type="number"
-                        className={`input w-full input-bordered rounded-md input-sm ${
-                          errors.stok_min ? "input-error" : "input-primary"
-                        }`}
-                        placeholder="Stok Minimal"
-                      />
-                      {errors.stok_min && (
-                        <p className="text-red-500 text-xs mt-1">
-                          {errors.stok_min}
-                        </p>
-                      )}
-                    </div>
-                  </div>
-                </div>
-                <div className="flex flex-col">
-                  <div className="label">
-                    <span className="label-text font-bold text-base">
-                      Deskripsi <span className="text-red-800">*</span>
+                      Deskripsi <span className="text-red-600">*</span>
                     </span>
                   </div>
                   <textarea

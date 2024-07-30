@@ -1,14 +1,14 @@
-import { faFile, faPlus, faTag } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faTag } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import DatatablesPurchase from "../../components/purchase/DatatablesPurchase";
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL, headers } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { ModalDetail } from "../../components/purchase/ModalDetail";
+import { ModalDetailPurchase } from "../../components/Modal";
+import { Datatable } from "../../components/Datatable";
 
 export const PurchasePage = () => {
   const [loading, setLoading] = useState(true);
@@ -58,7 +58,7 @@ export const PurchasePage = () => {
         accessor: "action",
         Cell: ({ row }) => (
           <div>
-            <ModalDetail
+            <ModalDetailPurchase
               total={row.original.total}
               poId={row.original.po_id}
               data={row.original.detail}
@@ -114,7 +114,7 @@ export const PurchasePage = () => {
                 </div>
                 <hr></hr>
                 <div className="table-pin-rows overflow-x-auto">
-                  <DatatablesPurchase
+                  <Datatable
                     columns={columns}
                     data={goodReceipt}
                     loading={loading}

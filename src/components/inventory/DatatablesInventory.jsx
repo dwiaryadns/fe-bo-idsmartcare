@@ -35,9 +35,6 @@ export const DatatablesInventory = ({ columns }) => {
           `${API_BASE_URL}/inventory/get-stock-barang`,
           config
         );
-        console.log(response);
-        console.log(localPageSize);
-        console.log(pageIndex + 1);
 
         setData(response.data.data.data);
         setPageCount(response.data.data.last_page);

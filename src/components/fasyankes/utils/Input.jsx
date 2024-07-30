@@ -23,7 +23,7 @@ const Input = ({
         <div className="label min-w-72">
           <span className="label-text font-bold text-base">
             {label}
-            <span className="text-red-800 mr-1">*</span>
+            <span className="text-red-600 mr-1">*</span>
             <div className="tooltip tooltip-info" data-tip={tooltip}>
               <FontAwesomeIcon
                 icon={faInfoCircle}

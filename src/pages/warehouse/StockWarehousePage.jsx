@@ -5,11 +5,11 @@ import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const"; // Remove headers import here
-import DataTableStockWarehouse from "../../components/warehouse/DatatableStockWarehouse";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../dummy/axiosInstance";
 import Swal from "sweetalert2";
+import { DatatableWithPaginate } from "../../components/Datatable";
 
 export const StockWarehousePage = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -145,10 +145,10 @@ export const StockWarehousePage = () => {
               Stock Barang - Gudang {warehouses[0].name}{" "}
             </span>
             <hr className="my-2"></hr>
-            <DataTableStockWarehouse
+            <DatatableWithPaginate
               columns={columns}
-              warehouse_id={selectGudang}
-              loading={loading}
+              endpoint="/warehouses/stock-gudang"
+              params={{ warehouse_id: selectGudang }}
             />
           </div>
         </div>
@@ -178,11 +178,10 @@ export const StockWarehousePage = () => {
                 Stock Barang - Gudang {selectedWarehouseName}{" "}
               </span>
               <div className="overflow-x-auto table-pin-rows">
-                <DataTableStockWarehouse
+                <DatatableWithPaginate
                   columns={columns}
-                  warehouse_id={selectGudang}
-                  data={stockData}
-                  loading={loading}
+                  endpoint="/warehouses/stock-gudang"
+                  params={{ warehouse_id: selectGudang }}
                 />
               </div>
             </div>

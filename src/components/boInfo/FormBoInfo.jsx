@@ -238,7 +238,7 @@ const FormBoInfo = () => {
           <div className="pb-3">
             <div className="label">
               <span className="label-text font-bold text-base">
-                Business Type<span className="text-red-800">*</span>
+                Business Type<span className="text-red-600">*</span>
               </span>
             </div>
             <select

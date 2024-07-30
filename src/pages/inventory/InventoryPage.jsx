@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
 import DatatablesInventory from "../../components/inventory/DatatablesInventory";
+import { DatatableWithPaginate } from "../../components/Datatable";
 
 export const InventoryPage = () => {
   const formatRupiah = (number) => {
@@ -19,53 +20,24 @@ export const InventoryPage = () => {
     () => [
       {
         Header: "Kode Barang",
-        accessor: "kfa",
-        Cell: ({ row }) => <p>{row.original.barang_id}</p>,
+        accessor: "barang_id",
       },
       {
         Header: "Nama Barang",
         accessor: "nama_barang",
-        Cell: ({ row }) => <p>{row.original.barang.nama_barang}</p>,
       },
       {
         Header: "Supplier",
-        accessor: "supplier_barang_id",
-        Cell: ({ row }) => <p>{row.original.barang.supplier.nama_supplier}</p>,
+        accessor: "supplier.nama_supplier",
       },
       {
         Header: "Harga Beli",
         accessor: "harga_beli",
-        Cell: ({ row }) => (
-          <p>{formatRupiah(row.original.barang.harga_beli)}</p>
-        ),
-      },
-      {
-        Header: "Harga Jual",
-        accessor: "harga_jual",
-        Cell: ({ row }) => (
-          <p>{formatRupiah(row.original.barang.harga_jual)}</p>
-        ),
+        Cell: ({ row }) => <p>{formatRupiah(row.original.harga_beli)}</p>,
       },
       {
         Header: "Satuan",
         accessor: "satuan",
-        Cell: ({ row }) => <p>{row.original.barang.satuan}</p>,
-      },
-      {
-        Header: "Stok",
-        accessor: "stok",
-        Cell: ({ row }) => <p>{row.original.stok}</p>,
-      },
-      {
-        Header: "Aksi",
-        accessor: "action",
-        Cell: ({ row }) => (
-          <div className="flex flex-row">
-            <button className="bg-primary btn-sm rounded-md hover:bg-primary text-white btn">
-              <FontAwesomeIcon icon={faEye} />
-            </button>
-          </div>
-        ),
       },
     ],
     []
@@ -78,7 +50,7 @@ export const InventoryPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Inventory" icon={faBox} />
+            <Header title="Daftar Produk" icon={faBox} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
@@ -88,12 +60,15 @@ export const InventoryPage = () => {
                     to={"/inventory/create"}
                   >
                     <FontAwesomeIcon icon={faPlus} />
-                    Add Inventory
+                    Tambah Barang
                   </Link>
                 </div>
                 <hr></hr>
                 <div className="overflow-x-auto table-pin-rows">
-                  <DatatablesInventory columns={columns} />
+                  <DatatableWithPaginate
+                    columns={columns}
+                    endpoint={"/inventory/get-barang"}
+                  />
                 </div>
               </div>
             </div>

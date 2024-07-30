@@ -1,15 +1,13 @@
-import { faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import DataTableWarehouse from "../../components/warehouse/DatatableWarehouse";
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
-import { ModalDetailWarehouse } from "../../components/warehouse/ModalDetailWarehouse";
 import axiosInstance from "../../dummy/axiosInstance";
+import { ModalDetailWarehouse } from "../../components/Modal";
+import { Datatable } from "../../components/Datatable";
 
 const WarehousePage = () => {
   const columns = useMemo(
@@ -45,7 +43,7 @@ const WarehousePage = () => {
               }
               className="btn bg-primary hover:bg-primary text-white btn-sm rounded-md "
             >
-              View Detail
+              <FontAwesomeIcon icon={faEye} />
             </button>
           </div>
         ),
@@ -57,7 +55,6 @@ const WarehousePage = () => {
   const [warehouse, setWarehouse] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  console.log(headers);
   useEffect(() => {
     const fetchWarehouse = async () => {
       try {
@@ -95,7 +92,7 @@ const WarehousePage = () => {
                 </div>
                 <hr></hr>
                 <div className="overflow-x-auto table-pin-rows">
-                  <DataTableWarehouse
+                  <Datatable
                     columns={columns}
                     data={warehouse}
                     loading={loading}

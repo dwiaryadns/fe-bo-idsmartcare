@@ -3,9 +3,11 @@ import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
 import { Link } from "react-router-dom";
-import ChartDaily from "../components/dashboard/ChartDaily";
-import { PieStockReports } from "../components/dashboard/PieStockReports";
-import LineMonthlyReport from "../components/dashboard/LineMonthlyReport";
+import {
+  ChartDaily,
+  LineMonthlyReport,
+  PieStockReports,
+} from "../components/ChartDashboard";
 
 const DashboardPage = () => {
   return (

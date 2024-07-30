@@ -1,21 +1,14 @@
-import {
-  faEdit,
-  faEye,
-  faFile,
-  faPencil,
-  faPlus,
-  faReceipt,
-} from "@fortawesome/free-solid-svg-icons";
+import { faEye, faPlus, faReceipt } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import DatatablesReceiption from "../../components/receiption/DatatablesReceiption";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL, headers } from "../../dummy/const";
-import { ModalUpdateStock } from "../../components/receiption/ModalUpdateStock";
+import { ModalUpdateStock } from "../../components/Modal";
+import { Datatable } from "../../components/Datatable";
 
 export const ReceiptionPage = () => {
   const [loading, setLoading] = useState(true);
@@ -26,7 +19,7 @@ export const ReceiptionPage = () => {
     () => [
       {
         Header: "Penerimaan ID",
-        accessor: "penerimaan_id", // accessor is the "key" in the data
+        accessor: "penerimaan_id",
       },
       {
         Header: "Nama PO",
@@ -122,7 +115,7 @@ export const ReceiptionPage = () => {
                 </div>
                 <hr></hr>
                 <div className="table-pin-rows overflow-x-auto">
-                  <DatatablesReceiption
+                  <Datatable
                     columns={columns}
                     data={goodReceipt}
                     loading={loading}

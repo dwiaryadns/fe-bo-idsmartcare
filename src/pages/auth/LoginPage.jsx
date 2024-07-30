@@ -118,13 +118,10 @@ const LoginPage = () => {
               className="max-w-lg hidden md:block self-center"
               alt="Login Illustration"
             />
+
             <div className="w-full max-w-sm md:max-w-md mt-6 md:mt-0 md:ml-10">
               <div className="flex justify-center">
-                <img
-                  src={logoLogin}
-                  className="w-56 md:w-64 mb-4"
-                  alt="Logo"
-                />
+                <img src={logoLogin} className="w-56 md:w-64 mb-4" alt="Logo" />
               </div>
               <h6 className="text-2xl sm:text-3xl text-primary font-extrabold mb-3">
                 Login

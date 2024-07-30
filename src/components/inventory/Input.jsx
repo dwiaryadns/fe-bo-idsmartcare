@@ -14,7 +14,7 @@ export const Input = ({
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text font-bold text-base">
-            {label} {isOptional ? "" : <span className="text-red-800">*</span>}
+            {label} {isOptional ? "" : <span className="text-red-600">*</span>}
           </span>
         </div>
         <input

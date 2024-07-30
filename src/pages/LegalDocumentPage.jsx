@@ -163,7 +163,7 @@ const LegalDocumentPage = () => {
           <label className="form-control w-full">
             <div className=" flex flex-col justify-start text-start">
               <span className="label-text font-bold text-base">
-                Password <span className="text-red-800">*</span>
+                Password <span className="text-red-600">*</span>
               </span>
               <span className="text-xs text-gray-500 mb-1">
                 Password untuk melindungi data pribadi anda.
@@ -215,7 +215,7 @@ const LegalDocumentPage = () => {
           <label className="form-control w-full">
             <div className=" flex flex-col justify-start text-start">
               <span className="label-text font-bold text-base">
-                Password <span className="text-red-800">*</span>
+                Password <span className="text-red-600">*</span>
               </span>
               <span className="text-xs text-gray-500 mb-1">
                 Password ini digunakan untuk mengakses file yang anda upload

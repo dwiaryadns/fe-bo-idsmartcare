@@ -126,7 +126,7 @@ export const CreateSupplierPage = () => {
         navigate("/supplier");
       }
     } catch (error) {
-      console.log(error.response)
+      console.log(error.response);
       setErrors({
         nama_supplier: error.response.data.errors.nama_supplier,
         alamat: error.response.data.errors.alamat,
@@ -174,7 +174,7 @@ export const CreateSupplierPage = () => {
                   <div className="pb-3">
                     <div className="label">
                       <span className="label-text font-bold text-base">
-                        Tipe Supplier <span className="text-red-800">*</span>
+                        Tipe Supplier <span className="text-red-600">*</span>
                       </span>
                     </div>
                     <div className="grid md:grid-cols-3 gap-3 border-red-600">

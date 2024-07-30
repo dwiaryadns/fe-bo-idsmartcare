@@ -31,6 +31,9 @@ import { CreateSupplierPage } from "./pages/supplier/CreateSupplierPage";
 import { CreateBarangPage } from "./pages/inventory/CreateBarangPage";
 import NotFound from "./components/404Page";
 import { StockWarehousePage } from "./pages/warehouse/StockWarehousePage";
+import { DistribusiPage } from "./pages/distribusi/DistribusiPage";
+import { CreateDistribusiPage } from "./pages/distribusi/CreateDistribusiPage";
+import { StockFasyankesPage } from "./pages/fasyankes/StockFasyankesPage";
 
 function App() {
   return (
@@ -224,7 +227,31 @@ function App() {
             }
           />
           <Route
-            path="/inventory"
+            path="/distribusi"
+            element={
+              <PrivateRoute>
+                <DistribusiPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/distribusi/create"
+            element={
+              <PrivateRoute>
+                <CreateDistribusiPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/fasyankes/stok"
+            element={
+              <PrivateRoute>
+                <StockFasyankesPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/daftar-produk"
             element={
               <PrivateRoute>
                 <InventoryPage />

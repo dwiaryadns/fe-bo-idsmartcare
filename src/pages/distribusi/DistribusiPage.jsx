@@ -1,69 +1,70 @@
-import { faHospital, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBagShopping, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import axiosInstance from "../../dummy/axiosInstance";
 import { Datatable } from "../../components/Datatable";
 
-const FasyankesPage = () => {
-  const [loading, setLoading] = useState(true);
+export const DistribusiPage = () => {
   const columns = useMemo(
     () => [
       {
-        Header: "Name",
-        accessor: "name", // accessor is the "key" in the data
+        Header: "Distribusi ID",
+        accessor: "distribusi_id",
       },
       {
-        Header: "Type",
-        accessor: "type",
+        Header: "Fasyankes",
+        accessor: "fasyankes",
       },
       {
-        Header: "Report",
-        accessor: "report",
+        Header: "Gudang",
+        accessor: "gudang",
       },
       {
-        Header: "Information",
-        accessor: "information",
+        Header: "Tanggal",
+        accessor: "date",
       },
     ],
     []
   );
 
-  const [fasyankes, setFasyankes] = useState([]);
+  const [distribusi, setDistribusi] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    axios
-      .get(API_BASE_URL + "/fasyankes", headers)
-      .then((response) => {
-        console.log(response.data.data);
-        setFasyankes(response.data.data);
+    const fetchDistribusi = async () => {
+      try {
+        const response = await axiosInstance.get("/distribusi");
+        setDistribusi(response.data.data);
+      } catch (error) {
+        console.error(error);
+        throw error;
+      } finally {
         setLoading(false);
-      })
-      .catch(function (error) {
-        console.log(error);
-      });
-  }, []);
+      }
+    };
 
+    fetchDistribusi();
+  }, []);
   return (
     <div>
       <div className="flex flex-row w-full">
         <Sidebar />
-        <div className="w-full">
+        <div className="w-full ">
           <Navbar />
           <div className="mx-10">
-            <Header title="Fasyankes" icon={faHospital} />
+            <Header title="Distribusi" icon={faBagShopping} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Fasyankes</p>
-                  <Link to={"/fasyankes/create"}>
+                  <p className="md:text-lg text-sm">List Distribusi</p>
+                  <Link to={"/distribusi/create"}>
                     <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
                       <FontAwesomeIcon icon={faPlus} />
-                      Tambah Fasyankes
+                      Tambah Distribusi
                     </button>
                   </Link>
                 </div>
@@ -71,7 +72,7 @@ const FasyankesPage = () => {
                 <div className="overflow-x-auto table-pin-rows">
                   <Datatable
                     columns={columns}
-                    data={fasyankes}
+                    data={distribusi}
                     loading={loading}
                   />
                 </div>
@@ -83,5 +84,3 @@ const FasyankesPage = () => {
     </div>
   );
 };
-
-export default FasyankesPage;

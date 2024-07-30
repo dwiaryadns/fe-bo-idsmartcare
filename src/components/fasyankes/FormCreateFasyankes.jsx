@@ -88,7 +88,7 @@ export const FormCreateFasyankes = () => {
     setFormData({ ...formData, warehouseId: e.target.value });
     setErrors((prevErrors) => ({ ...prevErrors, warehouseId: "" }));
   };
-  
+
   useEffect(() => {
     axios
       .get(API_BASE_URL + "/warehouses", headers)
@@ -417,7 +417,7 @@ export const FormCreateFasyankes = () => {
           <div className="form-control w-full">
             <div className="label">
               <span className="label-text font-bold text-base">
-                Type Of Fasyankes<span className="text-red-800 mr-2">*</span>
+                Type Of Fasyankes<span className="text-red-600 mr-2">*</span>
                 <div
                   className="tooltip tooltip-info"
                   data-tip="Pilih tipe fasyankes yang akan Anda daftarkan ke idSmartCare"
@@ -457,7 +457,7 @@ export const FormCreateFasyankes = () => {
           <div className="w-full">
             <div className="label">
               <span className="label-text font-bold text-base">
-                Package Plan<span className="text-red-800 mr-2">*</span>
+                Package Plan<span className="text-red-600 mr-2">*</span>
                 <div
                   className="tooltip tooltip-info "
                   data-tip="Pilih plan sesuai dengan kebutuhan"
@@ -554,7 +554,7 @@ export const FormCreateFasyankes = () => {
             <div className="form-control w-full flex md:flex-row flex-col md:items-center">
               <div className="label min-w-72">
                 <span className="label-text font-bold text-base">
-                  Select Warehouse <span className="text-red-800">*</span>
+                  Select Warehouse <span className="text-red-600">*</span>
                   <div
                     className="tooltip tooltip-info ms-1"
                     data-tip="Pilih Warehouse yang akan dimasukkan ke fasyankes"

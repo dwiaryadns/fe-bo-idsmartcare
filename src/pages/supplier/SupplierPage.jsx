@@ -1,23 +1,19 @@
 import {
-  faBox,
-  faEdit,
-  faEllipsis,
   faEllipsisV,
   faIndustry,
   faPlus,
-  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import DatatableSupplier from "../../components/supplier/DatatableSupplier";
 import { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL, headers } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { ModalDetailSupplier } from "../../components/supplier/ModalDetailSupplier";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
+import { ModalDetailSupplier } from "../../components/Modal";
+import { Datatable } from "../../components/Datatable";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
@@ -176,7 +172,7 @@ export const SupplierPage = () => {
                 </div>
                 <hr></hr>
                 <div className="table-pin-rows overflow-x-auto">
-                  <DatatableSupplier
+                  <Datatable
                     columns={columns}
                     data={supplier}
                     loading={loading}

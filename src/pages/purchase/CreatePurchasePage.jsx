@@ -8,6 +8,7 @@ import { API_BASE_URL, headers } from "../../dummy/const";
 import DatatablesSupplierBarang from "../../components/purchase/DatatablesSupplierBarang";
 import Swal from "sweetalert2";
 import { RincianPembelianPage } from "./RincianPembelianPage";
+import { DatatableWithPaginate } from "../../components/Datatable";
 
 export const CreatePurchasePage = () => {
   const [tanggalPemesanan, setTanggalPemesanan] = useState(
@@ -22,7 +23,6 @@ export const CreatePurchasePage = () => {
     JSON.parse(localStorage.getItem("selectedItems")) || []
   );
 
-  
   const handleChangeCheckbox = (item) => {
     if (selectedSupplier && item.supplier.nama_supplier !== selectedSupplier) {
       Swal.fire({
@@ -100,7 +100,9 @@ export const CreatePurchasePage = () => {
       {
         Header: "Harga",
         accessor: "harga",
-        Cell: ({ row }) => <p> {formatRupiah(row.original.barang.harga_beli)}</p>,
+        Cell: ({ row }) => (
+          <p> {formatRupiah(row.original.barang.harga_beli)}</p>
+        ),
       },
     ],
     [selectedItems, selectedSupplier]
@@ -168,11 +170,12 @@ export const CreatePurchasePage = () => {
     <div>
       {step === 1 ? (
         <div>
-          <DatatablesSupplierBarang
+          <DatatableWithPaginate
             columns={columns}
-            selectedItems={selectedItems}
-            count={count}
-            handleClick={handleChangeCheckbox}
+            endpoint={"/purchase/get-barang-supplier"}
+            // selectedItems={selectedItems}
+            // count={count}
+            // handleClick={handleChangeCheckbox}
           />
         </div>
       ) : (

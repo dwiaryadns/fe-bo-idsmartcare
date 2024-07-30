@@ -19,7 +19,7 @@ export const privacyList = [
     title: "Pemberian Informasi Kepada Pihak Ketiga",
     subtitle: "Providing Information to Third Parties",
     content_id:
-      "Dalam beberapa situasi, idSmartCare dapat memberikan informasi pribadi Anda kepada pihak ketiga yang terkait dengan penyediaan layanan idSmartCare. Ini mungkin termasuk penyedia layanan atau mitra yang membantu idSmartCare dalam menyediakan layanan kepada Anda. Kami juga dapat mengungkapkan informasi pribadi Anda jika diwajibkan oleh hukum atau jika kami percaya bahwa pengungkapan tersebut diperlukan untuk mematuhi perintah pengadilan, proses hukum, atau permintaan resmi dari otoritas hukum yang berwenang",
+      "Dalam beberapa situasi, idSmartCare dapat memberikan informasi pribadi Anda kepada pihak ketiga yang terkait dengan penyediaan layanan idSmartCare. Ini mungkin termasuk penyedia layanan atau mitra yang membantu idSmartCare dalam menyediakan layanan kepada Anda. Kami juga dapat mengungkapkan informasi pribadi Anda jika diwajibkan oleh hukum atau jika kami percaya bahwa pengungkapan tersebut diperlukan untuk mematuhi perintah pengadilan, proses hukum, atau permintaan resmi dari otoritas hukum yang berwenang.",
     content_en:
       "In some situations, idSmartCare may provide your personal information to third parties related to providing idSmartCare services. This may include service providers or partners who assist idSmartCare in providing services to you. We may also disclose your personal information if required to do so by law or if we believe that such disclosure is necessary to comply with a court order, legal process, or official request from a competent legal authority.",
   },

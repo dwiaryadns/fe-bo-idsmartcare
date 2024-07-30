@@ -292,7 +292,7 @@ export const CreateReceiptPage = () => {
               <label className="form-control w-full">
                 <div className="label">
                   <span className="label-text font-bold text-base">
-                    Nama Penerima <span className="text-red-800">*</span>
+                    Nama Penerima <span className="text-red-600">*</span>
                   </span>
                 </div>
                 <input
@@ -313,7 +313,7 @@ export const CreateReceiptPage = () => {
               <label className="form-control w-full">
                 <div className="label">
                   <span className="label-text font-bold text-base">
-                    Nama Pengirim <span className="text-red-800">*</span>
+                    Nama Pengirim <span className="text-red-600">*</span>
                   </span>
                 </div>
                 <input
@@ -334,7 +334,7 @@ export const CreateReceiptPage = () => {
               <label className="form-control w-full">
                 <div className="label">
                   <span className="label-text font-bold text-base">
-                    Nama Pengecek <span className="text-red-800">*</span>
+                    Nama Pengecek <span className="text-red-600">*</span>
                   </span>
                 </div>
                 <input
@@ -355,7 +355,7 @@ export const CreateReceiptPage = () => {
               <label className="form-control w-full">
                 <div className="label">
                   <span className="label-text font-bold text-base">
-                    Tanggal Penerimaan <span className="text-red-800">*</span>
+                    Tanggal Penerimaan <span className="text-red-600">*</span>
                   </span>
                 </div>
                 <input
@@ -380,7 +380,7 @@ export const CreateReceiptPage = () => {
               <label className="form-control">
                 <div className="label">
                   <span className="label-text font-bold text-base">
-                    Supplier Invoice <span className="text-red-800">*</span>
+                    Supplier Invoice <span className="text-red-600">*</span>
                   </span>
                 </div>
                 <input
