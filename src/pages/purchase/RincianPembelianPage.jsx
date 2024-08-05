@@ -5,7 +5,7 @@ import {
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useState } from "react";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
@@ -58,7 +58,7 @@ export const RincianPembelianPage = ({
       currency: "IDR",
     }).format(number);
   };
-  
+
   const handleSave = async () => {
     const payload = {
       barang: data.map((barang, index) => ({
@@ -71,8 +71,11 @@ export const RincianPembelianPage = ({
       po_name: po,
       total: calculateTotal(),
     };
-    console.log(payload);
 
+    const token = localStorage.getItem("token");
+    const headers = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
     try {
       const response = await axios.post(
         API_BASE_URL + "/purchase/store",

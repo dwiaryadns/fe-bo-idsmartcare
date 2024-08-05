@@ -1,11 +1,10 @@
-import { faBox, faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useMemo } from "react";
-import DatatablesInventory from "../../components/inventory/DatatablesInventory";
 import { DatatableWithPaginate } from "../../components/Datatable";
 
 export const InventoryPage = () => {
@@ -55,6 +54,13 @@ export const InventoryPage = () => {
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
                   <p className="md:text-lg text-sm">List Barang</p>
+                  <Link
+                    className="btn bg-success md:btn-md btn-sm hover:bg-success text-white rounded-md"
+                    to={"/inventory/import"}
+                  >
+                    <FontAwesomeIcon icon={faPlus} />
+                    Import Excel
+                  </Link>
                   <Link
                     className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                     to={"/inventory/create"}

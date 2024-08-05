@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Input from "./utils/Input";
-import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../dummy/axiosInstance";

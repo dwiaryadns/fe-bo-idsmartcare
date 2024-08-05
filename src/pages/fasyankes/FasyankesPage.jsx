@@ -6,7 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import { Datatable } from "../../components/Datatable";
 
 const FasyankesPage = () => {
@@ -35,6 +35,10 @@ const FasyankesPage = () => {
 
   const [fasyankes, setFasyankes] = useState([]);
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     axios
       .get(API_BASE_URL + "/fasyankes", headers)

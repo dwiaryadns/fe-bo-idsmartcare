@@ -4,8 +4,7 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
-import DatatablesSupplierBarang from "../../components/purchase/DatatablesSupplierBarang";
+import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { RincianPembelianPage } from "./RincianPembelianPage";
 import { DatatableWithPaginate } from "../../components/Datatable";
@@ -108,6 +107,10 @@ export const CreatePurchasePage = () => {
     [selectedItems, selectedSupplier]
   );
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     const fetchWarehouse = async () => {
       try {

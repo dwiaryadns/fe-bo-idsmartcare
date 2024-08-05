@@ -5,10 +5,11 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useState } from "react";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
+import { Link } from "react-router-dom";
 
 export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const [diskon, setDiskon] = useState(0);
@@ -47,7 +48,10 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const navigate = useNavigate();
 
   const [snapToken, setSnapToken] = useState();
-  
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const handlePayment = async () => {
     const payload = {
       amount: total,
@@ -153,15 +157,16 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
       <hr />
 
       {snapToken && <div id="snap-checkout" />}
-      <div className="flex">
+      <div className="flex gap-3 items-center mt-3">
         <input
           type="checkbox"
           onClick={handleCheckbox}
           className="checkbox checkbox-primary rounded-md"
         />
+
         <p className="text-sm">
-          Dengan melakukan pembayaran, kamu setuju dengan Syarat dan Ketentuan
-          pembelian di idSmartCare.
+          Dengan melakukan pembayaran, kamu setuju dengan <Link to={"/fasyankes/syarat-ketentuan-pembelian"} className="text-primary italic font-bold"> Syarat dan Ketentuan
+          Pembelian</Link>  di idSmartCare.
         </p>
       </div>
       <button className="btn btn-block btn-primary hover:btn-primary text-white rounded-md my-4">
@@ -169,7 +174,8 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
       </button>
       <button
         onClick={handlePayment}
-        className="btn btn-block btn-warning hover:btn-warning text-white rounded-md"
+        disabled={!checkbox}
+        className="btn btn-block  btn-warning hover:btn-warning text-white rounded-md"
       >
         <FontAwesomeIcon icon={faCreditCard} /> Payment
       </button>

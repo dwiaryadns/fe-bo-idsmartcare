@@ -89,8 +89,16 @@ export const sidebarItemsRev = [
         link: "daftar-produk",
       },
       {
-        title: "Stock Fasyankes",
+        title: "Stok Fasyankes",
         link: "fasyankes/stok",
+      },
+      {
+        title: "Stok Opname",
+        link: "stok-opname",
+      },
+      {
+        title: "History Stok Opname",
+        link: "stok-opname/histori",
       },
     ],
   },

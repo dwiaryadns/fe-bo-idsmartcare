@@ -18,7 +18,7 @@ import { useNavigate } from "react-router-dom";
 import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
 import Header from "../Header";
 export const FormCreateFasyankes = () => {
@@ -72,7 +72,7 @@ export const FormCreateFasyankes = () => {
   };
 
   const [type, setType] = useState("");
-  const [step, setStep] = useState(1); // Step control
+  const [step, setStep] = useState(3); // Step control
   const [formData, setFormData] = useState({
     nameFasyankes: "",
     picName: "",
@@ -89,6 +89,10 @@ export const FormCreateFasyankes = () => {
     setErrors((prevErrors) => ({ ...prevErrors, warehouseId: "" }));
   };
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     axios
       .get(API_BASE_URL + "/warehouses", headers)

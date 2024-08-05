@@ -4,11 +4,11 @@ import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { Input } from "../../components/inventory/Input";
 import { useEffect, useState } from "react";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AsyncPaginate } from "react-select-async-paginate";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
 
 export const CreateBarangPage = () => {
@@ -44,11 +44,34 @@ export const CreateBarangPage = () => {
     }
   };
 
+  const formatRupiah = (value) => {
+    // Menghapus karakter non-numeric kecuali titik
+    const numberString = value.replace(/[^0-9]/g, "");
+    // Format menjadi format mata uang dengan titik sebagai pemisah ribuan
+    return numberString
+      .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+      .replace(/^/, "Rp ");
+  };
+
   const handleChange = (e) => {
     const { name, value } = e.target;
+
+    const formattedValue =
+      name === "harga_beli" || name === "harga_jual"
+        ? formatRupiah(value)
+        : value;
+    if (name === "expired_at") {
+      if (value && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Tanggal tidak valid",
+        }));
+        return;
+      }
+    }
     setFormValues((prevValues) => ({
       ...prevValues,
-      [name]: value,
+      [name]: formattedValue,
     }));
     setErrors((prevErrors) => ({
       ...prevErrors,
@@ -67,6 +90,10 @@ export const CreateBarangPage = () => {
       [name]: "",
     }));
     console.log(errors);
+  };
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
   };
   useEffect(() => {
     const fetchKategori = async () => {
@@ -138,6 +165,7 @@ export const CreateBarangPage = () => {
       },
     };
   };
+  const navigate = useNavigate();
   const handleSubmit = async () => {
     try {
       const resSubmit = await axios.post(
@@ -156,6 +184,7 @@ export const CreateBarangPage = () => {
           timerProgressBar: true,
         });
         setFormValues({});
+        navigate("/daftar-produk");
       } else {
         Swal.fire({
           icon: "error",
@@ -336,7 +365,6 @@ export const CreateBarangPage = () => {
                         errors.harga_beli ? "input-error" : "input-primary"
                       } input-bordered rounded-md  flex items-center gap-2`}
                     >
-                      Rp
                       <input
                         name="harga_beli"
                         value={formValues.harga_beli}
@@ -362,7 +390,6 @@ export const CreateBarangPage = () => {
                         errors.harga_jual ? "input-error" : "input-primary"
                       } input-bordered rounded-md  flex items-center gap-2`}
                     >
-                      Rp
                       <input
                         type="text"
                         className="grow"

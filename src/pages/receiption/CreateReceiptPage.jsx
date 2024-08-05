@@ -9,12 +9,11 @@ import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
 export const CreateReceiptPage = () => {
-  const listKondisiBarang = ["Sesuai Pesanan", "Tidak Sesuai Pesanan"];
   const [isOpen, setIsOpen] = useState(false);
   const toggleOpen = () => {
     setIsOpen(!isOpen);
@@ -27,6 +26,10 @@ export const CreateReceiptPage = () => {
   const [status, setStatus] = useState("");
   const [conditions, setConditions] = useState("");
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };

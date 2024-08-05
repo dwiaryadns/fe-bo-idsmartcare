@@ -7,7 +7,7 @@ import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
@@ -104,6 +104,10 @@ export const SupplierPage = () => {
   );
 
   const [supplier, setSupplier] = useState([]);
+  const token = localStorage.getItem("token");
+    const headers = {
+      headers: { Authorization: `Bearer ${token}` },
+    };
   useEffect(() => {
     const fetchSupplier = async () => {
       try {

@@ -6,7 +6,7 @@ import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import { ModalUpdateStock } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 
@@ -76,6 +76,10 @@ export const ReceiptionPage = () => {
   );
 
   const [goodReceipt, setGoodReceipt] = useState([]);
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     const fetchGoodReceipts = async () => {
       try {

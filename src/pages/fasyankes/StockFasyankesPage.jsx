@@ -1,16 +1,11 @@
-import { faBox, faEye, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBox, faEye } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
-import DatatablesInventory from "../../components/inventory/DatatablesInventory";
 import { DatatableWithPaginate } from "../../components/Datatable";
-import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
 import axiosInstance from "../../dummy/axiosInstance";
-
 export const StockFasyankesPage = () => {
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {

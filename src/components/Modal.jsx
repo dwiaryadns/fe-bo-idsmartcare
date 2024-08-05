@@ -2,7 +2,7 @@ import { faCheck, faClone, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
-import { API_BASE_URL, headers } from "../dummy/const";
+import { API_BASE_URL } from "../dummy/const";
 import axios from "axios";
 import Swal from "sweetalert2";
 
@@ -333,6 +333,10 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
 
   const [loading, setLoading] = useState(false);
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const handleUpdate = async () => {
     setLoading(true);
     const payload = {
@@ -348,7 +352,6 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
         kondisi: conditions[index],
       })),
     };
-    console.log(payload);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/good-receipt/update`,
@@ -402,7 +405,7 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
             <p>{grn_id}</p>
           </div>
           <div className="p-5 rounded-md">
-            <p className="font-bold ">List GRN</p>
+            <p className="font-bold ">List Good Receipt Note</p>
             <hr className="mb-3"></hr>
             {file_grn.map((grn, index) => (
               <div className="text-lg my-2" key={index}>
@@ -437,7 +440,7 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
                 <thead>
                   <tr>
                     <th>No</th>
-                    <th>Name</th>
+                    <th>Nama Barang</th>
                     <th>Jumlah Beli</th>
                     <th>Jumlah Datang</th>
                     <th>Jumlah Kurang</th>
@@ -560,6 +563,181 @@ export const ModalDetailPurchase = ({ poId, data, total }) => {
                 </tbody>
               </table>
             </div>
+          </div>
+        </div>
+        <form method="dialog" className="modal-backdrop">
+          <button>close</button>
+        </form>
+      </dialog>
+    </div>
+  );
+};
+
+export const ModalOpname = ({ id, barang }) => {
+  const modalRef = useRef();
+  const [check, setCheck] = useState(false);
+  // const [physicalStock, setPhysicalStock] = useState("");
+
+  const handleCheckbox = () => {
+    setCheck(!check);
+  };
+
+  // const handlePhysicalStockChange = (e) => {
+  //   const inputValue = e.target.value;
+  //   if (
+  //     inputValue === "" ||
+  //     (Number(inputValue) >= 0 && Number(inputValue) <= barang.stok)
+  //   ) {
+  //     setPhysicalStock(inputValue);
+  //   }
+  // };
+
+  const [petugas, setPetugas] = useState(null);
+  const [keterangan, setKeterangan] = useState(null);
+  const [jumlahFisik, setJumlahFisik] = useState(0);
+  const [jumlahPenyesuaian, setJumlahPenyesuaian] = useState("");
+  const handleJumlahFisik = (e) => {
+    setJumlahFisik(e.target.value);
+    setJumlahPenyesuaian(e.target.value - barang.stok);
+  };
+  const handleChangePetugas = (e) => {
+    setPetugas(e.target.value);
+  };
+  const handleChangeKeterangan = (e) => {
+    setKeterangan(e.target.value);
+  };
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const handleSubmit = async () => {
+    const payload = {
+      petugas: petugas,
+      barang_id: barang.barang.barang_id,
+      keterangan: keterangan,
+      jml_tercatat: barang.stok,
+      jml_fisik: jumlahFisik,
+      jml_penyesuaian: jumlahPenyesuaian,
+      stock_gudang_id: barang.stock_gudang_id ? barang.stock_gudang_id : null,
+      stok_barang_id: barang.stok_barang_id ? barang.stok_barang_id : null,
+    };
+    console.log(payload);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/stok-opname/store`,
+        payload,
+        headers
+      );
+      if (response.data.status === true) {
+        modalRef.current.close();
+        Swal.fire({
+          icon: "success",
+          title: response.data.message,
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Gagal menyimpan stok opname",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+    }
+  };
+  return (
+    <div>
+      <dialog id={id} className="modal" ref={modalRef}>
+        <div className="modal-box w-11/12 max-w-6xl px-10 text-lg">
+          <div className="flex justify-center bg-primary text-white rounded-md p-4 text-wrap items-center text-md border-b-2">
+            Stok Opname; {barang.barang.nama_barang} -{" "}
+            {barang.fasyankes_warehouse != undefined
+              ? barang.fasyankes_warehouse.fasyankes.name
+              : barang.warehouse.name}
+          </div>
+          <div className="overflow-x-auto">
+            <table className="table">
+              <thead>
+                <tr>
+                  <th>Nama Pertugas</th>
+                  <th>Jumlah Tercatat</th>
+                  <th>Jumlah Fisik</th>
+                  <th>Jumlah Penyesuaian</th>
+                  <th>Keterangan</th>
+                  <th>Verifikasi</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="Nama Petugas"
+                      onChange={handleChangePetugas}
+                      value={petugas}
+                      className="input input-bordered input-sm rounded-md"
+                    />
+                  </td>
+                  <td>
+                    {barang.stok} {barang.barang.satuan}
+                  </td>
+                  <td>
+                    <input
+                      type="number"
+                      value={jumlahFisik}
+                      onChange={handleJumlahFisik}
+                      className="input max-w-28 input-bordered input-sm rounded-md"
+                    />{" "}
+                    {barang.barang.satuan}
+                  </td>
+                  <td>
+                    {jumlahPenyesuaian} {barang.barang.satuan}
+                  </td>
+                  <td>
+                    <input
+                      type="text"
+                      placeholder="Keterangan"
+                      onChange={handleChangeKeterangan}
+                      value={keterangan}
+                      className="input input-bordered input-sm rounded-md"
+                    />
+                  </td>
+                  <td>
+                    <input
+                      type="checkbox"
+                      onChange={handleCheckbox}
+                      defaultChecked={check}
+                      className="checkbox rounded-md checkbox-sm"
+                    />
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <div className="flex justify-end">
+            <button
+              onClick={handleSubmit}
+              disabled={!check}
+              className="btn bg-primary text-white hover:bg-primary btn-sm mt-5 rounded-md"
+            >
+              Opname
+            </button>
           </div>
         </div>
         <form method="dialog" className="modal-backdrop">

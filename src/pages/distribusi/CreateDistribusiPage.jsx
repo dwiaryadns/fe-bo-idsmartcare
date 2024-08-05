@@ -25,7 +25,7 @@ export const CreateDistribusiPage = () => {
         accessor: "stok",
       },
       {
-        Header: "Jumlah yg di distribusi",
+        Header: "Jumlah yang di distribusi",
         accessor: "jumlah_distribusi",
         Cell: ({ row }) => (
           <input
@@ -197,7 +197,7 @@ export const CreateDistribusiPage = () => {
                       <div className="flex justify-end mt-4">
                         <button
                           onClick={handleSave}
-                          className="btn bg-primary hover:bg-primary text-white btn-sm rounded-md"
+                          className="btn bg-primary hover:bg-primary text-white rounded-md"
                         >
                           <FontAwesomeIcon icon={faSave} /> Simpan
                         </button>

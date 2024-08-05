@@ -8,8 +8,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { navbarItems } from "../dummy/data";
 import { Link, useNavigate } from "react-router-dom";
 import Swal from "sweetalert2";
-import axios from "axios";
-import { API_BASE_URL, headers } from "../dummy/const";
+import { API_BASE_URL, } from "../dummy/const";
 import { useState } from "react";
 import axiosInstance from "../dummy/axiosInstance";
 

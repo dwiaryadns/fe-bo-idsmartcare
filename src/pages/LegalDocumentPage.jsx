@@ -1,5 +1,4 @@
 import {
-  faCheck,
   faHourglass,
   faLegal,
   faSave,
@@ -10,11 +9,10 @@ import Sidebar from "../components/Sidebar";
 import InputFile from "../components/legaldoc/InputFile";
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../dummy/const";
+import { API_BASE_URL } from "../dummy/const";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import StatusLegal from "../components/legaldoc/StatusLegal";
-import { data } from "autoprefixer";
 
 const LegalDocumentPage = () => {
   const [type, setType] = useState("");
@@ -27,6 +25,10 @@ const LegalDocumentPage = () => {
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {

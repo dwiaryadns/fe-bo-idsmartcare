@@ -75,7 +75,7 @@
   scrollbar-width: thin;
 }
 .tooltip {
-  --tooltip-color: #01CDFF;
+  --tooltip-color: #01cdff;
   --tooltip-text-color: #fff;
 }
 
@@ -94,4 +94,15 @@
 
 .float {
   animation: float 3s ease-in-out infinite;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type="number"] {
+  -moz-appearance: textfield;
+  margin: 0;
 }

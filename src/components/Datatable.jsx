@@ -102,7 +102,9 @@ export const Datatable = ({ columns, data, loading }) => {
                     <td
                       key={index}
                       {...cell.getCellProps()}
-                      style={{ padding: "10px", whiteSpace: "nowrap" }}
+                      style={{
+                        whiteSpace: "nowrap",
+                      }}
                     >
                       {cell.render("Cell")}
                     </td>
@@ -155,7 +157,7 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
 
   useEffect(() => {
     const fetchData = async () => {
-      setLoading(true)
+      setLoading(true);
       try {
         const response = await axios.get(`${API_BASE_URL}${endpoint}`, config);
         setData(response.data.data.data);
@@ -274,7 +276,6 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
                       key={index}
                       {...cell.getCellProps()}
                       style={{
-                        padding: "10px",
                         whiteSpace: "nowrap",
                       }}
                     >

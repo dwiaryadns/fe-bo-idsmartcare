@@ -34,6 +34,9 @@ import { StockWarehousePage } from "./pages/warehouse/StockWarehousePage";
 import { DistribusiPage } from "./pages/distribusi/DistribusiPage";
 import { CreateDistribusiPage } from "./pages/distribusi/CreateDistribusiPage";
 import { StockFasyankesPage } from "./pages/fasyankes/StockFasyankesPage";
+import StockOpnamePage from "./pages/opname/StockOpnamePage";
+import { ImportBarangPage } from "./pages/inventory/ImportBarangPage";
+import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
 
 function App() {
   return (
@@ -259,10 +262,34 @@ function App() {
             }
           />
           <Route
+            path="/stok-opname"
+            element={
+              <PrivateRoute>
+                <StockOpnamePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/stok-opname/histori"
+            element={
+              <PrivateRoute>
+                <HistoryStockOpname />
+              </PrivateRoute>
+            }
+          />
+          <Route
             path="/inventory/create"
             element={
               <PrivateRoute>
                 <CreateBarangPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/inventory/import"
+            element={
+              <PrivateRoute>
+                <ImportBarangPage />
               </PrivateRoute>
             }
           />

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import Input from "./Input";
 import Select from "./Select";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import { useNavigate } from "react-router";
 import Swal from "sweetalert2";
 import { StateStatus } from "./StateStatus";
@@ -97,6 +97,10 @@ const FormBoInfo = () => {
     );
   };
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {

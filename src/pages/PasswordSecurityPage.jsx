@@ -2,16 +2,10 @@ import { faLock } from "@fortawesome/free-solid-svg-icons";
 import Header from "../components/Header";
 import Navbar from "../components/Navbar";
 import Sidebar from "../components/Sidebar";
-import { data } from "autoprefixer";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
-import {
-  ACCESS_HEADER,
-  API_BASE_URL,
-  GATEWAY_KEY,
-  headers,
-} from "../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../dummy/const";
 import Swal from "sweetalert2";
 
 const PasswordSecurityPage = () => {
@@ -136,6 +130,10 @@ const PasswordSecurityPage = () => {
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [errors, setError] = useState({});
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const handleChangePassword = async () => {
     try {
       const response = await axios.post(

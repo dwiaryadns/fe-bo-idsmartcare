@@ -6,7 +6,7 @@ import { useState } from "react";
 import { Input } from "../../components/supplier/Input";
 import Select from "../../components/boInfo/Select";
 import axios from "axios";
-import { API_BASE_URL, headers } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
@@ -15,6 +15,10 @@ export const CreateSupplierPage = () => {
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   const handleTypeChange = (selectedType) => {
     setType(selectedType);
     setFormValues((prevValues) => ({
@@ -42,6 +46,29 @@ export const CreateSupplierPage = () => {
   });
   const handleChange = (e) => {
     const { name, value } = e.target;
+    if (name === "nomor_npwp" && value.length > 16) return;
+    if (name === "kode_pos" && value.length > 5) return;
+    if (name === "nomor_telepon" && value.length > 16) return;
+    if (name === "nomor_kontak_person" && value.length > 16) return;
+    if (name === "start_pks_date") {
+      if (value && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Tanggal tidak valid",
+        }));
+        return;
+      }
+    }
+    if (name === "end_pks_date") {
+      if (value && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: "Tanggal tidak valid",
+        }));
+        return;
+      }
+    }
+
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: value,
@@ -220,10 +247,11 @@ export const CreateSupplierPage = () => {
                     <Input
                       value={formValues.nomor_telepon}
                       errors={errors.nomor_telepon}
-                      type={"text"}
+                      type={"number"}
                       label={"Kontak Supplier"}
                       placeholder={"Kontak Supplier"}
                       name={"nomor_telepon"}
+                      max={16}
                       onChange={handleChange}
                     />
                     <Input
@@ -239,10 +267,11 @@ export const CreateSupplierPage = () => {
                   <Input
                     value={formValues.nomor_npwp}
                     errors={errors.nomor_npwp}
-                    type={"text"}
+                    type={"number"}
                     label={"Nomor NPWP"}
                     placeholder={"Nomor NPWP"}
                     name={"nomor_npwp"}
+                    max={16}
                     onChange={handleChange}
                   />
                   <Input
@@ -273,10 +302,11 @@ export const CreateSupplierPage = () => {
                   <Input
                     value={formValues.kode_pos}
                     errors={errors.kode_pos}
-                    type={"text"}
+                    type={"number"}
                     label={"Kode Pos"}
                     placeholder={"Kode Pos"}
                     name={"kode_pos"}
+                    max={5}
                     onChange={handleChange}
                   />
                   <div className="grid md:grid-cols-2 gap-5 grid-cols-1">
