@@ -47,7 +47,7 @@ const LoginPage = () => {
           } else {
             localStorage.removeItem("email");
           }
-          navigate("/dashboard");
+          navigate("/dasbor");
           Swal.fire({
             icon: "success",
             title: response.data.message,

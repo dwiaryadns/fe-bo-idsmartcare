@@ -93,7 +93,7 @@ function App() {
           />
 
           <Route
-            path="/dashboard"
+            path="/dasbor"
             element={
               <PrivateRoute>
                 <DashboardPage />

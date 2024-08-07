@@ -14,9 +14,9 @@ import {
 
 export const sidebarItemsRev = [
   {
-    title: "Dashboard",
+    title: "Dasbor",
     icon: faChartBar,
-    link: "dashboard",
+    link: "dasbor",
   },
   {
     title: "Informasi Bisnis",
@@ -97,7 +97,7 @@ export const sidebarItemsRev = [
         link: "stok-opname",
       },
       {
-        title: "History Stok Opname",
+        title: "Histori Stok Opname",
         link: "stok-opname/histori",
       },
     ],

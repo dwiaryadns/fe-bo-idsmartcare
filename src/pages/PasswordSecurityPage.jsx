@@ -366,7 +366,7 @@ const PasswordSecurityPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Password & Security" icon={faLock} />
+            <Header title="Keamanan Akun" icon={faLock} />
             <div className="flex flex-col justify-center text-center mt-5 md:mx-64">
               {stepPage()}
             </div>

@@ -99,7 +99,7 @@ export const StockFasyankesPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Stock Fasyankes" icon={faBox} />
+            <Header title="Stok Fasyankes" icon={faBox} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div>

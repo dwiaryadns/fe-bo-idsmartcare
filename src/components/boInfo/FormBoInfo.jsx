@@ -124,7 +124,6 @@ const FormBoInfo = () => {
 
   const handleSubmitBoInfo = async (e) => {
     setLoading(true);
-    console.log(formValues);
     e.preventDefault();
     const payload = {
       // businessId: formValues.businessId,
@@ -220,7 +219,6 @@ const FormBoInfo = () => {
         setLoading(false);
       });
   };
-  console.log(formValues);
 
   if (loading) {
     return (

@@ -9,7 +9,7 @@ import { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import Swal from "sweetalert2";
-import templateExcel from "../../dummy/template.xlsx";
+import templateExcel from "../../dummy/Template-Data-Obat.xlsx";
 
 export const ImportBarangPage = () => {
   const lists = [
@@ -52,7 +52,7 @@ export const ImportBarangPage = () => {
       setImportedData(response.data.data);
       Swal.fire({
         icon: "success",
-        title: "Import Gagal",
+        title: "Import Berhasil",
         text: response.data.message,
         toast: true,
         position: "top-end",
@@ -95,14 +95,14 @@ export const ImportBarangPage = () => {
               <a
                 href={templateExcel}
                 className="btn rounded-md bg-success hover:bg-success text-white btn-sm"
-                download="template.xlsx"
+                download="Template-Data-Obat.xlsx"
               >
                 <FontAwesomeIcon icon={faFileExcel} /> Download Template
               </a>
             </div>
           </div>
           <div>
-            <form className="flex w-full mt-10" onSubmit={handleSubmit}>
+            <form className="flex md:flex-row flex-col md:gap-0 gap-2 w-full mt-10" onSubmit={handleSubmit}>
               <input
                 type="file"
                 className="file-input  file-input-bordered file-input-primary rounded-md w-full "

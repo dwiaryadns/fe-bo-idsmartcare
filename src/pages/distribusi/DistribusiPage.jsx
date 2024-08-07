@@ -56,7 +56,7 @@ export const DistribusiPage = () => {
         <div className="w-full ">
           <Navbar />
           <div className="mx-10">
-            <Header title="Distribusi" icon={faBagShopping} />
+            <Header title="Distribusi Barang" icon={faBagShopping} />
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">

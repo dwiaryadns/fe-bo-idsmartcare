@@ -17,7 +17,7 @@ const DashboardPage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Dashboard" icon={faChartBar} />
+            <Header title="Dasbor" icon={faChartBar} />
             <div className="mt-3">
               <div role="alert" className="alert alert-warning">
                 <svg
