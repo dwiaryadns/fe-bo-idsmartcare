@@ -1,7 +1,7 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import "./index.css";
 import DashboardPage from "./pages/DashboardPage";
-import AccessPage from "./pages/AccessPage";
+import AccessPage from "./pages/access/AccessPage";
 import SubscribtionPage from "./pages/SubscribtionPage";
 import LegalDocumentPage from "./pages/LegalDocumentPage";
 import PasswordSecurityPage from "./pages/PasswordSecurityPage";
@@ -29,7 +29,7 @@ import { CreatePurchasePage } from "./pages/purchase/CreatePurchasePage";
 import { SupplierPage } from "./pages/supplier/SupplierPage";
 import { CreateSupplierPage } from "./pages/supplier/CreateSupplierPage";
 import { CreateBarangPage } from "./pages/inventory/CreateBarangPage";
-import NotFound from "./components/404Page";
+import NotFound from "./pages/404Page";
 import { StockWarehousePage } from "./pages/warehouse/StockWarehousePage";
 import { DistribusiPage } from "./pages/distribusi/DistribusiPage";
 import { CreateDistribusiPage } from "./pages/distribusi/CreateDistribusiPage";
@@ -37,6 +37,8 @@ import { StockFasyankesPage } from "./pages/fasyankes/StockFasyankesPage";
 import StockOpnamePage from "./pages/opname/StockOpnamePage";
 import { ImportBarangPage } from "./pages/inventory/ImportBarangPage";
 import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
+import NoAccessPage from "./pages/403Page";
+import CreateAccessPage from "./pages/access/CreateAccessPage";
 
 function App() {
   return (
@@ -137,6 +139,14 @@ function App() {
             element={
               <PrivateRoute>
                 <AccessPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/access/create"
+            element={
+              <PrivateRoute>
+                <CreateAccessPage />
               </PrivateRoute>
             }
           />
@@ -326,6 +336,7 @@ function App() {
             }
           />
           <Route path="*" element={<NotFound />} />
+          <Route path="/forbidden" element={<NoAccessPage />} />
         </Routes>
       </Router>
     </div>

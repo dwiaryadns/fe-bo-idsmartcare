@@ -39,15 +39,13 @@ export const PurchasePage = () => {
         Header: "Status",
         accessor: "status",
         Cell: ({ row }) => (
-          <div className="indicator">
+          <div className="flex items-center">
             <span
-              className={`indicator-item h-5 indicator-middle indicator-start badge ${
-                row.original.status === "Order"
-                  ? "badge-warning"
-                  : "badge-success"
+              className={`${
+                row.original.status === "Order" ? "dot-pending" : "dot-success"
               }`}
             ></span>
-            <div className=" ml-4 place-items-center">
+            <div className="ml-2 text-sm place-items-center">
               {row.original.status}
             </div>
           </div>
@@ -106,8 +104,8 @@ export const PurchasePage = () => {
             <Header title="Pemesanan Barang" icon={faTag} />
             <div className="card shadow-md ">
               <div className="card-body">
-                <div className="card-title flex justify-between">
-                  <p className="md:text-lg text-sm">List Pemesanan</p>
+                <div className="card-title flex md:flex-row flex-col justify-between">
+                  <p className="text-lg ">List Pemesanan</p>
                   <Link
                     className="btn cursor-pointer bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                     to={"/purchase/create"}
@@ -117,7 +115,7 @@ export const PurchasePage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="table-pin-rows overflow-x-auto">
+                <div>
                   <Datatable
                     columns={columns}
                     data={goodReceipt}

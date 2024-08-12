@@ -105,9 +105,9 @@ export const SupplierPage = () => {
 
   const [supplier, setSupplier] = useState([]);
   const token = localStorage.getItem("token");
-    const headers = {
-      headers: { Authorization: `Bearer ${token}` },
-    };
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
   useEffect(() => {
     const fetchSupplier = async () => {
       try {
@@ -162,10 +162,10 @@ export const SupplierPage = () => {
           <Navbar />
           <div className="mx-10">
             <Header title="Supplier" icon={faIndustry} />
-            <div className="card shadow-md ">
+            <div className="card shadow-md">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Supplier</p>
+                  <p className="text-lg ">List Supplier</p>
                   <Link
                     to={"/supplier/create"}
                     className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
@@ -175,7 +175,7 @@ export const SupplierPage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="table-pin-rows overflow-x-auto">
+                <div>
                   <Datatable
                     columns={columns}
                     data={supplier}

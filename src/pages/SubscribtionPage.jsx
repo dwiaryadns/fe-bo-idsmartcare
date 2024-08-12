@@ -67,11 +67,9 @@ const SubscriptionPage = () => {
         Header: "Status",
         accessor: "status",
         Cell: ({ row }) => (
-          <div className="indicator">
-            <span
-              className={`indicator-item h-5 indicator-middle indicator-start badge badge-warning`}
-            ></span>
-            <div className=" ml-3 place-items-center">
+          <div className="flex items-center">
+            <span className="dot-pending"></span>
+            <div className=" ml-2 place-items-center">
               {row.original.status}
             </div>
           </div>
@@ -136,12 +134,10 @@ const SubscriptionPage = () => {
         Header: "Status",
         accessor: "status",
         Cell: ({ row }) => (
-          <div className="indicator">
+          <div className="flex items-center">
             <span
-              className={`indicator-item h-5 indicator-middle indicator-start badge ${
-                row.original.status === "success"
-                  ? "badge-success"
-                  : "badge-error"
+              className={`${
+                row.original.status === "Success" ? "dot-success" : "dot-error"
               }`}
             ></span>
             <div className=" ml-3 place-items-center">
@@ -167,7 +163,7 @@ const SubscriptionPage = () => {
                 <h3 className="font-bold text-lg mt-5 text-primary">
                   Belum Bayar
                 </h3>
-                <div className="overflow-x-auto table-pin-rows">
+                <div>
                   <Datatable
                     columns={needPayColumns}
                     data={needPayData}
@@ -179,7 +175,7 @@ const SubscriptionPage = () => {
                 <h3 className="font-bold text-lg text-primary">
                   Histori Langganan
                 </h3>
-                <div className="overflow-x-auto table-pin-rows">
+                <div>
                   <Datatable
                     columns={historyColumns}
                     data={historyData}

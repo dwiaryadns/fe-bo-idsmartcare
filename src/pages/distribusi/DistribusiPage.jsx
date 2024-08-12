@@ -60,7 +60,7 @@ export const DistribusiPage = () => {
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Distribusi</p>
+                  <p className="text-lg">List Distribusi</p>
                   <Link to={"/distribusi/create"}>
                     <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
                       <FontAwesomeIcon icon={faPlus} />
@@ -69,7 +69,7 @@ export const DistribusiPage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="overflow-x-auto table-pin-rows">
+                <div>
                   <Datatable
                     columns={columns}
                     data={distribusi}

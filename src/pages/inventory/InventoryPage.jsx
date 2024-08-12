@@ -53,7 +53,7 @@ export const InventoryPage = () => {
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Barang</p>
+                  <p className="text-lg ">List Barang</p>
                   <Link
                     className="btn bg-success md:btn-md btn-sm hover:bg-success text-white rounded-md"
                     to={"/inventory/import"}
@@ -70,7 +70,7 @@ export const InventoryPage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="overflow-x-auto table-pin-rows">
+                <div >
                   <DatatableWithPaginate
                     columns={columns}
                     endpoint={"/inventory/get-barang"}

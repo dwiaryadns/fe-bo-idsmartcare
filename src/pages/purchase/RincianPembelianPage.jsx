@@ -132,7 +132,7 @@ export const RincianPembelianPage = ({
             <tr>
               <th></th>
               <th>Nama Produk</th>
-              <th>Kuantitas</th>
+              <th className="md:text-start text-center">Kuantitas</th>
               <th>Harga Jual</th>
               <th>Subtotal</th>
               <th>Keterangan</th>
@@ -144,23 +144,25 @@ export const RincianPembelianPage = ({
                 <th>{index + 1}</th>
                 <td>{barang.barang.nama_barang}</td>
                 <td>
-                  <button
-                    className="btn btn-sm"
-                    onClick={() => handleDecrement(index)}
-                  >
-                    -
-                  </button>
-                  <input
-                    className="input input-bordered rounded-md input-sm max-w-14 text-center"
-                    value={quantities[index]}
-                    readOnly
-                  />
-                  <button
-                    className="btn btn-sm"
-                    onClick={() => handleIncrement(index)}
-                  >
-                    +
-                  </button>
+                  <div className="flex flex-row">
+                    <button
+                      className="btn btn-sm rounded-md"
+                      onClick={() => handleDecrement(index)}
+                    >
+                      -
+                    </button>
+                    <input
+                      className="input input-bordered rounded-md input-sm max-w-14 text-center"
+                      value={quantities[index]}
+                      readOnly
+                    />
+                    <button
+                      className="btn btn-sm rounded-md"
+                      onClick={() => handleIncrement(index)}
+                    >
+                      +
+                    </button>
+                  </div>
                 </td>
                 <td>{formatRupiah(barang.barang.harga_beli)}</td>
                 <td>

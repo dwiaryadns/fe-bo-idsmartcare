@@ -140,7 +140,7 @@ export const StockWarehousePage = () => {
     if (warehouses.length === 1) {
       return (
         <div>
-          <div className="overflow-x-auto table-pin-rows">
+          <div>
             <span className="font-bold text-lg">
               Stock Barang - Gudang {warehouses[0].name}{" "}
             </span>
@@ -177,7 +177,7 @@ export const StockWarehousePage = () => {
               <span className="font-bold text-lg">
                 Stock Barang - Gudang {selectedWarehouseName}{" "}
               </span>
-              <div className="overflow-x-auto table-pin-rows">
+              <div >
                 <DatatableWithPaginate
                   columns={columns}
                   endpoint="/warehouses/stock-gudang"

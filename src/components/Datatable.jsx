@@ -38,7 +38,7 @@ export const Datatable = ({ columns, data, loading }) => {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex md:flex-row flex-col justify-between">
         <select
           className="select select-bordered rounded-md select-sm mt-3"
           value={pageSize}
@@ -56,65 +56,67 @@ export const Datatable = ({ columns, data, loading }) => {
           value={globalFilter || ""}
           onChange={(e) => setGlobalFilter(e.target.value || undefined)}
           placeholder="Search..."
-          className="input input-bordered rounded-md mb-5 input-sm mt-3 mr-2"
+          className="input input-bordered rounded-md mb-5 input-sm mt-3"
         />
       </div>
-      <table
-        className="table table-zebra"
-        {...getTableProps()}
-        style={{ width: "100%" }}
-      >
-        <thead className="font-extrabold">
-          {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  key={index}
-                  {...column.getHeaderProps()}
-                  style={{ color: "black", fontWeight: "bold" }}
+      <div className="table-pin-rows overflow-x-auto">
+        <table
+          className="table whitespace-nowrap table-zebra-zebra"
+          {...getTableProps()}
+          style={{ width: "100%" }}
+        >
+          <thead className="font-extrabold">
+            {headerGroups.map((headerGroup, index) => (
+              <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, index) => (
+                  <th
+                    key={index}
+                    {...column.getHeaderProps()}
+                    style={{ color: "black", fontWeight: "bold" }}
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {page.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  style={{ textAlign: "center", padding: "10px" }}
                 >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {page.length === 0 ? (
-            <tr>
-              <td
-                colSpan={columns.length}
-                style={{ textAlign: "center", padding: "10px" }}
-              >
-                {loading ? (
-                  <span className="loading loading-dots loading-md"></span>
-                ) : (
-                  "No records found"
-                )}
-              </td>
-            </tr>
-          ) : (
-            page.map((row, index) => {
-              prepareRow(row);
-              return (
-                <tr key={index} {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => (
-                    <td
-                      key={index}
-                      {...cell.getCellProps()}
-                      style={{
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+                  {loading ? (
+                    <span className="loading loading-dots loading-md"></span>
+                  ) : (
+                    "No records found"
+                  )}
+                </td>
+              </tr>
+            ) : (
+              page.map((row, index) => {
+                prepareRow(row);
+                return (
+                  <tr key={index} {...row.getRowProps()}>
+                    {row.cells.map((cell, index) => (
+                      <td
+                        key={index}
+                        {...cell.getCellProps()}
+                        // style={{
+                        //   whiteSpace: "nowrap",
+                        // }}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
       <div className="pagination-container">
         <ReactPaginate
           previousLabel={<FontAwesomeIcon icon={faAngleDoubleLeft} />}
@@ -201,7 +203,7 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
 
   return (
     <div>
-      <div className="flex justify-between">
+      <div className="flex md:flex-row flex-col justify-between">
         <select
           className="select select-bordered rounded-md select-sm mt-3"
           value={localPageSize}
@@ -219,75 +221,77 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
           value={globalFilter || ""}
           onChange={(e) => setGlobalFilter(e.target.value || undefined)}
           placeholder="Search..."
-          className="input input-bordered rounded-md mb-5 input-sm mt-3 mr-2"
+          className="input input-bordered rounded-md mb-5 input-sm mt-3"
         />
       </div>
-      <table
-        className="table table-zebra"
-        {...getTableProps()}
-        style={{
-          width: "100%",
-        }}
-      >
-        <thead className="font-extrabold">
-          {headerGroups.map((headerGroup, index) => (
-            <tr key={index} {...headerGroup.getHeaderGroupProps()}>
-              {headerGroup.headers.map((column, index) => (
-                <th
-                  key={index}
-                  {...column.getHeaderProps()}
-                  style={{
-                    color: "black",
-                    fontWeight: "bold",
-                  }}
+      <div className="table-pin-rows overflow-x-auto">
+        <table
+          className="table table-zebra"
+          {...getTableProps()}
+          style={{
+            width: "100%",
+          }}
+        >
+          <thead className="font-extrabold">
+            {headerGroups.map((headerGroup, index) => (
+              <tr key={index} {...headerGroup.getHeaderGroupProps()}>
+                {headerGroup.headers.map((column, index) => (
+                  <th
+                    key={index}
+                    {...column.getHeaderProps()}
+                    style={{
+                      color: "black",
+                      fontWeight: "bold",
+                    }}
+                  >
+                    {column.render("Header")}
+                  </th>
+                ))}
+              </tr>
+            ))}
+          </thead>
+          <tbody {...getTableBodyProps()}>
+            {loading ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  style={{ textAlign: "center", padding: "10px" }}
                 >
-                  {column.render("Header")}
-                </th>
-              ))}
-            </tr>
-          ))}
-        </thead>
-        <tbody {...getTableBodyProps()}>
-          {loading ? (
-            <tr>
-              <td
-                colSpan={columns.length}
-                style={{ textAlign: "center", padding: "10px" }}
-              >
-                <span className="loading loading-dots loading-md"></span>
-              </td>
-            </tr>
-          ) : page.length === 0 ? (
-            <tr>
-              <td
-                colSpan={columns.length}
-                style={{ textAlign: "center", padding: "10px" }}
-              >
-                No records found
-              </td>
-            </tr>
-          ) : (
-            page.map((row, index) => {
-              prepareRow(row);
-              return (
-                <tr key={index} {...row.getRowProps()}>
-                  {row.cells.map((cell, index) => (
-                    <td
-                      key={index}
-                      {...cell.getCellProps()}
-                      style={{
-                        whiteSpace: "nowrap",
-                      }}
-                    >
-                      {cell.render("Cell")}
-                    </td>
-                  ))}
-                </tr>
-              );
-            })
-          )}
-        </tbody>
-      </table>
+                  <span className="loading loading-dots loading-md"></span>
+                </td>
+              </tr>
+            ) : page.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={columns.length}
+                  style={{ textAlign: "center", padding: "10px" }}
+                >
+                  No records found
+                </td>
+              </tr>
+            ) : (
+              page.map((row, index) => {
+                prepareRow(row);
+                return (
+                  <tr key={index} {...row.getRowProps()}>
+                    {row.cells.map((cell, index) => (
+                      <td
+                        key={index}
+                        {...cell.getCellProps()}
+                        // style={{
+                        //   whiteSpace: "nowrap",
+                        // }}
+                      >
+                        {cell.render("Cell")}
+                      </td>
+                    ))}
+                  </tr>
+                );
+              })
+            )}
+          </tbody>
+        </table>
+      </div>
       <div className="pagination-container">
         <ReactPaginate
           previousLabel={<FontAwesomeIcon icon={faAngleDoubleLeft} />}

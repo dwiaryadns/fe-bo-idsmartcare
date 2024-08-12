@@ -31,7 +31,11 @@ export const CardPackage = ({
           >
             {title}{" "}
             {isPopular ? (
-              <span className="badge bg-info text-white text-xs align-center wp">
+              <span
+                className={`${
+                  isPackage === title ? "text-primary bg-white" : "bg-info text-white"
+                } badge text-xs align-center font-bold`}
+              >
                 Popular
               </span>
             ) : (

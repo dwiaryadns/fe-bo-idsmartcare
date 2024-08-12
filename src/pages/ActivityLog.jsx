@@ -129,7 +129,7 @@ const ActivityLog = () => {
             </div>
           </div>
           <hr className="my-3" />
-          <div className="table-pin-rows overflow-x-auto">
+          <div >
             <DatatableWithPaginate
               endpoint={"/activity-log"}
               columns={columns}

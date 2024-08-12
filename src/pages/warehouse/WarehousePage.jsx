@@ -81,7 +81,7 @@ const WarehousePage = () => {
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Gudang</p>
+                  <p className="text-lg ">List Gudang</p>
                   <Link
                     className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
                     to={"/warehouse/create"}
@@ -91,7 +91,7 @@ const WarehousePage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="overflow-x-auto table-pin-rows">
+                <div className="overflow-x-auto">
                   <Datatable
                     columns={columns}
                     data={warehouse}

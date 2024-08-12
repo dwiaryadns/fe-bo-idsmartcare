@@ -185,7 +185,7 @@ export const HistoryStockOpname = () => {
             </div>
           </div>
           <hr></hr>
-          <div className="table-pin-rows overflow-x-auto">
+          <div >
             <DatatableWithPaginate
               endpoint={"/stok-opname/histori"}
               columns={columns}

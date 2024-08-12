@@ -119,7 +119,7 @@ export const StockFasyankesPage = () => {
                   </select>
                 </div>
                 <hr className="my-3" />
-                <div className="overflow-x-auto table-pin-rows">
+                <div >
                   <DatatableWithPaginate
                     columns={columns}
                     endpoint="/inventory/get-stock-barang"

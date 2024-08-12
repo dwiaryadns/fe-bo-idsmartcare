@@ -698,13 +698,15 @@ export const ModalOpname = ({ id, barang }) => {
                     {barang.stok} {barang.barang.satuan}
                   </td>
                   <td>
-                    <input
-                      type="number"
-                      value={jumlahFisik}
-                      onChange={handleJumlahFisik}
-                      className="input max-w-28 input-bordered input-sm rounded-md"
-                    />{" "}
-                    {barang.barang.satuan}
+                    <div className="flex items-center gap-2">
+                      <input
+                        type="number"
+                        value={jumlahFisik}
+                        onChange={handleJumlahFisik}
+                        className="input max-w-16 input-bordered input-sm rounded-md"
+                      />{" "}
+                      {barang.barang.satuan}
+                    </div>
                   </td>
                   <td>
                     {jumlahPenyesuaian} {barang.barang.satuan}

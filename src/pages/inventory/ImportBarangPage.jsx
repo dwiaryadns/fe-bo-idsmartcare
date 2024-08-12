@@ -14,12 +14,12 @@ import templateExcel from "../../dummy/Template-Data-Obat.xlsx";
 export const ImportBarangPage = () => {
   const lists = [
     "Edit file Excel dengan memasukkan data berupa informasi barang, seperti kode produk, tipe produk, nama produk, dan harga beli.",
-    "Pastikan format Excel tidak diubah agar sistem IDSmartCare tetap dapat mengenali file tersebut.",
+    "Pastikan format Excel tidak diubah agar sistem idSmartCare tetap dapat mengenali file tersebut.",
     "File Excel yang akan di import hanya maksimal sebesar 2 Mb.",
     "Jika anda ingin melakukan Import dengan data yang banyak dan menggunakan file besar, harap melakukan import file bertahap untuk menghindari terjadinya kegagalan upload file Excel.",
-    "Jika produk sudah terdaftar dalam sistem IDSmartCare, proses impor melalui Excel akan gagal untuk mencegah terjadinya duplikasi produk.",
-    "Jika Anda mengalami kendala atau menemukan Bug dalam melakukan import data melalui Excel, harap untuk menghubi tim support kami.",
-    "Harap unduh file Excel di bawah ini untuk melihat format yang dapat dikenali oleh sistem IDSmartCare.",
+    "Jika produk sudah terdaftar dalam sistem idSmartCare, proses impor melalui Excel akan gagal untuk mencegah terjadinya duplikasi produk.",
+    "Jika Anda mengalami kendala atau menemukan Bug dalam melakukan import data melalui Excel, harap untuk menghubungi tim support kami.",
+    "Harap unduh file Excel di bawah ini untuk melihat format yang dapat dikenali oleh sistem idSmartCare.",
   ];
   const [file, setFile] = useState(null);
   const [importedData, setImportedData] = useState([]);
@@ -102,7 +102,10 @@ export const ImportBarangPage = () => {
             </div>
           </div>
           <div>
-            <form className="flex md:flex-row flex-col md:gap-0 gap-2 w-full mt-10" onSubmit={handleSubmit}>
+            <form
+              className="flex md:flex-row flex-col md:gap-0 gap-2 w-full mt-10"
+              onSubmit={handleSubmit}
+            >
               <input
                 type="file"
                 className="file-input  file-input-bordered file-input-primary rounded-md w-full "

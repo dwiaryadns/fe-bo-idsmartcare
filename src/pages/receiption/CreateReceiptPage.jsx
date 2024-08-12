@@ -410,7 +410,7 @@ export const CreateReceiptPage = () => {
 
   const detailBarang = () => {
     return (
-      <div className="overflow-x-auto">
+      <div className="">
         <div className="card bg-white rounded-md shadow-md">
           <div className="card-body">
             <p className="mb-3 font-bold text-lg">Detail Barang</p>
@@ -434,65 +434,70 @@ export const CreateReceiptPage = () => {
               </span>
             </div>
 
-            <table className="table overflow-x-auto table-pin-rows">
-              <thead>
-                <tr>
-                  <th>Nama Barang</th>
-                  <th>Jumlah Pembeliaan</th>
-                  <th>Barang Datang</th>
-                  <th>Jumlah Kekurangan</th>
-                  <th>Catatan</th>
-                </tr>
-              </thead>
-              <tbody>
-                {data &&
-                  data.barangs &&
-                  data.barangs.map((barang, index) => (
-                    <tr key={index}>
-                      <td>{barang.nama}</td>
-                      <td>{barang.qty}</td>
-                      <td>
-                        <button
-                          className="btn btn-sm"
-                          onClick={() => handleDecrement(index)}
-                        >
-                          -
-                        </button>
-                        <input
-                          className="input input-sm max-w-14 text-center rounded-md input-bordered"
-                          type="text"
-                          value={barang.barangDatang || 0}
-                          onChange={(e) =>
-                            handleBarangDatangChange(
-                              index,
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
-                        <button
-                          className="btn btn-sm"
-                          onClick={() => handleIncrement(index)}
-                        >
-                          +
-                        </button>
-                      </td>
-                      <td>{barang.jml_kekurangan}</td>
+            <div className="overflow-x-auto table-pin-rows">
+              <table className="table ">
+                <thead>
+                  <tr>
+                    <th>Nama Barang</th>
+                    <th>Jumlah Pembeliaan</th>
+                    <th>Barang Datang</th>
+                    <th>Jumlah Kekurangan</th>
+                    <th>Catatan</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {data &&
+                    data.barangs &&
+                    data.barangs.map((barang, index) => (
+                      <tr key={index}>
+                        <td>{barang.nama}</td>
+                        <td>{barang.qty}</td>
+                        <td>
+                          <div className="flex flex-row">
+                            <button
+                              className="btn btn-sm rounded-md"
+                              onClick={() => handleDecrement(index)}
+                            >
+                              -
+                            </button>
+                            <input
+                              className="input input-sm max-w-14 text-center rounded-md input-bordered"
+                              type="text"
+                              value={barang.barangDatang || 0}
+                              onChange={(e) =>
+                                handleBarangDatangChange(
+                                  index,
+                                  parseInt(e.target.value)
+                                )
+                              }
+                            />
+                            <button
+                              className="btn btn-sm rounded-md"
+                              onClick={() => handleIncrement(index)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </td>
+                        <td>{barang.jml_kekurangan}</td>
 
-                      <td>
-                        <input
-                          className="input input-bordered rounded-md"
-                          type="text"
-                          placeholder="Kondisi"
-                          value={conditions[index] || ""}
-                          onChange={(e) =>
-                            handleChangeCondition(index, e.target.value)
-                          }
-                        />
-                      </td>
-                    </tr>
-                  ))}
-              </tbody>
-            </table>
+                        <td>
+                          <input
+                            className="input input-bordered rounded-md"
+                            type="text"
+                            placeholder="Kondisi"
+                            value={conditions[index] || ""}
+                            onChange={(e) =>
+                              handleChangeCondition(index, e.target.value)
+                            }
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                </tbody>
+              </table>
+            </div>
+
             <div className="mt-5">
               <textarea
                 className={`textarea resize-none rounded-md textarea-bordered w-full`}

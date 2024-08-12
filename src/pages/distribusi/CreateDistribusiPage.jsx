@@ -186,7 +186,7 @@ export const CreateDistribusiPage = () => {
                 </div>
 
                 <hr className="my-2" />
-                <div className="overflow-x-auto table-pin-rows">
+                <div>
                   {selectedWarehouse && (
                     <div>
                       <DatatableWithPaginate

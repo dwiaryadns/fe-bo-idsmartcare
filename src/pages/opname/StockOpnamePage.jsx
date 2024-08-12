@@ -178,7 +178,7 @@ export default function StockOpnamePage() {
             </div>
           </div>
           <hr></hr>
-          <div className="table-pin-rows overflow-x-auto">
+          <div >
             <DatatableWithPaginate
               endpoint={"/stok-opname/barang"}
               columns={columns}

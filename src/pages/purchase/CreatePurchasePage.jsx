@@ -176,9 +176,6 @@ export const CreatePurchasePage = () => {
           <DatatableWithPaginate
             columns={columns}
             endpoint={"/purchase/get-barang-supplier"}
-            // selectedItems={selectedItems}
-            // count={count}
-            // handleClick={handleChangeCheckbox}
           />
         </div>
       ) : (

@@ -106,3 +106,25 @@ input[type="number"] {
   -moz-appearance: textfield;
   margin: 0;
 }
+
+.dot-success {
+  height: 10px;
+  width: 10px;
+  background-color: #11ff00;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-error {
+  height: 10px;
+  width: 10px;
+  background-color: #ff0000;
+  border-radius: 50%;
+  display: inline-block;
+}
+.dot-pending {
+  height: 10px;
+  width: 10px;
+  background-color: #fff700;
+  border-radius: 50%;
+  display: inline-block;
+}

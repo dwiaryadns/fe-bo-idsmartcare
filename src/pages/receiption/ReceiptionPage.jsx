@@ -33,15 +33,13 @@ export const ReceiptionPage = () => {
         Header: "Status",
         accessor: "status",
         Cell: ({ row }) => (
-          <div className="indicator">
+          <div className="flex items-center">
             <span
-              className={`indicator-item h-5 indicator-middle indicator-start badge ${
-                row.original.status === "Pending"
-                  ? "badge-warning"
-                  : "badge-success"
+              className={`${
+                row.original.status == "pending" ? "dot-pending" : "dot-success"
               }`}
             ></span>
-            <div className=" ml-4 place-items-center">
+            <div className=" ml-2 place-items-center">
               {row.original.status}
             </div>
           </div>
@@ -108,7 +106,7 @@ export const ReceiptionPage = () => {
             <div className="card shadow-md ">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="md:text-lg text-sm">List Penerimaan</p>
+                  <p className="text-lg">List Penerimaan</p>
                   <Link
                     to={"/good-receipt/create"}
                     className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
@@ -118,7 +116,7 @@ export const ReceiptionPage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="table-pin-rows overflow-x-auto">
+                <div>
                   <Datatable
                     columns={columns}
                     data={goodReceipt}
