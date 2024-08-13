@@ -112,7 +112,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
-          {errors.provinsi && <p>{errors.provinsi}</p>}
+          {errors.provinsi && (
+            <p className="text-xs text-error">{errors.provinsi}</p>
+          )}
         </div>
 
         <div className="form-control w-full">
@@ -144,7 +146,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
-          {errors.kabupaten && <p>{errors.kabupaten}</p>}
+          {errors.kabupaten && (
+            <p className="text-xs text-error">{errors.kabupaten}</p>
+          )}
         </div>
       </div>
 
@@ -178,7 +182,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
-          {errors.kecamatan && <p>{errors.kecamatan}</p>}
+          {errors.kecamatan && (
+            <p className="text-xs text-error">{errors.kecamatan}</p>
+          )}
         </div>
 
         <div className="form-control w-full">
@@ -210,7 +216,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
               </option>
             ))}
           </select>
-          {errors.desa && <p>{errors.desa}</p>}
+          {errors.desa && <p className="text-xs text-error">{errors.desa}</p>}
         </div>
       </div>
     </div>

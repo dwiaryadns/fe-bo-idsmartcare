@@ -89,7 +89,7 @@ const AccessPage = () => {
         Cell: ({ row }) => {
           return (
             <button
-              onClick={() => handleDelete(row.original.id)} // Gunakan fungsi arrow
+              onClick={() => handleDelete(row.original.id)} 
               className="btn bg-red-600 hover:bg-red-600 text-white rounded-md btn-sm"
             >
               Hapus

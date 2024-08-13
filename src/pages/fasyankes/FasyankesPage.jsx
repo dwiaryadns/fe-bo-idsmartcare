@@ -8,26 +8,42 @@ import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import { Datatable } from "../../components/Datatable";
+import DetailFasyankesPage from "./DetailFasyankesPage";
 
 const FasyankesPage = () => {
   const [loading, setLoading] = useState(true);
+  const [step, setStep] = useState(0);
+  const [data, setData] = useState();
+  const handleStep = (fasyankes) => {
+    setStep(step + 1);
+    setData(fasyankes);
+  };
+  const handleBack = () => {
+    setStep(step - 1);
+  };
   const columns = useMemo(
     () => [
       {
-        Header: "Name",
-        accessor: "name", // accessor is the "key" in the data
+        Header: "Nama Fasyankes",
+        accessor: "name",
       },
       {
-        Header: "Type",
+        Header: "Tipe Fasyankes",
         accessor: "type",
       },
       {
-        Header: "Report",
-        accessor: "report",
-      },
-      {
-        Header: "Information",
+        Header: "Aksi",
         accessor: "information",
+        Cell: ({ row }) => {
+          return (
+            <button
+              className="btn bg-primary hover:bg-primary text-white rounded-md btn-sm"
+              onClick={() => handleStep(row.original)}
+            >
+              Lihat Detail
+            </button>
+          );
+        },
       },
     ],
     []
@@ -43,7 +59,6 @@ const FasyankesPage = () => {
     axios
       .get(API_BASE_URL + "/fasyankes", headers)
       .then((response) => {
-        console.log(response.data.data);
         setFasyankes(response.data.data);
         setLoading(false);
       })
@@ -54,36 +69,40 @@ const FasyankesPage = () => {
 
   return (
     <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Fasyankes" icon={faHospital} />
-            <div className="card shadow-md ">
-              <div className="card-body">
-                <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="text-lg ">List Fasyankes</p>
-                  <Link to={"/fasyankes/create"}>
-                    <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
-                      <FontAwesomeIcon icon={faPlus} />
-                      Tambah Fasyankes
-                    </button>
-                  </Link>
-                </div>
-                <hr></hr>
-                <div >
-                  <Datatable
-                    columns={columns}
-                    data={fasyankes}
-                    loading={loading}
-                  />
+      {step === 0 ? (
+        <div className="flex flex-row w-full">
+          <Sidebar />
+          <div className="w-full">
+            <Navbar />
+            <div className="mx-10">
+              <Header title="Fasyankes" icon={faHospital} />
+              <div className="card shadow-md ">
+                <div className="card-body">
+                  <div className="card-title flex md:flex-row flex-col justify-between">
+                    <p className="text-lg ">List Fasyankes</p>
+                    <Link to={"/fasyankes/create"}>
+                      <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
+                        <FontAwesomeIcon icon={faPlus} />
+                        Tambah Fasyankes
+                      </button>
+                    </Link>
+                  </div>
+                  <hr></hr>
+                  <div>
+                    <Datatable
+                      columns={columns}
+                      data={fasyankes}
+                      loading={loading}
+                    />
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <DetailFasyankesPage data={data} handleBack={handleBack} />
+      )}
     </div>
   );
 };

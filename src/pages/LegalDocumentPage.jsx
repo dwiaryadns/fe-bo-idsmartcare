@@ -1,4 +1,6 @@
 import {
+  faEye,
+  faEyeSlash,
   faHourglass,
   faLegal,
   faSave,
@@ -13,6 +15,7 @@ import { API_BASE_URL } from "../dummy/const";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import StatusLegal from "../components/legaldoc/StatusLegal";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const LegalDocumentPage = () => {
   const [type, setType] = useState("");
@@ -29,6 +32,8 @@ const LegalDocumentPage = () => {
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };
+
+  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -163,7 +168,7 @@ const LegalDocumentPage = () => {
             onFileChange={handleFileChange("iso")}
           />
           <label className="form-control w-full">
-            <div className=" flex flex-col justify-start text-start">
+            <div className="flex flex-col justify-start text-start">
               <span className="label-text font-bold text-base">
                 Password <span className="text-red-600">*</span>
               </span>
@@ -171,16 +176,24 @@ const LegalDocumentPage = () => {
                 Password untuk melindungi data pribadi anda.
               </span>
             </div>
-            <input
-              type="password"
-              placeholder="Password File"
-              name="password"
-              value={password}
-              onChange={(e) => handleChangePassword(e)}
-              className={`input input-bordered w-full rounded-md input-primary ${
-                errors.password ? "input-error" : ""
-              }`}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password File"
+                name="password"
+                value={password}
+                onChange={(e) => handleChangePassword(e)}
+                className={`input input-bordered w-full rounded-md input-primary ${
+                  errors.password ? "input-error" : ""
+                }`}
+              />
+              <span
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </span>
+            </div>
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}
@@ -215,24 +228,32 @@ const LegalDocumentPage = () => {
             onFileChange={handleFileChange("iso")}
           />
           <label className="form-control w-full">
-            <div className=" flex flex-col justify-start text-start">
+            <div className="flex flex-col justify-start text-start">
               <span className="label-text font-bold text-base">
                 Password <span className="text-red-600">*</span>
               </span>
               <span className="text-xs text-gray-500 mb-1">
-                Password ini digunakan untuk mengakses file yang anda upload
+                Password untuk melindungi data pribadi anda.
               </span>
             </div>
-            <input
-              type="password"
-              placeholder="Password File"
-              name="password"
-              value={password}
-              onChange={(e) => handleChangePassword(e)}
-              className={`input input-bordered w-full rounded-md input-primary ${
-                errors.password ? "input-error" : ""
-              } `}
-            />
+            <div className="relative">
+              <input
+                type={showPassword ? "text" : "password"}
+                placeholder="Password File"
+                name="password"
+                value={password}
+                onChange={(e) => handleChangePassword(e)}
+                className={`input input-bordered w-full rounded-md input-primary ${
+                  errors.password ? "input-error" : ""
+                }`}
+              />
+              <span
+                className="absolute inset-y-0 right-0 pr-3 flex items-center text-gray-500 cursor-pointer"
+                onClick={() => setShowPassword(!showPassword)}
+              >
+                <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+              </span>
+            </div>
             {errors.password && (
               <p className="text-red-500 text-xs mt-1">{errors.password}</p>
             )}

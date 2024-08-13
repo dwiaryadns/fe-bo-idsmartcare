@@ -54,17 +54,6 @@ export const StockFasyankesPage = () => {
         Header: "Stok",
         accessor: "stok",
       },
-      {
-        Header: "Aksi",
-        accessor: "action",
-        Cell: ({ row }) => (
-          <div className="flex flex-row">
-            <button className="bg-primary btn-sm rounded-md hover:bg-primary text-white btn">
-              <FontAwesomeIcon icon={faEye} />
-            </button>
-          </div>
-        ),
-      },
     ],
     []
   );
@@ -119,7 +108,7 @@ export const StockFasyankesPage = () => {
                   </select>
                 </div>
                 <hr className="my-3" />
-                <div >
+                <div>
                   <DatatableWithPaginate
                     columns={columns}
                     endpoint="/inventory/get-stock-barang"

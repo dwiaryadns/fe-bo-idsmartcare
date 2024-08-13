@@ -455,13 +455,13 @@ export const CreateReceiptPage = () => {
                         <td>
                           <div className="flex flex-row">
                             <button
-                              className="btn btn-sm rounded-md"
+                              className="btn btn-sm rounded-r-none rounded-l-md btn-primary"
                               onClick={() => handleDecrement(index)}
                             >
                               -
                             </button>
                             <input
-                              className="input input-sm max-w-14 text-center rounded-md input-bordered"
+                              className="input input-bordered rounded-none input-sm max-w-20 text-center"
                               type="text"
                               value={barang.barangDatang || 0}
                               onChange={(e) =>
@@ -472,7 +472,7 @@ export const CreateReceiptPage = () => {
                               }
                             />
                             <button
-                              className="btn btn-sm rounded-md"
+                              className="btn btn-sm rounded-l-none rounded-r-md btn-primary"
                               onClick={() => handleIncrement(index)}
                             >
                               +

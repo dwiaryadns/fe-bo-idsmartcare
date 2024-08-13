@@ -165,7 +165,7 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
         />
 
         <p className="text-sm">
-          Dengan melakukan pembayaran, kamu setuju dengan <Link to={"/fasyankes/syarat-ketentuan-pembelian"} className="text-primary italic font-bold"> Syarat dan Ketentuan
+          Dengan melakukan pembayaran, kamu setuju dengan <Link target="_blank" to={"/fasyankes/syarat-ketentuan-pembelian"} className="text-primary italic font-bold"> Syarat dan Ketentuan
           Pembelian</Link>  di idSmartCare.
         </p>
       </div>

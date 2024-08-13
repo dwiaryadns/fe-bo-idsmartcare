@@ -39,6 +39,7 @@ import { ImportBarangPage } from "./pages/inventory/ImportBarangPage";
 import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
 import NoAccessPage from "./pages/403Page";
 import CreateAccessPage from "./pages/access/CreateAccessPage";
+import SyaratPemblianPage from "./pages/SyaratPemblianPage";
 
 function App() {
   return (
@@ -316,6 +317,14 @@ function App() {
             element={
               <PrivateRoute>
                 <PrivacyPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/fasyankes/syarat-ketentuan-pembelian"
+            element={
+              <PrivateRoute>
+                <SyaratPemblianPage />
               </PrivateRoute>
             }
           />

@@ -165,7 +165,7 @@ export const SupplierPage = () => {
             <div className="card shadow-md">
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="text-lg ">List Supplier</p>
+                  <p className="text-lg">List Supplier</p>
                   <Link
                     to={"/supplier/create"}
                     className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"

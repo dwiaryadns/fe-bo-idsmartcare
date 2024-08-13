@@ -72,7 +72,7 @@ export const FormCreateFasyankes = () => {
   };
 
   const [type, setType] = useState("");
-  const [step, setStep] = useState(1); 
+  const [step, setStep] = useState(3); 
   const [formData, setFormData] = useState({
     nameFasyankes: "",
     picName: "",

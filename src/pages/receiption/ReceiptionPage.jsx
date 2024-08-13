@@ -36,7 +36,7 @@ export const ReceiptionPage = () => {
           <div className="flex items-center">
             <span
               className={`${
-                row.original.status == "pending" ? "dot-pending" : "dot-success"
+                row.original.status == "Pending" ? "dot-pending" : "dot-success"
               }`}
             ></span>
             <div className=" ml-2 place-items-center">
@@ -56,15 +56,16 @@ export const ReceiptionPage = () => {
                 data={row.original.pending}
                 file_grn={row.original.grn}
               />
-              <FontAwesomeIcon
+              <button
                 onClick={() =>
                   document
                     .getElementById(row.original.penerimaan_id)
                     .showModal()
                 }
-                className="text-white bg-primary p-3 rounded-md text-sm"
-                icon={faEye}
-              />
+                className="bg-primary btn btn-sm hover:bg-primary text-white"
+              >
+                Lihat Detail
+              </button>
             </div>
           </div>
         ),

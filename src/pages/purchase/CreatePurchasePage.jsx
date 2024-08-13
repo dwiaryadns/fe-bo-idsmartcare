@@ -199,8 +199,8 @@ export const CreatePurchasePage = () => {
           <div className="mx-10">
             <Header title="Purchase" icon={faTag} />
             <div className="bg-blue-100 mb-5 ">
-              <div className="grid gap-5 md:grid-cols-3 rounded-b-md px-10 py-5">
-                <div className="flex w-full flex-col">
+              <div className="grid gap-5 md:grid-cols-3 grid-cols-1 rounded-b-md px-10 py-5">
+                <div className="flex flex-col">
                   <label className="font-bold mb-2">Supplier</label>
                   <input
                     className="input input-bordered rounded-md input-primary"
@@ -209,7 +209,7 @@ export const CreatePurchasePage = () => {
                     readOnly
                   />
                 </div>
-                <div className="flex w-full flex-col">
+                <div className="flex flex-col">
                   <label className="font-bold mb-2">Tanggal Pemesanan</label>
                   <input
                     type="date"
@@ -219,7 +219,7 @@ export const CreatePurchasePage = () => {
                     placeholder="Tanggal Pemesanan"
                   />
                 </div>
-                <div className="flex w-full flex-col">
+                <div className="flex flex-col">
                   <label className="font-bold mb-2">Warehouse</label>
                   <select
                     onChange={handleSelectWarehouse}

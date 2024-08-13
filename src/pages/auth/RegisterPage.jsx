@@ -148,59 +148,71 @@ const RegisterPage = () => {
 
   return (
     <div className="relative min-h-screen">
-      <img src={bgLogin} className="absolute inset-0 w-full h-full z-0" />
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 space-y-4">
-        <div className="hero">
-          <div className="bg-white rounded-lg md:p-12 hero-content flex flex-col lg:flex-row items-center lg:items-start">
+      <img
+        src={bgLogin}
+        className="absolute inset-0 w-full h-full z-0 object-cover"
+        alt="Background"
+      />
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 space-y-4">
+        <div className="hero w-full max-w-4xl">
+          <div className="bg-white rounded-lg p-6 md:p-12 flex flex-col lg:flex-row items-center lg:items-start space-y-6 lg:space-y-0 lg:space-x-10">
             <img
               src={imgLogin}
-              className="max-w-lg hidden md:block self-center"
+              className="w-full self-center max-w-xs md:max-w-sm lg:max-w-md hidden md:block"
+              alt="Login Illustration"
             />
-            <div className="w-full max-w-sm md:max-w-lg mt-6 md:mt-0 md:mr-10">
+
+            <div className="w-full">
               <div className="flex justify-center">
-                <img src={logoLogin} className="w-56 md:w-64 mb-4" alt="Logo" />
+                <img
+                  src={logoLogin}
+                  className="w-44 md:w-56 lg:w-64 mb-4"
+                  alt="Logo"
+                />
               </div>
-              <h6 className="text-2xl sm:text-3xl text-primary font-extrabold mb-3">
+              <h6 className="text-2xl sm:text-3xl text-primary font-extrabold mb-3 text-center lg:text-left">
                 Register
               </h6>
               <div className="mb-3">
-                <label className="font-bold text-sm">Fullname</label>
-                <label
-                  className={`input ${
-                    errors.fullname ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full`}
-                >
-                  <FontAwesomeIcon icon={faUser} />
+                <label className="font-bold text-sm">Nama Lengkap</label>
+                <div className="relative w-full">
                   <input
                     type="text"
-                    className="grow"
-                    onChange={handleFullname}
+                    className={`input ${
+                      errors.fullname ? "input-error" : "input-primary"
+                    } w-full rounded-md pl-10 pr-10 p-2`}
+                    placeholder="Nama Lengkap"
                     value={fullname}
-                    placeholder="Fullname"
+                    onChange={handleFullname}
                   />
-                </label>
-                {errors.fullname && (
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  />
+                </div>
+                {errors.email && (
                   <div className="text-red-500 text-xs mt-1">
-                    {errors.fullname}
+                    {errors.email}
                   </div>
                 )}
               </div>
               <div className="mb-3">
                 <label className="font-bold text-sm">Email</label>
-                <label
-                  className={`input ${
-                    errors.email ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full`}
-                >
-                  <FontAwesomeIcon icon={faEnvelope} />
+                <div className="relative w-full">
                   <input
                     type="email"
-                    className="grow"
-                    onChange={handleEmail}
-                    value={email}
+                    className={`input ${
+                      errors.email ? "input-error" : "input-primary"
+                    } w-full rounded-md pl-10 pr-10 p-2`}
                     placeholder="Email"
+                    value={email}
+                    onChange={handleEmail}
                   />
-                </label>
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  />
+                </div>
                 {errors.email && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.email}
@@ -209,58 +221,62 @@ const RegisterPage = () => {
               </div>
               <div className="mb-3">
                 <label className="font-bold text-sm">Password</label>
-                <label
-                  className={`input ${
-                    errors.password ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full relative`}
-                >
-                  <FontAwesomeIcon icon={faKey} />
+                <div className="relative w-full">
                   <input
                     type={showPassword ? "text" : "password"}
-                    className="grow"
+                    className={`input ${
+                      errors.password ? "input-error" : "input-primary"
+                    } w-full rounded-md pl-10 pr-10 p-2`}
                     onChange={handlePassword}
                     value={password}
                     placeholder="Password"
                   />
                   <FontAwesomeIcon
+                    icon={faKey}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  />
+                  <FontAwesomeIcon
                     icon={showPassword ? faEyeSlash : faEye}
                     onClick={() => setShowPassword(!showPassword)}
-                    className="cursor-pointer absolute right-3"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                   />
-                </label>
+                </div>
                 {errors.password && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.password}
                   </div>
                 )}
               </div>
-              <div>
+
+              <div className="mb-3">
                 <label className="font-bold text-sm">Confirm Password</label>
-                <label
-                  className={`input ${
-                    errors.confirmPassword ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full relative`}
-                >
-                  <FontAwesomeIcon icon={faKey} />
+                <div className="relative w-full">
                   <input
                     type={showConfirmPassword ? "text" : "password"}
-                    className="grow"
+                    className={`input ${
+                      errors.confirmPassword ? "input-error" : "input-primary"
+                    } w-full rounded-md pl-10 pr-10 p-2`}
                     onChange={handleConfirmPassword}
                     value={confirmPassword}
                     placeholder="Confirm Password"
                   />
                   <FontAwesomeIcon
+                    icon={faKey}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  />
+                  <FontAwesomeIcon
                     icon={showConfirmPassword ? faEyeSlash : faEye}
                     onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                    className="cursor-pointer absolute right-3"
+                    className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
                   />
-                </label>
+                </div>
                 {errors.confirmPassword && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.confirmPassword}
                   </div>
                 )}
               </div>
+
               {errors.api && (
                 <div className="text-red-500 text-xs mt-1">{errors.api}</div>
               )}
@@ -275,10 +291,10 @@ const RegisterPage = () => {
                     "Register"
                   )}
                 </button>
-                <div>
+                <div className="mt-3">
                   <span className="text-xs font-semibold">
                     Have an account?{" "}
-                    <Link to="/login" className="text-primary">
+                    <Link to="/login" className="text-primary underline">
                       Login
                     </Link>
                   </span>

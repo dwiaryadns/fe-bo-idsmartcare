@@ -7,7 +7,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import bgLogin from "../../assets/bg-login.png";
 import imgReset from "../../assets/img-reset.png";
 import logoLogin from "../../assets/logo-login.png";
-import { faXmark } from "@fortawesome/free-solid-svg-icons";
+import { faEye, faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
 
 const ResetPasswordPage = () => {
   const { search } = useLocation(); // Get the search query string
@@ -88,6 +88,10 @@ const ResetPasswordPage = () => {
     }));
   };
 
+  const [showPassword, setShowPassword] = useState(false);
+  const [showPasswordConfirmation, setShowPasswordConfirmation] =
+    useState(false);
+
   return (
     <div>
       <div className="relative min-h-screen flex items-center justify-center">
@@ -110,16 +114,21 @@ const ResetPasswordPage = () => {
                     New password must be different from previously used password
                   </p>
                   <div className="mb-3 mt-10">
-                    <div className="mb-3 flex flex-col">
+                    <div className="mb-3 flex flex-col relative">
                       <label className="font-bold">New Password</label>
                       <input
                         className={`input input-primary rounded-md ${
                           errors.password ? "input-error" : "input-primary"
-                        } `}
-                        type="password"
+                        }`}
+                        type={showPassword ? "text" : "password"}
                         placeholder="New Password"
                         value={password}
                         onChange={handleInputChange(setPassword, "password")}
+                      />
+                      <FontAwesomeIcon
+                        icon={showPassword ? faEyeSlash : faEye}
+                        onClick={() => setShowPassword(!showPassword)}
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
                       />
                       {errors.password && (
                         <div className="text-red-600 text-xs">
@@ -127,21 +136,28 @@ const ResetPasswordPage = () => {
                         </div>
                       )}
                     </div>
-                    <div className="mb-3 flex flex-col">
+                    <div className="mb-3 flex flex-col relative">
                       <label className="font-bold">Confirm Password</label>
                       <input
                         className={`input input-primary rounded-md ${
                           errors.password_confirmation
                             ? "input-error"
                             : "input-primary"
-                        } `}
-                        type="password"
+                        }`}
+                        type={showPasswordConfirmation ? "text" : "password"}
                         placeholder="Confirm New Password"
                         value={passwordConfirmation}
                         onChange={handleInputChange(
                           setPasswordConfirmation,
                           "password_confirmation"
                         )}
+                      />
+                      <FontAwesomeIcon
+                        icon={showPasswordConfirmation ? faEyeSlash : faEye}
+                        onClick={() =>
+                          setShowPasswordConfirmation(!showPasswordConfirmation)
+                        }
+                        className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer text-gray-500"
                       />
                       {errors.password_confirmation && (
                         <div className="text-red-600 text-xs">

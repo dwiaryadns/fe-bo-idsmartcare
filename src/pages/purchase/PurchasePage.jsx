@@ -67,7 +67,7 @@ export const PurchasePage = () => {
               }
               className="bg-primary btn btn-sm hover:bg-primary text-white"
             >
-              View Detail
+              Lihat Detail
             </button>
           </div>
         ),

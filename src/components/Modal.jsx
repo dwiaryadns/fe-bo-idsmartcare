@@ -1,4 +1,9 @@
-import { faCheck, faClone, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faClone,
+  faFilePdf,
+  faTimes,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
@@ -435,65 +440,69 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
           {loading ? (
             <span className="loading loading-spinner loading-lg"></span>
           ) : data.length >= 1 ? (
-            <div className="overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama Barang</th>
-                    <th>Jumlah Beli</th>
-                    <th>Jumlah Datang</th>
-                    <th>Jumlah Kurang</th>
-                    <th>Kondisi</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((receipt, index) => (
-                    <tr key={index}>
-                      <td>{receipt.detil_penerimaan_id}</td>
-                      <td>{receipt.barang.nama_barang}</td>
-                      <td>{receipt.jumlah}</td>
-                      <td>
-                        <button
-                          className="btn btn-sm"
-                          onClick={() => handleDecrement(index)}
-                        >
-                          -
-                        </button>
-                        <input
-                          className="input text-center input-sm max-w-14 rounded-md input-bordered"
-                          type="text"
-                          value={receipt.jml_datang || 0}
-                          onChange={(e) =>
-                            handleBarangDatangChange(
-                              index,
-                              parseInt(e.target.value)
-                            )
-                          }
-                        />
-                        <button
-                          className="btn btn-sm"
-                          onClick={() => handleIncrement(index)}
-                        >
-                          +
-                        </button>
-                      </td>
-                      <td>{receipt.jml_kurang}</td>
-                      <td>
-                        <input
-                          className="input input-bordered rounded-md"
-                          type="text"
-                          placeholder="Kondisi"
-                          value={conditions[index] || ""}
-                          onChange={(e) =>
-                            handleChangeCondition(index, e.target.value)
-                          }
-                        />
-                      </td>
+            <div>
+              <div className="overflow-x-auto">
+                <table className="table">
+                  <thead>
+                    <tr>
+                      <th>No</th>
+                      <th>Nama Barang</th>
+                      <th>Jumlah Beli</th>
+                      <th className="text-center">Jumlah Datang</th>
+                      <th>Jumlah Kurang</th>
+                      <th>Kondisi</th>
                     </tr>
-                  ))}
-                </tbody>
-              </table>
+                  </thead>
+                  <tbody>
+                    {data.map((receipt, index) => (
+                      <tr key={index}>
+                        <td>{receipt.detil_penerimaan_id}</td>
+                        <td>{receipt.barang.nama_barang}</td>
+                        <td>{receipt.jumlah}</td>
+                        <td>
+                          <div className="flex flex-row justify-center">
+                            <button
+                              className="btn btn-sm rounded-r-none rounded-l-md btn-primary"
+                              onClick={() => handleDecrement(index)}
+                            >
+                              -
+                            </button>
+                            <input
+                              className="input input-bordered rounded-none input-sm max-w-20 text-center"
+                              type="text"
+                              value={receipt.jml_datang || 0}
+                              onChange={(e) =>
+                                handleBarangDatangChange(
+                                  index,
+                                  parseInt(e.target.value)
+                                )
+                              }
+                            />
+                            <button
+                              className="btn btn-sm rounded-l-none rounded-r-md btn-primary"
+                              onClick={() => handleIncrement(index)}
+                            >
+                              +
+                            </button>
+                          </div>
+                        </td>
+                        <td>{receipt.jml_kurang}</td>
+                        <td>
+                          <input
+                            className="input input-bordered rounded-md"
+                            type="text"
+                            placeholder="Kondisi"
+                            value={conditions[index] || ""}
+                            onChange={(e) =>
+                              handleChangeCondition(index, e.target.value)
+                            }
+                          />
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
               <div className="flex justify-end ">
                 <button
                   onClick={handleUpdate}
@@ -530,6 +539,11 @@ export const ModalDetailPurchase = ({ poId, data, total }) => {
     <div>
       <dialog id={poId} className="modal" ref={modalRef}>
         <div className="modal-box w-11/12 max-w-5xl px-10">
+          <form method="dialog">
+            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
+              ✕
+            </button>
+          </form>
           <div>
             <div className="overflow-x-auto">
               <table className="table">

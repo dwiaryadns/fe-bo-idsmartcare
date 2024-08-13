@@ -18,7 +18,7 @@ export const ProfilePage = () => {
               <div className="hero-content gap-6 flex-col items-start lg:flex-row">
                 <div className="avatar">
                   <div className="w-72 rounded">
-                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.jpg" />
+                    <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
                   </div>
                 </div>
                 <div>

@@ -34,6 +34,23 @@ export const RincianPembelianPage = ({
     }
   };
 
+  const handleQuantityChange = (index, value) => {
+    const newQuantities = [...quantities];
+    let parsedValue = parseInt(value, 10);
+
+    if (value.startsWith("0")) {
+      parsedValue = parseInt(value.slice(1), 10);
+    }
+
+    if (value === "" || isNaN(parsedValue) || parsedValue <= 0) {
+      newQuantities[index] = 0;
+    } else {
+      newQuantities[index] = parsedValue;
+    }
+
+    setQuantities(newQuantities);
+  };
+
   const handleDescriptionChange = (index, value) => {
     const newDescriptions = [...descriptions];
     newDescriptions[index] = value;
@@ -132,7 +149,7 @@ export const RincianPembelianPage = ({
             <tr>
               <th></th>
               <th>Nama Produk</th>
-              <th className="md:text-start text-center">Kuantitas</th>
+              <th className=" text-center">Kuantitas</th>
               <th>Harga Jual</th>
               <th>Subtotal</th>
               <th>Keterangan</th>
@@ -144,20 +161,24 @@ export const RincianPembelianPage = ({
                 <th>{index + 1}</th>
                 <td>{barang.barang.nama_barang}</td>
                 <td>
-                  <div className="flex flex-row">
+                  <div className="flex flex-row justify-center">
                     <button
-                      className="btn btn-sm rounded-md"
+                      className="btn btn-sm rounded-r-none rounded-l-md btn-primary"
                       onClick={() => handleDecrement(index)}
                     >
                       -
                     </button>
                     <input
-                      className="input input-bordered rounded-md input-sm max-w-14 text-center"
+                      className="input input-bordered rounded-none input-sm max-w-20 text-center"
+                      type="number"
+                      min="0" // Allow zero value
                       value={quantities[index]}
-                      readOnly
+                      onChange={(e) =>
+                        handleQuantityChange(index, e.target.value)
+                      }
                     />
                     <button
-                      className="btn btn-sm rounded-md"
+                      className="btn btn-sm rounded-l-none rounded-r-md btn-primary"
                       onClick={() => handleIncrement(index)}
                     >
                       +
