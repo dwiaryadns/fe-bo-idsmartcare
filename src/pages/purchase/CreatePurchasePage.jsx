@@ -14,7 +14,9 @@ export const CreatePurchasePage = () => {
     localStorage.getItem("tanggalPemesanan") || ""
   );
   const [warehouses, setWarehouses] = useState([]);
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(
+    parseInt(localStorage.getItem("count")) || 0
+  );
   const [selectedSupplier, setSelectedSupplier] = useState(
     localStorage.getItem("selectedSupplier") || ""
   );
@@ -49,17 +51,22 @@ export const CreatePurchasePage = () => {
       }
 
       localStorage.setItem("selectedItems", JSON.stringify(updatedItems));
-      setCount(updatedItems.length);
+
+      const newCount = updatedItems.length;
+      setCount(newCount);
+      localStorage.setItem("count", newCount);
 
       return updatedItems;
     });
   };
+
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
     }).format(number);
   };
+
   const columns = useMemo(
     () => [
       {
@@ -197,8 +204,8 @@ export const CreatePurchasePage = () => {
         <div className="w-full">
           <Navbar />
           <div className="mx-10">
-            <Header title="Purchase" icon={faTag} />
-            <div className="bg-blue-100 mb-5 ">
+            <Header title="Pemesanan Barang" icon={faTag} />
+            <div className="bg-blue-100 rounded-md mb-5 ">
               <div className="grid gap-5 md:grid-cols-3 grid-cols-1 rounded-b-md px-10 py-5">
                 <div className="flex flex-col">
                   <label className="font-bold mb-2">Supplier</label>
@@ -223,7 +230,9 @@ export const CreatePurchasePage = () => {
                   <label className="font-bold mb-2">Warehouse</label>
                   <select
                     onChange={handleSelectWarehouse}
-                    className="select select-bordered w-full rounded-md select-primary"
+                    className={`select select-bordered w-full rounded-md ${
+                      errors.warehouse ? "select-error" : "select-primary"
+                    }`}
                   >
                     <option disabled selected>
                       Pilih Warehouse
@@ -235,7 +244,9 @@ export const CreatePurchasePage = () => {
                     ))}
                   </select>
                   {errors.warehouse && (
-                    <span className="text-red-500">{errors.warehouse}</span>
+                    <span className="text-red-500 text-xs">
+                      {errors.warehouse}
+                    </span>
                   )}
                 </div>
               </div>
@@ -249,7 +260,9 @@ export const CreatePurchasePage = () => {
                     }`}
                   />
                   {errors.po_name && (
-                    <span className="text-red-500">{errors.po_name}</span>
+                    <span className="text-red-500 text-xs">
+                      {errors.po_name}
+                    </span>
                   )}
                 </div>
               ) : (
@@ -264,8 +277,8 @@ export const CreatePurchasePage = () => {
                   onClick={handlePesan}
                   className="bg-primary btn hover:bg-primary text-white"
                 >
-                  <p className="font-bold text-lg">Pesan Sekarang </p>
-                  <div className="badge badge-info text-white"> {count} </div>
+                  <p className="font-bold text-lg">Pesan</p>
+                  <div className="badge badge-info text-white text-lg"> {count} </div>
                 </button>
               </div>
             </div>
@@ -276,5 +289,3 @@ export const CreatePurchasePage = () => {
     </div>
   );
 };
-
-export default CreatePurchasePage;

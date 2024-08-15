@@ -10,6 +10,40 @@ import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 
 export const CreateDistribusiPage = () => {
+  const [quantities, setQuantities] = useState({});
+
+  const handleIncrement = (barangId) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [barangId]: (prev[barangId] || 0) + 1,
+    }));
+  };
+
+  const handleDecrement = (barangId) => {
+    setQuantities((prev) => ({
+      ...prev,
+      [barangId]: Math.max((prev[barangId] || 0) - 1, 0),
+    }));
+  };
+
+  const handleQuantityChange = (barangId, value) => {
+    let parsedValue = parseInt(value, 10);
+
+    if (value.startsWith("0")) {
+      parsedValue = parseInt(value.slice(1), 10);
+    }
+
+    if (value === "" || isNaN(parsedValue) || parsedValue < 0) {
+      parsedValue = 0;
+    }
+
+    setQuantities((prev) => ({
+      ...prev,
+      [barangId]: parsedValue,
+    }));
+
+    handleDetailChange(barangId, parsedValue.toString());
+  };
   const columns = useMemo(
     () => [
       {
@@ -28,18 +62,35 @@ export const CreateDistribusiPage = () => {
         Header: "Jumlah yang di distribusi",
         accessor: "jumlah_distribusi",
         Cell: ({ row }) => (
-          <input
-            type="text"
-            content="numeric"
-            className="input input-bordered input-primary input-sm rounded-md"
-            onChange={(e) =>
-              handleDetailChange(row.original.barang.barang_id, e.target.value)
-            }
-          />
+          <div className="flex flex-row justify-start">
+            <button
+              className="btn btn-sm rounded-r-none rounded-l-md btn-primary"
+              onClick={() => handleDecrement(row.original.barang.barang_id)}
+            >
+              -
+            </button>
+            <input
+              type="number"
+              className="input input-bordered input-primary input-sm rounded-none max-w-20 text-center"
+              value={quantities[row.original.barang.barang_id] || 0}
+              onChange={(e) =>
+                handleQuantityChange(
+                  row.original.barang.barang_id,
+                  e.target.value
+                )
+              }
+            />
+            <button
+              className="btn btn-sm rounded-l-none rounded-r-md btn-primary"
+              onClick={() => handleIncrement(row.original.barang.barang_id)}
+            >
+              +
+            </button>
+          </div>
         ),
       },
     ],
-    []
+    [quantities]
   );
 
   const [warehouse, setWarehouse] = useState([]);

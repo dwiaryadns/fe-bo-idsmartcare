@@ -526,20 +526,20 @@ export const CreateReceiptPage = () => {
         <div className="w-full ">
           <Navbar />
           <div className="mx-10">
-            <Header title="Good Receipt" icon={faReceipt} />
+            <Header title="Penerimaan Barang" icon={faReceipt} />
             <div className="pb-44">
               <div className="flex items-center justify-center my-5">
-                <label className="input input-bordered rounded-md input-primary md:w-5/12 flex items-center gap-2">
+                <label className="relative block md:w-5/12">
                   <input
                     type="text"
                     onChange={handleSearchChange}
                     onKeyDown={handleEnter}
-                    className="grow"
-                    placeholder="Search by PO ID"
+                    className="input input-bordered rounded-md input-primary w-full pr-10"
+                    placeholder="Cari PO ID"
                   />
                   <FontAwesomeIcon
                     onClick={handleClickSearch}
-                    className="hover:cursor-pointer"
+                    className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
                     icon={faSearch}
                   />
                 </label>

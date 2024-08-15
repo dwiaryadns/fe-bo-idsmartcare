@@ -116,9 +116,9 @@ const RegisterPage = () => {
 
   const handleFullname = (e) => {
     const value = e.target.value;
-    const nameRegex = /^[A-Za-z\s]+$/;
-    setFullname(value);
+    const nameRegex = /^[A-Za-z\s]*$/; // Allows only letters and spaces
     if (nameRegex.test(value)) {
+      setFullname(value);
       setErrors((prevErrors) => ({ ...prevErrors, fullname: "" }));
     }
   };

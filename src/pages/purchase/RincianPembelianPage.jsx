@@ -103,7 +103,7 @@ export const RincianPembelianPage = ({
       if (response.status === 200) {
         Swal.fire({
           icon: "success",
-          title: response.data.message,
+          title: "Pembelian Berhasil",
           toast: true,
           position: "top-end",
           showConfirmButton: false,
@@ -120,7 +120,7 @@ export const RincianPembelianPage = ({
       } else {
         Swal.fire({
           icon: "error",
-          title: "Data gagal disimpan",
+          title: "Pembelian Gagal",
           toast: true,
           position: "top-end",
           showConfirmButton: false,
@@ -133,9 +133,21 @@ export const RincianPembelianPage = ({
         });
       }
     } catch (error) {
-      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: "Pembelian Gagal",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.addEventListener("mouseenter", Swal.stopTimer);
+          toast.addEventListener("mouseleave", Swal.resumeTimer);
+        },
+      });
       setErrors({
-        warehouse: error.response.data.errors.wfid,
+        warehouse: error.response.data.errors.warehouse_id,
         po_name: error.response.data.errors.po_name,
       });
     }

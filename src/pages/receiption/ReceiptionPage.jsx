@@ -1,4 +1,4 @@
-import { faEye, faPlus, faReceipt } from "@fortawesome/free-solid-svg-icons";
+import {  faPlus, faReceipt } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";

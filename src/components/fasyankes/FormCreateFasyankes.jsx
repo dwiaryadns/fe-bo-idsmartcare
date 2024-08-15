@@ -72,7 +72,7 @@ export const FormCreateFasyankes = () => {
   };
 
   const [type, setType] = useState("");
-  const [step, setStep] = useState(3); 
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     nameFasyankes: "",
     picName: "",
@@ -391,7 +391,7 @@ export const FormCreateFasyankes = () => {
             </svg>
           </div>
           <div className="timeline-end timeline-box text-xs md:text-lg">
-            Legal Document
+            Dokumen Legal
           </div>
           <hr className={`${step >= 3 ? "bg-primary" : ""}`} />
         </li>
@@ -412,7 +412,7 @@ export const FormCreateFasyankes = () => {
             </svg>
           </div>
           <div className="timeline-end timeline-box text-xs md:text-lg">
-            Payment
+            Pembayaran
           </div>
         </li>
       </ul>

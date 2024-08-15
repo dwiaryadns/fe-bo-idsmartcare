@@ -40,6 +40,7 @@ import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
 import NoAccessPage from "./pages/403Page";
 import CreateAccessPage from "./pages/access/CreateAccessPage";
 import SyaratPemblianPage from "./pages/SyaratPemblianPage";
+import InvoicePage from "./pages/InvoicePage";
 
 function App() {
   return (
@@ -325,6 +326,14 @@ function App() {
             element={
               <PrivateRoute>
                 <SyaratPemblianPage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/fasyankes/invoice"
+            element={
+              <PrivateRoute>
+                <InvoicePage />
               </PrivateRoute>
             }
           />

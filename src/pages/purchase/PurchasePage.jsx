@@ -1,4 +1,9 @@
-import { faPlus, faTag } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faClone,
+  faPlus,
+  faTag,
+} from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
@@ -12,12 +17,53 @@ import { Datatable } from "../../components/Datatable";
 
 export const PurchasePage = () => {
   const [loading, setLoading] = useState(true);
+  const [copiedField, setCopiedField] = useState(null);
+
+  const handleCopy = (value, field) => {
+    window.navigator.clipboard.writeText(value).then(() => {
+      setCopiedField(field);
+      setTimeout(() => {
+        setCopiedField(null);
+      }, 3000);
+    });
+  };
+
+  const renderCopyIcon = (field, value) => (
+    <div
+      className={`tooltip ${
+        copiedField === field ? "tooltip-open" : ""
+      } tooltip-top`}
+      data-tip={`${copiedField === field ? "Disalin" : "Salin"}`}
+    >
+      <div
+        className={`transition duration-300 ease-in-out ${
+          copiedField === field ? "text-green-500" : "text-primary"
+        }`}
+        onClick={() => handleCopy(value, field)}
+      >
+        {copiedField === field ? (
+          <FontAwesomeIcon icon={faCheck} className="text-lg" />
+        ) : (
+          <FontAwesomeIcon icon={faClone} className="cursor-pointer text-lg" />
+        )}
+      </div>
+    </div>
+  );
 
   const columns = useMemo(
     () => [
       {
         Header: "PO ID",
-        accessor: "po_id", // accessor is the "key" in the data
+        accessor: "po_id",
+        Cell: ({ row }) => {
+          const poId = row.original.po_id;
+          return (
+            <div className="flex gap-3 items-center">
+              <span>{poId}</span>
+              {renderCopyIcon(`po_id_${poId}`, poId)}
+            </div>
+          );
+        },
       },
       {
         Header: "Nama PO",
@@ -73,7 +119,7 @@ export const PurchasePage = () => {
         ),
       },
     ],
-    []
+    [copiedField]
   );
 
   const [goodReceipt, setGoodReceipt] = useState([]);

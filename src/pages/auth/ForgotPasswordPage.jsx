@@ -68,16 +68,20 @@ const ForgotPasswordPage = () => {
   };
 
   return (
-    <div className="relative min-h-screen flex items-center justify-center">
-      <img src={bgLogin} className="absolute inset-0 w-full h-full z-0" />
-      <div className="relative z-10 flex flex-col items-center justify-center p-6 space-y-4">
-        <div className="hero">
+    <div className="relative min-h-screen">
+      <img
+        src={bgLogin}
+        className="absolute inset-0 w-full h-full z-0 object-cover"
+        alt="Background"
+      />
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-4 space-y-4">
+        <div className="hero w-full max-w-4xl">
           <div className="hero-content flex flex-col md:flex-row bg-white p-6 md:p-10 rounded-lg items-center justify-center">
             <div className="flex flex-col items-center">
               <img src={logoLogin} className="w-32 md:w-64 mb-4 self-start" />
               <img
                 src={imgForgot}
-                className="max-w-xs md:max-w-md hidden md:block"
+                className="w-full self-center max-w-xs md:max-w-sm lg:max-w-md hidden md:block"
               />
             </div>
             <div className="w-full max-w-sm md:max-w-md mt-6 md:mt-0 md:ml-10">
@@ -88,23 +92,24 @@ const ForgotPasswordPage = () => {
                 Enter your email and will send you a link to get back into your
                 account.
               </p>
-              <div className="mb-3 mt-10">
-                <label className="font-bold text-sm">Email Address</label>
-                <label
-                  className={`input ${
-                    errors.email ? "input-error" : "input-primary"
-                  } flex rounded-md items-center gap-2 w-full`}
-                >
-                  <FontAwesomeIcon icon={faEnvelope} />
+
+              <div className="mb-3 mt-4">
+                <label className="font-bold text-sm">Email</label>
+                <div className="relative w-full">
                   <input
                     type="email"
-                    className={`grow ${
+                    className={`input ${
                       errors.email ? "input-error" : "input-primary"
-                    }`}
+                    } w-full rounded-md pl-10 pr-10 p-2`}
+                    placeholder="Email"
+                    value={email}
                     onChange={handleEmail}
-                    placeholder="Email Address"
                   />
-                </label>
+                  <FontAwesomeIcon
+                    icon={faEnvelope}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  />
+                </div>
                 {errors.email && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.email}
@@ -125,7 +130,7 @@ const ForgotPasswordPage = () => {
                 </button>
                 <div>
                   <span className="text-xs font-semibold">
-                    <FontAwesomeIcon icon={faAngleLeft} /> Back to{" "}
+                    Kembali ke{"  "}
                     <Link
                       to="/login"
                       className="font-normal underline text-primary"

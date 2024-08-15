@@ -131,7 +131,7 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
 
   return (
     <div>
-      <div className="font-bold text-xl">Payment</div>
+      <div className="font-bold text-xl">Pembayaran</div>
       <hr />
       <div className="flex justify-between items-center my-4">
         <h5 className="text-lg">
@@ -165,25 +165,37 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
         />
 
         <p className="text-sm">
-          Dengan melakukan pembayaran, kamu setuju dengan <Link target="_blank" to={"/fasyankes/syarat-ketentuan-pembelian"} className="text-primary italic font-bold"> Syarat dan Ketentuan
-          Pembelian</Link>  di idSmartCare.
+          Dengan melakukan pembayaran, kamu setuju dengan{" "}
+          <Link
+            target="_blank"
+            to={"/fasyankes/syarat-ketentuan-pembelian"}
+            className="text-primary italic font-bold"
+          >
+            {" "}
+            Syarat dan Ketentuan Pembelian
+          </Link>{" "}
+          di idSmartCare.
         </p>
       </div>
-      <button className="btn btn-block btn-primary hover:btn-primary text-white rounded-md my-4">
-        <FontAwesomeIcon icon={faFileInvoice} /> View Invoice
-      </button>
+      <Link
+        to={"/fasyankes/invoice"}
+        target="_blank"
+        className="btn btn-block btn-primary hover:btn-primary text-white rounded-md my-4"
+      >
+        <FontAwesomeIcon icon={faFileInvoice} /> Lihat Invoice
+      </Link>
       <button
         onClick={handlePayment}
         disabled={!checkbox}
         className="btn btn-block  btn-warning hover:btn-warning text-white rounded-md"
       >
-        <FontAwesomeIcon icon={faCreditCard} /> Payment
+        <FontAwesomeIcon icon={faCreditCard} /> Bayar
       </button>
       <button
         onClick={handlePrevious}
         className="hidden mt-10 btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
       >
-        <FontAwesomeIcon icon={faAngleLeft} /> Previous
+        <FontAwesomeIcon icon={faAngleLeft} /> Kembali
       </button>
     </div>
   );
