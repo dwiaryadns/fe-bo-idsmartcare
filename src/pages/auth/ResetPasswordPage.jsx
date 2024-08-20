@@ -114,10 +114,10 @@ const ResetPasswordPage = () => {
                     New password must be different from previously used password
                   </p>
                   <div className="mb-3 mt-10">
+                    <label className="font-bold">New Password</label>
                     <div className="mb-3 flex flex-col relative">
-                      <label className="font-bold">New Password</label>
                       <input
-                        className={`input input-primary rounded-md ${
+                        className={`input w-full input-primary rounded-md ${
                           errors.password ? "input-error" : "input-primary"
                         }`}
                         type={showPassword ? "text" : "password"}
@@ -136,8 +136,8 @@ const ResetPasswordPage = () => {
                         </div>
                       )}
                     </div>
+                    <label className="font-bold">Confirm Password</label>
                     <div className="mb-3 flex flex-col relative">
-                      <label className="font-bold">Confirm Password</label>
                       <input
                         className={`input input-primary rounded-md ${
                           errors.password_confirmation

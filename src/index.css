@@ -128,3 +128,19 @@ input[type="number"] {
   border-radius: 50%;
   display: inline-block;
 }
+
+.scrollbar {
+  scrollbar-width: thin; /* Untuk Firefox */
+  -ms-overflow-style: auto; /* Untuk Internet Explorer dan Edge */
+}
+
+/* Untuk browser WebKit seperti Chrome, Safari */
+.scrollbar::-webkit-scrollbar {
+  height: 12px; /* Atur ukuran scrollbar */
+  background-color: transparent;
+}
+
+.scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.5); /* Warna scrollbar */
+  border-radius: 10px; /* Membuat ujung scrollbar lebih bulat */
+}

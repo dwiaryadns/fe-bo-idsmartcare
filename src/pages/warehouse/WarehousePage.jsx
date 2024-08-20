@@ -91,7 +91,7 @@ const WarehousePage = () => {
                   </Link>
                 </div>
                 <hr></hr>
-                <div className="overflow-x-auto">
+                <div>
                   <Datatable
                     columns={columns}
                     data={warehouse}

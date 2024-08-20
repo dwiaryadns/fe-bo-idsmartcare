@@ -3,7 +3,10 @@ import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPaperPlane } from "@fortawesome/free-solid-svg-icons";
+import {
+  faChevronCircleLeft,
+  faPaperPlane,
+} from "@fortawesome/free-solid-svg-icons";
 import bgLogin from "../../assets/bg-login.png";
 import logoLogin from "../../assets/logo.png";
 import imgOtp from "../../assets/img-otp.png";
@@ -15,6 +18,8 @@ export const VerifyOtpPage = () => {
   const [countdownVerifyOtp, setCountdownVerifyOtp] = useState(300); // 5 minutes
   const [isSendButtonActive, setIsSendButtonActive] = useState(false);
   const [isVerifyButtonActive, setIsVerifyButtonActive] = useState(false);
+
+  const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
@@ -88,11 +93,35 @@ export const VerifyOtpPage = () => {
   const location = useLocation();
   const otpId = location.state?.otpId;
   const [resendOtpId, setResentOtpId] = useState();
-  console.log(resendOtpId);
+
+  const [step, setStep] = useState(0);
+  const handleClickHere = () => {
+    setStep(step + 1);
+  };
+  const handleBack = () => {
+    setStep(step - 1);
+    setNewEmail(null);
+  };
+
+  const [newEmail, setNewEmail] = useState(null);
+  const handleNewEmail = (e) => {
+    const value = e.target.value;
+    const validEmailChars = /^[A-Z0-9._%+-@]*$/i;
+
+    if (validEmailChars.test(value)) {
+      setNewEmail(value);
+    }
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      newEmail: "",
+      email: "",
+    }));
+  };
+
   const handleSendOtp = () => {
     setLoading(true);
     const payload = {
-      email: email, // Ini harus diganti dengan email atau data yang benar sesuai dengan API Anda
+      email: email,
       otp: otp,
       otp_id:
         resendOtpId == null || resendOtpId == undefined ? otpId : resendOtpId,
@@ -110,7 +139,7 @@ export const VerifyOtpPage = () => {
             setLoading(false);
             Swal.fire({
               icon: "success",
-              title: "Verification Successfully",
+              title: "Verifikasi Berhasil",
               toast: true,
               position: "top-end",
               showConfirmButton: false,
@@ -147,37 +176,71 @@ export const VerifyOtpPage = () => {
       .catch(function (error) {
         setLoading(false);
         Swal.fire({
-          position: "top-end",
           icon: "error",
           title: error.response.data.message,
+          toast: true,
+          position: "top-end",
           showConfirmButton: false,
-          timer: 1500,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
         });
-        console.log(error);
       });
   };
 
-  const getOTP = async (email) => {
+  const getOTP = async (inputEmail) => {
     try {
-      const response = await axios.post(
-        API_BASE_URL + "/get-otp",
-        {
-          email: email,
-          phone: "",
-          gateway_key: GATEWAY_KEY,
+      const payload = {
+        email: newEmail != null ? email : inputEmail,
+        phone: "",
+        gateway_key: GATEWAY_KEY,
+        newEmail: newEmail,
+      };
+
+      const response = await axios.post(API_BASE_URL + "/get-otp", payload, {
+        headers: {
+          Authorization: `Bearer ${ACCESS_HEADER}`,
         },
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_HEADER}`,
-          },
-        }
-      );
+      });
 
       if (response.data.status === true) {
         setResentOtpId(response.data.data.id);
+        setStep(0);
+        setNewEmail(null);
+        if (newEmail != null) {
+          localStorage.setItem("email", newEmail);
+          localStorage.setItem(
+            "resend_countdown_start_time",
+            Math.floor(Date.now() / 1000)
+          );
+          setCountdownSendOtp(120);
+          setIsSendButtonActive(false);
+          setLoading(false);
+        }
       }
     } catch (error) {
-      console.error(error);
+      setLoading(false);
+      setErrors({
+        email: error.response.data.errors.email,
+        newEmail: error.response.data.errors.newEmail,
+      });
+
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
     }
   };
 
@@ -190,6 +253,11 @@ export const VerifyOtpPage = () => {
     setIsSendButtonActive(false);
     setOtp("");
     getOTP(email);
+  };
+
+  const handleSubmitClickHere = () => {
+    getOTP(newEmail);
+    setLoading(true);
   };
 
   return (
@@ -208,66 +276,131 @@ export const VerifyOtpPage = () => {
             <div className="hero">
               <div className="hero-content flex-col lg:flex-row-reverse">
                 <img src={imgOtp} className="min-w-96" alt="OTP" />
-                <div className="max-w-2xl mt-0">
-                  <h1 className="text-5xl font-bold text-primary">
-                    Verify Your Email
-                  </h1>
-                  <p className="py-6">
-                    We’ve sent an email to{" "}
-                    <span className="font-bold">{email}</span> to verify your
-                    email address and activate your account. The OTP Code in the
-                    email will expire in 5 minutes.
-                  </p>
-                  <div className="mb-3 flex">
-                    <input
-                      type="text"
-                      onChange={(e) => setOtp(e.target.value)}
-                      className={`input input-bordered w-full rounded-l-md rounded-r-none ${
-                        otp.length === 6 ? "disabled" : ""
-                      }`}
-                      placeholder="OTP Code"
-                    />
-                    <button
-                      onClick={handleSendOtp}
-                      className={`btn bg-primary border-none rounded-l-none hover:bg-primary rounded-md ${
-                        isVerifyButtonActive ? "bg-primary" : ""
-                      } text-white`}
-                    >
-                      {loading ? (
-                        <span className="loading loading-bars loading-sm"></span>
+                {step === 0 ? (
+                  <div>
+                    <div className="max-w-2xl mt-0">
+                      <h1 className="text-5xl font-bold text-primary">
+                        Verifikasi Email Anda
+                      </h1>
+
+                      <p className="py-6">
+                        Kami telah mengirim email ke{" "}
+                        <span className="font-bold">{email}</span> untuk
+                        memverifikasi alamat email Anda dan mengaktifkan akun
+                        Anda. Kode OTP di dalam email akan kedaluwarsa dalam 5
+                        menit.
+                      </p>
+
+                      <div className="mb-3 flex">
+                        <input
+                          type="text"
+                          onChange={(e) => setOtp(e.target.value)}
+                          className={`input input-bordered w-full rounded-l-md rounded-r-none ${
+                            otp.length === 6 ? "disabled" : ""
+                          }`}
+                          placeholder="Kode OTP"
+                        />
+                        <button
+                          onClick={handleSendOtp}
+                          className={`btn bg-primary border-none rounded-l-none hover:bg-primary rounded-md ${
+                            isVerifyButtonActive ? "bg-primary" : ""
+                          } text-white`}
+                        >
+                          {loading ? (
+                            <span className="loading loading-bars loading-sm"></span>
+                          ) : (
+                            <FontAwesomeIcon icon={faPaperPlane} />
+                          )}
+                        </button>
+                      </div>
+                      <p className="text-xs font-bold">
+                        {countdownVerifyOtp > 0
+                          ? `OTP Kadaluarsa dalam : ${formatTime(
+                              countdownVerifyOtp
+                            )}`
+                          : ""}
+                      </p>
+                      {countdownVerifyOtp == 0 ? (
+                        <div className="mt-4">
+                          <button
+                            disabled={!isSendButtonActive}
+                            onClick={handleResendOtp}
+                            className={`btn bg-primary border-none hover:bg-primary rounded-md ${
+                              isSendButtonActive ? "bg-primary" : ""
+                            } text-white`}
+                          >
+                            {isSendButtonActive
+                              ? "Kirim Ulang OTP"
+                              : `${formatTime(countdownSendOtp)}`}
+                          </button>
+                        </div>
                       ) : (
-                        <FontAwesomeIcon icon={faPaperPlane} />
+                        ""
                       )}
-                    </button>
+                      <p className="text-xs mt-5">
+                        <span
+                          onClick={handleClickHere}
+                          className="font-bold cursor-pointer hover:underline hover:text-primary transition duration-300 ease-in-out"
+                        >
+                          Klik di sini
+                        </span>{" "}
+                        jika Anda tidak menerima email atau ingin mengubah
+                        alamat email yang Anda gunakan untuk mendaftar.
+                      </p>
+                    </div>
                   </div>
-                  <p className="text-xs font-bold">
-                    {countdownVerifyOtp > 0
-                      ? `OTP Expired in : ${formatTime(countdownVerifyOtp)}`
-                      : ""}
-                  </p>
-                  {countdownVerifyOtp == 0 ? (
-                    <div className="mt-4">
+                ) : (
+                  <div className="w-full max-w-2xl">
+                    <h1 className="text-5xl font-bold text-primary">
+                      Masukkan Email Baru
+                    </h1>{" "}
+                    <p className="py-6">
+                      Kami tidak dapat menyelesaikan verifikasi dengan email{" "}
+                      <span className="font-bold">{email}</span>. Silakan
+                      masukkan alamat email baru untuk menerima kode OTP yang
+                      baru.
+                    </p>
+                    <div className="flex items-center mt-5 w-full gap-1">
+                      <input
+                        className={`input ${
+                          errors.newEmail || errors.email
+                            ? "input-error"
+                            : "input-primary"
+                        }  w-full rounded-md`}
+                        placeholder="Masukkan Email Baru"
+                        value={newEmail}
+                        onChange={handleNewEmail}
+                      />
+
                       <button
-                        disabled={!isSendButtonActive}
-                        onClick={handleResendOtp}
-                        className={`btn bg-primary border-none hover:bg-primary rounded-md ${
-                          isSendButtonActive ? "bg-primary" : ""
-                        } text-white`}
+                        onClick={handleSubmitClickHere}
+                        className="btn bg-primary hover:bg-primary text-white rounded-md border-none"
                       >
-                        {isSendButtonActive
-                          ? "Resend OTP"
-                          : `${formatTime(countdownSendOtp)}`}
+                        {loading ? (
+                          <span className="loading loading-bars loading-sm"></span>
+                        ) : (
+                          "Kirim"
+                        )}
                       </button>
                     </div>
-                  ) : (
-                    ""
-                  )}
-                  <p className="text-xs mt-5">
-                    <span className="font-bold">Click here</span> if you did not
-                    receive an email or would like to change the email address
-                    you signed up with.
-                  </p>
-                </div>
+                    <span className="text-xs flex text-red-600">
+                      {errors.newEmail ||
+                        (errors.email && (
+                          <div>
+                            {errors.newEmail && errors.newEmail}
+                            {errors.email && errors.email}
+                          </div>
+                        ))}
+                    </span>
+                    <button
+                      onClick={handleBack}
+                      className="btn mt-5 btn-sm bg-info hover:bg-info text-white rounded-md border-none"
+                    >
+                      <FontAwesomeIcon icon={faChevronCircleLeft} />
+                      Kembali
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           </div>

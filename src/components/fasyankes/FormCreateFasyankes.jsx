@@ -4,6 +4,7 @@ import {
   faHome,
   faHospital,
   faInfoCircle,
+  faPaperPlane,
   faPlus,
   faSave,
   faTag,
@@ -18,43 +19,12 @@ import { useNavigate } from "react-router-dom";
 import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
 import Swal from "sweetalert2";
 import Header from "../Header";
+import StepBar from "./utils/StepBar";
+import { packagePrices, plan } from "./utils/package";
 export const FormCreateFasyankes = () => {
-  const free = [
-    "Maximum 2 users",
-    "3 days history data",
-    "Limited Data",
-    "Limited Features",
-  ];
-  const plus = [
-    "Maximum 4 users",
-    "Unlimited history data",
-    "Unlimited data row in 5 years",
-  ];
-  const advanced = [
-    "Unlimited users",
-    "Unlimited history data",
-    "Unlimited data row & storage",
-  ];
-
-  const packagePrices = {
-    Apotek: {
-      free: "0",
-      plus: "199.000",
-      plusAnnually: "159.000",
-      advanced: "259.000",
-      advancedAnnually: "195.000",
-    },
-    Klinik: {
-      free: "0",
-      plus: "249.000",
-      plusAnnually: "199.000",
-      advanced: "289.000",
-      advancedAnnually: "231.000",
-    },
-  };
   const [duration, setDuration] = useState("Monthly");
   const [choosePlan, setChoosePlan] = useState({
     paket: "",
@@ -351,71 +321,162 @@ export const FormCreateFasyankes = () => {
     setStep(step - 1);
   };
 
+  // OTP
+  const [otp, setOtp] = useState("");
+  const [otpId, setOtpId] = useState("");
+  const [isSuccess, setIsSuccess] = useState(false);
+
+  const getOTP = async (email) => {
+    try {
+      const response = await axios.post(
+        API_BASE_URL + "/get-otp",
+        {
+          email: email,
+          phone: "",
+          gateway_key: GATEWAY_KEY,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${ACCESS_HEADER}`,
+          },
+        }
+      );
+
+      if (response.data.status === true) {
+        setOtpId(response.data.data.id);
+        Swal.fire({
+          icon: "success",
+          title: "OTP sent successfully",
+          toast: true,
+          position: "top-end",
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+          didOpen: (toast) => {
+            toast.onmouseenter = Swal.stopTimer;
+            toast.onmouseleave = Swal.resumeTimer;
+          },
+        });
+      }
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        icon: "error",
+        title: error.response.data.message,
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+    }
+  };
+  const handleOtpChange = (e) => {
+    setOtp(e.target.value);
+  };
+
+  const handleGetOtp = () => {
+    if (formData.emailFasyankes === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Please enter email",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      return;
+    }
+    getOTP(formData.emailFasyankes);
+  };
+  const handleSendOtp = () => {
+    if (otp === "") {
+      Swal.fire({
+        icon: "error",
+        title: "Please enter OTP",
+        toast: true,
+        position: "top-end",
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        didOpen: (toast) => {
+          toast.onmouseenter = Swal.stopTimer;
+          toast.onmouseleave = Swal.resumeTimer;
+        },
+      });
+      return;
+    }
+    setLoading(true);
+    const payload = {
+      email: formData.emailFasyankes,
+      otp: otp,
+      otp_id: otpId,
+    };
+    axios
+      .post(API_BASE_URL + "/store-otp", payload, {
+        headers: {
+          Authorization: `Bearer ${ACCESS_HEADER}`,
+        },
+      })
+      .then(function (response) {
+        if (response.data.status === true) {
+          setIsSuccess(true);
+          Swal.fire({
+            icon: "success",
+            title: "Berhasil",
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+        } else {
+          setLoading(false);
+          setIsSuccess(false);
+          Swal.fire({
+            icon: "error",
+            title: response.data.message,
+            toast: true,
+            position: "top-end",
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            didOpen: (toast) => {
+              toast.onmouseenter = Swal.stopTimer;
+              toast.onmouseleave = Swal.resumeTimer;
+            },
+          });
+        }
+      })
+      .catch(function (error) {
+        setLoading(false);
+        setIsSuccess(false);
+        Swal.fire({
+          position: "top-end",
+          icon: "error",
+          title: error.response.data.message,
+          showConfirmButton: false,
+          timer: 1500,
+        });
+      });
+  };
+
   return (
     <div>
-      <ul className="max-w-7xl timeline mb-10 flex justify-center">
-        <li className="w-1/3">
-          <div className="timeline-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className={`w-5 h-5 ${step >= 1 ? "text-primary" : ""}`}
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <div className="timeline-end timeline-box text-xs md:text-lg">
-            Info Fasyankes
-          </div>
-          <hr className={`${step >= 2 ? "bg-primary" : ""}`} />
-        </li>
-        <li className="w-1/3">
-          <hr className={`${step >= 2 ? "bg-primary" : ""}`} />
-          <div className="timeline-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className={`w-5 h-5 ${step >= 2 ? "text-primary" : ""}`}
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <div className="timeline-end timeline-box text-xs md:text-lg">
-            Dokumen Legal
-          </div>
-          <hr className={`${step >= 3 ? "bg-primary" : ""}`} />
-        </li>
-        <li className="w-1/3">
-          <hr className={`${step >= 3 ? "bg-primary" : ""}`} />
-          <div className="timeline-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 20 20"
-              fill="currentColor"
-              className={`w-5 h-5 ${step >= 3 ? "text-primary" : ""}`}
-            >
-              <path
-                fillRule="evenodd"
-                d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.857-9.809a.75.75 0 00-1.214-.882l-3.483 4.79-1.88-1.88a.75.75 0 10-1.06 1.061l2.5 2.5a.75.75 0 001.137-.089l4-5.5z"
-                clipRule="evenodd"
-              />
-            </svg>
-          </div>
-          <div className="timeline-end timeline-box text-xs md:text-lg">
-            Pembayaran
-          </div>
-        </li>
-      </ul>
+      <StepBar step={step} />
       {step === 1 ? (
         <div className="pb-10">
           <div className="form-control w-full">
@@ -496,7 +557,7 @@ export const FormCreateFasyankes = () => {
               <div className={`grid md:grid-cols-3 gap-5`}>
                 <CardPackage
                   icon={faTag}
-                  fitur={free}
+                  fitur={plan.free}
                   title={"FREE"}
                   price={packagePrices[type].free}
                   handleChoosePlan={() =>
@@ -506,7 +567,7 @@ export const FormCreateFasyankes = () => {
                 />
                 <CardPackage
                   icon={faHome}
-                  fitur={plus}
+                  fitur={plan.plus}
                   title={"Plus"}
                   isPopular={true}
                   price={packagePrices[type].plus}
@@ -525,7 +586,7 @@ export const FormCreateFasyankes = () => {
                 />
                 <CardPackage
                   icon={faHospital}
-                  fitur={advanced}
+                  fitur={plan.advanced}
                   title={"Advanced"}
                   price={packagePrices[type].advanced}
                   disc={packagePrices[type].advancedAnnually}
@@ -702,88 +763,133 @@ export const FormCreateFasyankes = () => {
             error={errors.address}
             tooltip="Alamat fasyankes yang didaftarkan"
           />
-          <Input
-            type="email"
-            label="Email Fasyankes"
-            placeholder="Email Fasyankes"
-            name="emailFasyankes"
-            onChange={handleInputChange}
-            value={formData.emailFasyankes}
-            error={errors.emailFasyankes}
-            tooltip="Email fasyankes yang akan dikirimkan seputar informasi penting dan dijadikan username admin"
-          />
-
-          <div className="my-4">
-            <Header title="Credential Data" icon={faUser} />
-          </div>
-
-          <Input
-            type="text"
-            label="Username"
-            placeholder="Username"
-            name="username"
-            onChange={handleInputChange}
-            value={formData.username}
-            error={errors.username}
-            tooltip="Username untuk login masuk ke halaman admin"
-          />
-          <Input
-            type="password"
-            label="Password"
-            placeholder="Password"
-            name="password"
-            onChange={handleInputChange}
-            value={formData.password}
-            error={errors.password}
-            tooltip="Password untuk login masuk ke halaman admin"
-          />
-          <Input
-            type="password"
-            label="Confirm Password"
-            placeholder="Confirm Password"
-            name="confirmPassword"
-            onChange={handleInputChange}
-            value={formData.confirmPassword}
-            error={errors.confirmPassword}
-            tooltip="Confirm password untuk memastikan password yang sudah di buat"
-          />
-          <div className="form-control mt-10">
-            <label className="flex items-center gap-5">
-              <input
-                type="checkbox"
-                onClick={handleCheckbox}
-                className="checkbox checkbox-primary rounded-md"
-              />
-              <span className="label-text">
-                Dengan membuat akun, Anda setuju dengan{" "}
-                <a
-                  href="/syarat-dan-ketentuan"
-                  target="_blank"
-                  className="font-bold italic text-primary"
-                >
-                  Syarat dan Ketentuan
-                </a>{" "}
-                serta{" "}
-                <a
-                  href="/kebijakan-privasi"
-                  target="_blank"
-                  className="font-bold italic text-primary"
-                >
-                  Kebijakan Privasi{" "}
-                </a>
-                <span className="font-bold"> idSmartCare.</span>
-              </span>
-            </label>
-          </div>
-          <div className="flex justify-end mt-5">
+          <div
+            className={` ${isSuccess ? "w-full" : "flex md:flex-row flex-col"}`}
+          >
+            <Input
+              type="email"
+              label="Email Fasyankes"
+              placeholder="Email Fasyankes"
+              name="emailFasyankes"
+              onChange={handleInputChange}
+              value={formData.emailFasyankes}
+              error={errors.emailFasyankes}
+              tooltip="Email fasyankes yang akan dikirimkan seputar informasi penting dan dijadikan username admin"
+            />
             <button
-              onClick={handleNext}
-              disabled={!checkbox}
-              className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+              onClick={handleGetOtp}
+              className={`btn ${
+                isSuccess ? "hidden" : ""
+              } mt-3 bg-primary hover:bg-primary text-white rounded-md`}
             >
-              Next <FontAwesomeIcon icon={faAngleRight} />
+              Kirim OTP
             </button>
           </div>
+
+          <div
+            className={`${
+              isSuccess ? "hidden" : "flex flex-col md:flex-row mt-2"
+            } `}
+          >
+            <div className="form-control w-full flex flex-col md:flex-row md:items-center">
+              <div className="label md:min-w-72 mb-2 md:mb-0">
+                <span className="label-text font-bold text-base"></span>
+              </div>
+              <div className="relative flex flex-col md:flex-row md:items-center gap-3 w-full">
+                <input
+                  type="number"
+                  value={otp}
+                  onChange={handleOtpChange}
+                  className="input input-primary rounded-md mb-2 md:mb-0 md:mr-2 w-full md:w-auto"
+                  placeholder="Kode OTP"
+                />
+                <button
+                  onClick={handleSendOtp}
+                  className="btn bg-primary hover:bg-primary text-white rounded-md w-full md:w-auto"
+                >
+                  <FontAwesomeIcon icon={faPaperPlane} />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          {isSuccess ? (
+            <div>
+              <div className="my-4">
+                <Header title="Credential Data" icon={faUser} />
+              </div>
+
+              <Input
+                type="text"
+                label="Username"
+                placeholder="Username"
+                name="username"
+                onChange={handleInputChange}
+                value={formData.username}
+                error={errors.username}
+                tooltip="Username untuk login masuk ke halaman admin"
+              />
+              <Input
+                type="password"
+                label="Password"
+                placeholder="Password"
+                name="password"
+                onChange={handleInputChange}
+                value={formData.password}
+                error={errors.password}
+                tooltip="Password untuk login masuk ke halaman admin"
+              />
+              <Input
+                type="password"
+                label="Confirm Password"
+                placeholder="Confirm Password"
+                name="confirmPassword"
+                onChange={handleInputChange}
+                value={formData.confirmPassword}
+                error={errors.confirmPassword}
+                tooltip="Confirm password untuk memastikan password yang sudah di buat"
+              />
+              <div className="form-control mt-10">
+                <label className="flex items-center gap-5">
+                  <input
+                    type="checkbox"
+                    onClick={handleCheckbox}
+                    className="checkbox checkbox-primary rounded-md"
+                  />
+                  <span className="label-text">
+                    Dengan membuat akun, Anda setuju dengan{" "}
+                    <a
+                      href="/syarat-dan-ketentuan"
+                      target="_blank"
+                      className="font-bold italic text-primary"
+                    >
+                      Syarat dan Ketentuan
+                    </a>{" "}
+                    serta{" "}
+                    <a
+                      href="/kebijakan-privasi"
+                      target="_blank"
+                      className="font-bold italic text-primary"
+                    >
+                      Kebijakan Privasi{" "}
+                    </a>
+                    <span className="font-bold"> idSmartCare.</span>
+                  </span>
+                </label>
+              </div>
+              <div className="flex justify-end mt-5">
+                <button
+                  onClick={handleNext}
+                  disabled={!checkbox}
+                  className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+                >
+                  Next <FontAwesomeIcon icon={faAngleRight} />
+                </button>
+              </div>
+            </div>
+          ) : (
+            ""
+          )}
         </div>
       ) : step === 2 ? (
         <FormDocument

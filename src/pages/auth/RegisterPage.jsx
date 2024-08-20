@@ -3,7 +3,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
   faKey,
-  faUser,
   faEye,
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
@@ -34,6 +33,12 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [otpId, setOtpId] = useState();
 
+  useEffect(() => {
+    const registerId = localStorage.getItem("register_id");
+    if (registerId) {
+      navigate(`/verify-otp/${registerId}`);
+    }
+  }, [navigate]);
   useEffect(() => {
     if (otpId) {
       const registerId = localStorage.getItem("register_id");

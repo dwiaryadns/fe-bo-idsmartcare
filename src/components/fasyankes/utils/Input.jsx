@@ -2,6 +2,7 @@ import {
   faEye,
   faEyeSlash,
   faInfoCircle,
+  faPaperPlane,
 } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
@@ -43,6 +44,7 @@ const Input = ({
               error ? "border-red-600" : ""
             }`}
           />
+
           {error && <span className="text-red-600">{error}</span>}
           {type === "password" && (
             <FontAwesomeIcon
@@ -51,6 +53,7 @@ const Input = ({
               className="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
             />
           )}
+          {name === "emailFasyankes" ? <div></div> : ""}
         </div>
       </div>
     </div>

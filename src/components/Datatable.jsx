@@ -59,9 +59,9 @@ export const Datatable = ({ columns, data, loading }) => {
           className="input input-bordered rounded-md mb-5 input-sm mt-3"
         />
       </div>
-      <div className="table-pin-rows overflow-x-auto">
+      <div className="table-pin-rows overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded">
         <table
-          className="table whitespace-nowrap table-zebra-zebra"
+          className="table  whitespace-nowrap table-zebra-zebra"
           {...getTableProps()}
           style={{ width: "100%" }}
         >
@@ -117,6 +117,9 @@ export const Datatable = ({ columns, data, loading }) => {
           </tbody>
         </table>
       </div>
+      <p className="text-xs md:hidden block text-gray-400">
+        * Geser untuk melihat detail
+      </p>
       <div className="pagination-container">
         <ReactPaginate
           previousLabel={<FontAwesomeIcon icon={faAngleDoubleLeft} />}
@@ -292,6 +295,9 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
           </tbody>
         </table>
       </div>
+      <p className="text-xs md:hidden block text-gray-400">
+        * Geser untuk melihat detail
+      </p>
       <div className="pagination-container">
         <ReactPaginate
           previousLabel={<FontAwesomeIcon icon={faAngleDoubleLeft} />}
