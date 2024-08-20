@@ -194,7 +194,7 @@ export const VerifyOtpPage = () => {
   const getOTP = async (inputEmail) => {
     try {
       const payload = {
-        email: newEmail != null ? email : inputEmail,
+        email: newEmail != null ? newEmail : inputEmail,
         phone: "",
         gateway_key: GATEWAY_KEY,
         newEmail: newEmail,
