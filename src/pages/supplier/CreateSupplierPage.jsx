@@ -323,7 +323,7 @@ export const CreateSupplierPage = () => {
                     <Input
                       value={formValues.nomor_kontak_person}
                       errors={errors.nomor_kontak_person}
-                      type={"text"}
+                      type={"number"}
                       label={"Kontak PIC"}
                       placeholder={"Kontak PIC"}
                       name={"nomor_kontak_person"}

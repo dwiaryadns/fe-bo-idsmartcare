@@ -10,7 +10,7 @@ import {
 import bgLogin from "../../assets/bg-login.png";
 import logoLogin from "../../assets/logo.png";
 import imgOtp from "../../assets/img-otp.png";
-import Swal from "sweetalert2";
+import { ToastAlert } from "../../components/Alert";
 
 export const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
@@ -137,20 +137,7 @@ export const VerifyOtpPage = () => {
         if (response.data.status === true) {
           setTimeout(() => {
             setLoading(false);
-            Swal.fire({
-              icon: "success",
-              title: "Verifikasi Berhasil",
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
-
+            ToastAlert("success", "Verifikasi Berhasil");
             setTimeout(() => {
               localStorage.clear();
               navigate("/login");
@@ -158,36 +145,12 @@ export const VerifyOtpPage = () => {
           }, 2000);
         } else {
           setLoading(false);
-          Swal.fire({
-            icon: "error",
-            title: response.data.message,
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
+          ToastAlert("error", response.data.message);
         }
       })
       .catch(function (error) {
         setLoading(false);
-        Swal.fire({
-          icon: "error",
-          title: error.response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("error", error.response.data.message);
       });
   };
 
@@ -227,20 +190,7 @@ export const VerifyOtpPage = () => {
         email: error.response.data.errors.email,
         newEmail: error.response.data.errors.newEmail,
       });
-
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
+      ToastAlert("error", error.response.data.message);
     }
   };
 

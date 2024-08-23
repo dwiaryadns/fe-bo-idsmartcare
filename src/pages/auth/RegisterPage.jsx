@@ -12,7 +12,7 @@ import logoLogin from "../../assets/logo-login.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
-import Swal from "sweetalert2";
+import { CenterAlert, ToastAlert } from "../../components/Alert";
 
 const RegisterPage = () => {
   const [fullname, setFullname] = useState("");
@@ -83,19 +83,7 @@ const RegisterPage = () => {
         const registerId = response.data.register_id;
         localStorage.setItem("register_id", registerId);
         localStorage.setItem("email", response.data.user.email);
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("success", response.data.message);
         await getOTP(response.data.user.email);
       }
     } catch (error) {
@@ -110,18 +98,14 @@ const RegisterPage = () => {
           api: "",
         });
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Oops...",
-          text: "An error occurred. Please try again later.",
-        });
+        CenterAlert("error", "Opps...", error.response.data.message);
       }
     }
   };
 
   const handleFullname = (e) => {
     const value = e.target.value;
-    const nameRegex = /^[A-Za-z\s]*$/; // Allows only letters and spaces
+    const nameRegex = /^[A-Za-z\s]*$/;
     if (nameRegex.test(value)) {
       setFullname(value);
       setErrors((prevErrors) => ({ ...prevErrors, fullname: "" }));
@@ -195,9 +179,9 @@ const RegisterPage = () => {
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                   />
                 </div>
-                {errors.email && (
+                {errors.fullname && (
                   <div className="text-red-500 text-xs mt-1">
-                    {errors.email}
+                    {errors.fullname}
                   </div>
                 )}
               </div>
