@@ -11,6 +11,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import templateExcel from "../../dummy/Template-Data-Obat.xlsx";
 import { ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export const ImportBarangPage = () => {
   const lists = [
@@ -24,6 +25,7 @@ export const ImportBarangPage = () => {
   ];
   const [file, setFile] = useState(null);
   const [importedData, setImportedData] = useState([]);
+  const [loading, setLoading] = useState(false);
 
   const handleFileChange = (e) => {
     setFile(e.target.files[0]);
@@ -38,8 +40,9 @@ export const ImportBarangPage = () => {
   const [isShow, setIsShow] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     if (!file) {
+      setLoading(false);
       ToastAlert("warning", "Silakan pilih file untuk diunggah.");
       return;
     }
@@ -63,28 +66,34 @@ export const ImportBarangPage = () => {
         setErrors(response.data.errors);
         ToastAlert(
           "warning",
-          "Import selesai dengan beberapa error. Silakan periksa detail di bawah."
+          "Import Gagal dengan beberapa error. Silakan periksa detail di bawah."
         );
       } else {
         setImportedData(response.data.data);
         ToastAlert("success", "Import Berhasil");
       }
       setIsShow(true);
+      setLoading(false);
     } catch (error) {
       console.error("Import error:", error);
       setIsShow(false);
       if (error.response && error.response.data && error.response.data.errors) {
         setErrors(error.response.data.errors);
-        ToastAlert(
-          "error",
-          "Import Gagal. Silakan periksa detail error di bawah."
-        );
+        if (error.response.status == 422) {
+          ToastAlert("warning", error.response.data.message);
+        } else {
+          ToastAlert(
+            "error",
+            "Import Gagal. Silakan periksa detail error di bawah."
+          );
+        }
       } else {
         ToastAlert(
           "error",
           "Import Gagal. Terjadi kesalahan yang tidak terduga."
         );
       }
+      setLoading(false);
     }
   };
 
@@ -128,7 +137,7 @@ export const ImportBarangPage = () => {
                 className="btn bg-primary hover:bg-primary text-white rounded-md"
                 type="submit"
               >
-                Upload
+                {loading ? <Loading type={"bars"} size={"sm"} /> : "Upload"}
               </button>
             </form>
             {importedData && isShow && errors.length <= 0 && (
@@ -144,7 +153,10 @@ export const ImportBarangPage = () => {
 
             {errors.length > 0 && (
               <div className="bg-error rounded-md p-5 mt-3 text-white">
-                <h3 className="font-bold text-lg">  <FontAwesomeIcon icon={faWarning}/> Error pada saat import:</h3>
+                <h3 className="font-bold text-lg">
+                  {" "}
+                  <FontAwesomeIcon icon={faWarning} /> Error pada saat import:
+                </h3>
                 <ul className="list-disc">
                   {errors.map((error, index) => (
                     <li key={index} className="ml-5">
