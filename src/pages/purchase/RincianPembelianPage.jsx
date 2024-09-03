@@ -6,8 +6,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axios from "axios";
 import { useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { ToastAlert } from "../../components/Alert";
 
 export const RincianPembelianPage = ({
   previous,
@@ -101,51 +101,15 @@ export const RincianPembelianPage = ({
       );
       console.log(response);
       if (response.status === 200) {
-        Swal.fire({
-          icon: "success",
-          title: "Pembelian Berhasil",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-          },
-        });
+        ToastAlert("success", "Pembelian Berhasil");
         navigate(`/purchase`);
         localStorage.removeItem("selectedSupplier");
         localStorage.removeItem("selectedItems");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Pembelian Gagal",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-          },
-        });
+        ToastAlert("error", "Pembelian Gagal");
       }
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Pembelian Gagal",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.addEventListener("mouseenter", Swal.stopTimer);
-          toast.addEventListener("mouseleave", Swal.resumeTimer);
-        },
-      });
+      ToastAlert("error", "Pembelian Gagal");
       setErrors({
         warehouse: error.response.data.errors.warehouse_id,
         po_name: error.response.data.errors.po_name,

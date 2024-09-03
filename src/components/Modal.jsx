@@ -1,15 +1,11 @@
-import {
-  faCheck,
-  faClone,
-  faFilePdf,
-  faTimes,
-} from "@fortawesome/free-solid-svg-icons";
+import { faCheck, faClone, faFilePdf } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
 import { API_BASE_URL } from "../dummy/const";
 import axios from "axios";
-import Swal from "sweetalert2";
+import { ToastAlert } from "./Alert";
+import Loading from "./Loading";
 
 export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
   const modalRef = useRef();
@@ -289,6 +285,8 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
   const modalRef = useRef();
 
   const [conditions, setConditions] = useState("");
+  const [datas, setDatas] = useState([]);
+  const [initialValues, setInitialValues] = useState({}); // State to store initial values
 
   const handleChangeCondition = (index, value) => {
     setConditions((prevConditions) => {
@@ -297,21 +295,24 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
       return newConditions;
     });
   };
+
   useEffect(() => {
     setDatas(data);
+    const initialDataValues = data.reduce((acc, item, index) => {
+      acc[index] = item.jml_datang || 0;
+      return acc;
+    }, {});
+    setInitialValues(initialDataValues);
   }, [data]);
-
-  const [datas, setDatas] = useState([]);
 
   const handleBarangDatangChange = (index, value) => {
     setDatas((prevData) => {
       const newData = [...prevData];
       const barang = newData[index];
       const barangDatang = Math.max(
-        0,
+        initialValues[index],
         Math.min(barang.jumlah, Number(value) || 0)
       );
-
       barang.jml_datang = barangDatang;
       barang.jml_kurang = barang.jumlah - barangDatang;
       return newData;
@@ -325,15 +326,9 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
 
   const handleDecrement = (index) => {
     const barangDatang = datas[index].jml_datang || 0;
-    handleBarangDatangChange(index, barangDatang - 1);
-  };
-  const [status, setStatus] = useState("");
-  const handleChangeStatus = (index, val) => {
-    setStatus((prevStatus) => {
-      const newStatus = { ...prevStatus };
-      newStatus[index] = val;
-      return newStatus;
-    });
+    if (barangDatang > initialValues[index]) {
+      handleBarangDatangChange(index, barangDatang - 1);
+    }
   };
 
   const [loading, setLoading] = useState(false);
@@ -353,7 +348,6 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
         barang_id: barang.barang_id,
         jml_datang: barang.jml_datang,
         jml_kurang: barang.jml_kurang,
-        // status: status[index],
         kondisi: conditions[index],
       })),
     };
@@ -368,37 +362,13 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
       if (response.data.status === true) {
         window.location.reload();
         modalRef.current.close();
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("success", response.data.message);
       } else {
-        Swal.fire({
-          icon: "error",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("error", response.data.message);
       }
     } catch (error) {
       setLoading(false);
-      console.log(error);
+      ToastAlert("error", error.response.data.message);
     }
   };
 
@@ -438,7 +408,7 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
             ))}
           </div>
           {loading ? (
-            <span className="loading loading-spinner loading-lg"></span>
+            <Loading type={"spinner"} size={"lg"} />
           ) : data.length >= 1 ? (
             <div>
               <div className="overflow-x-auto">
@@ -527,14 +497,53 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
     </div>
   );
 };
+
 export const ModalDetailPurchase = ({ poId, data, total }) => {
   const modalRef = useRef();
+
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
       style: "currency",
       currency: "IDR",
     }).format(number);
   };
+
+  const [loading, setLoading] = useState(false);
+
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+    responseType: "arraybuffer",
+  };
+
+  const downloadPdf = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(
+        `${API_BASE_URL}/purchase/download`,
+        { po_id: poId },
+        headers
+      );
+      const blob = new Blob([response.data], { type: "application/pdf" });
+      const url = window.URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `purchase_order_${poId}.pdf`);
+      document.body.appendChild(link);
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+      link.remove();
+      ToastAlert("success", "Berhasil Download PDF");
+      setLoading(false);
+    } catch (error) {
+      setLoading(false);
+      ToastAlert("error", "Gagal Download PDF");
+    }
+  };
+
   return (
     <div>
       <dialog id={poId} className="modal" ref={modalRef}>
@@ -545,6 +554,19 @@ export const ModalDetailPurchase = ({ poId, data, total }) => {
             </button>
           </form>
           <div>
+            <button
+              onClick={downloadPdf}
+              disabled={loading}
+              className="btn btn-error text-white btn-sm"
+            >
+              {loading ? (
+                <Loading type={"spinner"}  size={"sm"} />
+              ) : (
+                <div>
+                  <FontAwesomeIcon icon={faFilePdf} /> Download Invoice
+                </div>
+              )}
+            </button>
             <div className="overflow-x-auto">
               <table className="table">
                 <thead>
@@ -572,7 +594,7 @@ export const ModalDetailPurchase = ({ poId, data, total }) => {
                     <td colSpan={5} className="text-right italic font-bold">
                       Total
                     </td>
-                    <td> {formatRupiah(total)} </td>
+                    <td>{formatRupiah(total)}</td>
                   </tr>
                 </tbody>
               </table>
@@ -644,35 +666,11 @@ export const ModalOpname = ({ id, barang }) => {
       );
       if (response.data.status === true) {
         modalRef.current.close();
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("success", response.data.message);
       }
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: "Gagal menyimpan stok opname",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
+      ToastAlert("error", "Gagal Menyimpan Stock Opname");
     }
   };
   return (

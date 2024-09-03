@@ -1,4 +1,4 @@
-const Input = ({ label, placeholder, name, value, onChange, errors,max }) => {
+const Input = ({ label, placeholder, name, value, onChange, errors, max }) => {
   return (
     <div className="pb-3">
       <label className="form-control w-full">

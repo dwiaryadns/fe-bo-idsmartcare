@@ -8,8 +8,8 @@ import { useEffect, useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { useNavigate } from "react-router";
-import Swal from "sweetalert2";
 import { Link } from "react-router-dom";
+import { ToastAlert } from "../Alert";
 
 export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const [diskon, setDiskon] = useState(0);
@@ -76,44 +76,16 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
         onSuccess: (result) => {
           console.log("Success:", result);
           navigate("/fasyankes");
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: "success",
-            title: "Pembayaran Berhasil",
-          });
+          ToastAlert("success", "Pembayaran Berhasil");
         },
         onPending: (result) => {
           console.log("Pending:", result);
           navigate("/subscription");
-
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: "warning",
-            title: "Pembayaran Anda Pending",
-          });
+          ToastAlert("success", "Pembayaran Pending");
         },
         onError: (result) => {
-          console.log("Error:", result);
+          console.log("Pending:", result);
+          ToastAlert("success", "Pembayaran Gagal");
         },
         onClose: () => {
           console.log(

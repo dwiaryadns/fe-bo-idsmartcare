@@ -6,6 +6,7 @@ import axiosInstance from "../../dummy/axiosInstance";
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { API_BASE_URL } from "../../dummy/const";
+import { ToastAlert } from "../../components/Alert";
 import Swal from "sweetalert2";
 
 const AccessPage = () => {
@@ -32,25 +33,9 @@ const AccessPage = () => {
         setData(
           (prevData) => prevData.filter((item) => item.id !== id) // Filter data menggunakan id
         );
-        console.log(response.data);
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        ToastAlert("success", response.data.message);
       } catch (error) {
-        console.log(error);
-        Swal.fire({
-          icon: "success",
-          title: error.response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        ToastAlert("error", error.response.data.message);
       }
     }
   };
@@ -89,7 +74,7 @@ const AccessPage = () => {
         Cell: ({ row }) => {
           return (
             <button
-              onClick={() => handleDelete(row.original.id)} 
+              onClick={() => handleDelete(row.original.id)}
               className="btn bg-red-600 hover:bg-red-600 text-white rounded-md btn-sm"
             >
               Hapus

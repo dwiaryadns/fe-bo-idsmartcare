@@ -13,6 +13,7 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 const RegisterPage = () => {
   const [fullname, setFullname] = useState("");
@@ -66,7 +67,7 @@ const RegisterPage = () => {
         setOtpId(response.data.data.id);
       }
     } catch (error) {
-      console.error(error);
+      console.log(error);
     }
   };
   const handleRegister = async () => {
@@ -274,11 +275,7 @@ const RegisterPage = () => {
                   onClick={handleRegister}
                   className="btn btn-block bg-primary hover:bg-primary text-white rounded-md"
                 >
-                  {loading ? (
-                    <span className="loading loading-bars loading-sm"></span>
-                  ) : (
-                    "Register"
-                  )}
+                  {loading ? <Loading type={"bars"} size={"sm"} /> : "Register"}
                 </button>
                 <div className="mt-3">
                   <span className="text-xs font-semibold">

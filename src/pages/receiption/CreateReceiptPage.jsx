@@ -10,8 +10,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { CenterAlert, ToastAlert } from "../../components/Alert";
 
 export const CreateReceiptPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -33,17 +33,7 @@ export const CreateReceiptPage = () => {
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
+
   const handleClickSearch = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/good-receipt/search`, {
@@ -60,22 +50,13 @@ export const CreateReceiptPage = () => {
 
       setData(updatedData);
       setStep(2);
-      Toast.fire({
-        icon: "success",
-        title: response.data.message,
-      });
+      ToastAlert("success", response.data.message);
     } catch (error) {
       setStep(1);
       if (error.response) {
-        Toast.fire({
-          icon: "error",
-          title: error.response.data.message,
-        });
+        ToastAlert("error", error.response.data.message);
       } else {
-        Toast.fire({
-          icon: "error",
-          title: "Something went wrong",
-        });
+        ToastAlert("success", error.response.data.message);
       }
       setData([]);
     }
@@ -198,30 +179,17 @@ export const CreateReceiptPage = () => {
       console.log(response);
       if (response.data.status === true) {
         navigate("/good-receipt");
-        Toast.fire({
-          icon: "success",
-          title: response.data.message,
-        });
+        ToastAlert("success", response.data.message);
       } else {
-        Toast.fire({
-          icon: "error",
-          title: response.data.message,
-        });
+        ToastAlert("error", response.data.message);
       }
     } catch (err) {
       if (err.response) {
         const errors = err.response.data.errors;
         setError(errors);
-        console.log(error);
-        Toast.fire({
-          icon: "error",
-          title: err.response.data.message,
-        });
+        ToastAlert("error", err.response.data.message);
       } else {
-        Toast.fire({
-          icon: "error",
-          title: "Something went wrong",
-        });
+        CenterAlert("error", "Oops...", "Terjadi Kesalahan Server");
       }
     }
   };

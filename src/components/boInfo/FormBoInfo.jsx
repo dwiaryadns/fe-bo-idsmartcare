@@ -4,9 +4,10 @@ import Select from "./Select";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import { useNavigate } from "react-router";
-import Swal from "sweetalert2";
 import { StateStatus } from "./StateStatus";
 import { faHourglass, faSave } from "@fortawesome/free-solid-svg-icons";
+import { CenterAlert, ToastAlert } from "../Alert";
+import Loading from "../Loading";
 
 const FormBoInfo = () => {
   const [loading, setLoading] = useState(true);
@@ -151,51 +152,17 @@ const FormBoInfo = () => {
               setStateStatus(getResponse.data.data.status);
               navigate("/bo-info");
               setLoading(false);
-              const Toast = Swal.mixin({
-                toast: true,
-                position: "top-end",
-                showConfirmButton: false,
-                timer: 3000,
-                timerProgressBar: true,
-                didOpen: (toast) => {
-                  toast.onmouseenter = Swal.stopTimer;
-                  toast.onmouseleave = Swal.resumeTimer;
-                },
-              });
-              Toast.fire({
-                icon: "success",
-                title: response.data.message,
-              });
+              ToastAlert("success", response.data.message);
             })
             .catch((getError) => {
-              Swal.fire({
-                icon: "error",
-                title: "Oops...",
-                text: getError.response.data.message,
-              });
+              CenterAlert("error", "Oops...", getError.response.data.message);
             });
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: response.data.message,
-          });
+          CenterAlert("error", "Oops...", response.data.message);
         }
       })
       .catch((error) => {
-        Swal.fire({
-          icon: "error",
-          title: error.response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("error", error.response.data.message);
         if (
           error.response &&
           error.response.data &&
@@ -222,8 +189,8 @@ const FormBoInfo = () => {
 
   if (loading) {
     return (
-      <div className="flex justify-center mt-32">
-        <span className="loading loading-spinner text-primary loading-lg"></span>
+      <div className="flex justify-center mt-32 text-primary">
+        <Loading type={"spinner"} size={"lg"} />
       </div>
     );
   }

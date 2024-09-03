@@ -5,9 +5,9 @@ import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
 import { RincianPembelianPage } from "./RincianPembelianPage";
 import { DatatableWithPaginate } from "../../components/Datatable";
+import { CenterAlert } from "../../components/Alert";
 
 export const CreatePurchasePage = () => {
   const [tanggalPemesanan, setTanggalPemesanan] = useState(
@@ -26,11 +26,11 @@ export const CreatePurchasePage = () => {
 
   const handleChangeCheckbox = (item) => {
     if (selectedSupplier && item.supplier.nama_supplier !== selectedSupplier) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Dalam 1 transaksi hanya dapat memasukkan barang yang berasal dari 1 supplier yang sama.",
-      });
+      CenterAlert(
+        "error",
+        "Gagal",
+        "Dalam 1 transaksi hanya dapat memasukkan barang yang berasal dari 1 supplier yang sama."
+      );
       return;
     }
 
@@ -145,11 +145,11 @@ export const CreatePurchasePage = () => {
 
   const handlePesan = () => {
     if (selectedItems.length === 0) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Pilih barang yang ingin dipesan terlebih dahulu.",
-      });
+      CenterAlert(
+        "error",
+        "Gagal",
+        "Pilih Barang yang ingin dipesan terlebih dahulu."
+      );
       return;
     }
     setStep(2);
@@ -278,7 +278,10 @@ export const CreatePurchasePage = () => {
                   className="bg-primary btn hover:bg-primary text-white"
                 >
                   <p className="font-bold text-lg">Pesan</p>
-                  <div className="badge badge-info text-white text-lg"> {count} </div>
+                  <div className="badge badge-info text-white text-lg">
+                    {" "}
+                    {count}{" "}
+                  </div>
                 </button>
               </div>
             </div>

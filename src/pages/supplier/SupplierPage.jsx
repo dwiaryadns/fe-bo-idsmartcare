@@ -14,6 +14,7 @@ import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ModalDetailSupplier } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
+import { CenterAlert, ToastAlert } from "../../components/Alert";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
@@ -143,14 +144,9 @@ export const SupplierPage = () => {
           )
         );
         console.log(response.data);
-        Swal.fire("Deleted!", "The supplier has been deleted.", "success");
+        ToastAlert("success", "Supplier Berhasil Dihapus");
       } catch (error) {
-        console.log(error);
-        Swal.fire(
-          "Error!",
-          "There was an issue deleting the supplier.",
-          "error"
-        );
+        CenterAlert("error", "Oops...", "Terjadi Kesalahan Server");
       }
     }
   };

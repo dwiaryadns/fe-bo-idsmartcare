@@ -2,14 +2,15 @@ import {
   faBox,
   faFileExcel,
   faInfoCircle,
+  faWarning,
 } from "@fortawesome/free-solid-svg-icons";
 import Layout from "../../components/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
 import templateExcel from "../../dummy/Template-Data-Obat.xlsx";
+import { ToastAlert } from "../../components/Alert";
 
 export const ImportBarangPage = () => {
   const lists = [
@@ -28,53 +29,65 @@ export const ImportBarangPage = () => {
     setFile(e.target.files[0]);
   };
 
+  const [errors, setErrors] = useState([]);
+
   const token = localStorage.getItem("token");
   const headers = {
-    headers: { Authorization: `Bearer ${token}` },
+    Authorization: `Bearer ${token}`,
   };
   const [isShow, setIsShow] = useState(false);
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!file) {
+      ToastAlert("warning", "Silakan pilih file untuk diunggah.");
+      return;
+    }
+
     const formData = new FormData();
     formData.append("file", file);
 
     try {
       const response = await axios.post(
-        API_BASE_URL + "/inventory/import-barang",
+        `${API_BASE_URL}/inventory/import-barang`,
         formData,
-        headers,
         {
           headers: {
+            ...headers,
             "Content-Type": "multipart/form-data",
           },
         }
       );
-      setImportedData(response.data.data);
-      Swal.fire({
-        icon: "success",
-        title: "Import Berhasil",
-        text: response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-      });
-      setFile("");
+
+      if (response.data.errors && response.data.errors.length > 0) {
+        setErrors(response.data.errors);
+        ToastAlert(
+          "warning",
+          "Import selesai dengan beberapa error. Silakan periksa detail di bawah."
+        );
+      } else {
+        setImportedData(response.data.data);
+        ToastAlert("success", "Import Berhasil");
+      }
       setIsShow(true);
     } catch (error) {
+      console.error("Import error:", error);
       setIsShow(false);
-      Swal.fire({
-        icon: "error",
-        title: "Import Gagal",
-        text: error.response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-      });
-      setFile("");
+      if (error.response && error.response.data && error.response.data.errors) {
+        setErrors(error.response.data.errors);
+        ToastAlert(
+          "error",
+          "Import Gagal. Silakan periksa detail error di bawah."
+        );
+      } else {
+        ToastAlert(
+          "error",
+          "Import Gagal. Terjadi kesalahan yang tidak terduga."
+        );
+      }
     }
   };
+
   return (
     <Layout title={"Import Barang"} icon={faBox}>
       <div className="card mt-3">
@@ -103,7 +116,7 @@ export const ImportBarangPage = () => {
           </div>
           <div>
             <form
-              className="flex md:flex-row flex-col md:gap-0 gap-2 w-full mt-10"
+              className="flex md:flex-row flex-col md:gap-0 gap-2 w-full mt-5"
               onSubmit={handleSubmit}
             >
               <input
@@ -118,12 +131,25 @@ export const ImportBarangPage = () => {
                 Upload
               </button>
             </form>
-            {importedData && isShow && (
+            {importedData && isShow && errors.length <= 0 && (
               <div>
                 <h3>Data yang Diimpor:</h3>
                 <ul>
                   {importedData.map((item, index) => (
                     <li key={index}>{item.nama_barang}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
+
+            {errors.length > 0 && (
+              <div className="bg-error rounded-md p-5 mt-3 text-white">
+                <h3 className="font-bold text-lg">  <FontAwesomeIcon icon={faWarning}/> Error pada saat import:</h3>
+                <ul className="list-disc">
+                  {errors.map((error, index) => (
+                    <li key={index} className="ml-5">
+                      {error}
+                    </li>
                   ))}
                 </ul>
               </div>

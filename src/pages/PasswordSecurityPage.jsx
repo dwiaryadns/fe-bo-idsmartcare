@@ -6,7 +6,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../dummy/const";
-import Swal from "sweetalert2";
+import { CenterAlert, ToastAlert } from "../components/Alert";
 
 const PasswordSecurityPage = () => {
   const [email, setEmail] = useState();
@@ -43,15 +43,9 @@ const PasswordSecurityPage = () => {
         setOtpId(response.data.data.id);
       }
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Error",
-        text: "Failed to get OTP",
-      });
-      console.error(error);
+      CenterAlert("error", "Gagal", "Gagal Mendapatkan OTP");
     }
   };
-  console.log(otpId);
 
   const handleSend = () => {
     if (type === "otp") {
@@ -80,48 +74,17 @@ const PasswordSecurityPage = () => {
         if (response.data.status === true) {
           setTimeout(() => {
             setLoading(false);
-            Swal.fire({
-              icon: "success",
-              title: "Verification OTP Success",
-              toast: true,
-              position: "top-end",
-              showConfirmButton: false,
-              timer: 3000,
-              timerProgressBar: true,
-              didOpen: (toast) => {
-                toast.onmouseenter = Swal.stopTimer;
-                toast.onmouseleave = Swal.resumeTimer;
-              },
-            });
+            ToastAlert("success", "Verifikasi OTP Berhasil");
           }, 2000);
           setStep(3);
         } else {
           setLoading(false);
-          Swal.fire({
-            icon: "error",
-            title: response.data.message,
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
+          ToastAlert("error", response.data.message);
         }
       })
       .catch(function (error) {
         setLoading(false);
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response.data.message,
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        console.log(error);
+        ToastAlert("error", error.response.data.message);
       });
   };
 
@@ -148,36 +111,10 @@ const PasswordSecurityPage = () => {
       console.log(response);
 
       if (response.data.status === true) {
-        console.log("status true");
-        Swal.fire({
-          icon: "success",
-          title: "Password Changed Successfully",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("success", "Password Berhasil Dirubah");
         setStep(1);
       } else {
-        console.log("status false");
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("error", "Password Gagal Dirubah");
         setError({
           old_password: response.data.errors.old_password,
           new_password: response.data.errors.new_password,
@@ -191,19 +128,7 @@ const PasswordSecurityPage = () => {
           old_password: err.response.data.message,
         });
       }
-      Swal.fire({
-        icon: "error",
-        title: "Change Password Failed",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
+      ToastAlert("error", "Password Gagal Dirubah");
       setError({
         old_password: err.response.data.errors.old_password,
         new_password: err.response.data.errors.new_password,

@@ -4,8 +4,8 @@ import Layout from "../../components/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosInstance from "../../dummy/axiosInstance";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { ToastAlert } from "../../components/Alert";
 
 export default function CreateAccessPage() {
   const hakAksesOptions = {
@@ -75,30 +75,14 @@ export default function CreateAccessPage() {
       );
       // swal fire top end
       if (response.data.status === true) {
-        Swal.fire({
-          icon: "success",
-          title: "Hak Akses Berhasil Ditambahkan",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        ToastAlert("success", "Berhasil Menambahkan Hak Akses");
         navigate("/access"); // Redirect to access list page after successful submission
       } else {
-        Swal.fire({
-          icon: "error",
-          title: "Gagal Menambah Hak Akses",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 1500,
-        });
-        console.log(response.data.message); // Log the error message for debugging purposes
+        ToastAlert("success", "Gagal Menambahkan Hak Akses");
       }
-      // Handle success response, like showing a success message or redirecting
     } catch (error) {
       console.error(error);
-      // Handle error response, like showing an error message
+      ToastAlert("error", "Terjadi Kesalahan Server");
     }
   };
 

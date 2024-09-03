@@ -11,6 +11,7 @@ import bgLogin from "../../assets/bg-login.png";
 import logoLogin from "../../assets/logo.png";
 import imgOtp from "../../assets/img-otp.png";
 import { ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
@@ -157,7 +158,7 @@ export const VerifyOtpPage = () => {
   const getOTP = async (inputEmail) => {
     try {
       const payload = {
-        email: newEmail != null ? newEmail : inputEmail,
+        email: newEmail != null ? email : inputEmail,
         phone: "",
         gateway_key: GATEWAY_KEY,
         newEmail: newEmail,
@@ -175,14 +176,14 @@ export const VerifyOtpPage = () => {
         setNewEmail(null);
         if (newEmail != null) {
           localStorage.setItem("email", newEmail);
-          localStorage.setItem(
-            "resend_countdown_start_time",
-            Math.floor(Date.now() / 1000)
-          );
-          setCountdownSendOtp(120);
-          setIsSendButtonActive(false);
-          setLoading(false);
         }
+        localStorage.setItem(
+          "resend_countdown_start_time",
+          Math.floor(Date.now() / 1000)
+        );
+        setCountdownSendOtp(120);
+        setIsSendButtonActive(false);
+        setLoading(false);
       }
     } catch (error) {
       setLoading(false);
@@ -257,7 +258,7 @@ export const VerifyOtpPage = () => {
                           } text-white`}
                         >
                           {loading ? (
-                            <span className="loading loading-bars loading-sm"></span>
+                            <Loading type={"bars"} size={"sm"} />
                           ) : (
                             <FontAwesomeIcon icon={faPaperPlane} />
                           )}
@@ -327,7 +328,7 @@ export const VerifyOtpPage = () => {
                         className="btn bg-primary hover:bg-primary text-white rounded-md border-none"
                       >
                         {loading ? (
-                          <span className="loading loading-bars loading-sm"></span>
+                          <Loading type={"bars"} size={"sm"} />
                         ) : (
                           "Kirim"
                         )}

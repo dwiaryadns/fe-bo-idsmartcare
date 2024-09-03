@@ -7,8 +7,8 @@ import { Input } from "../../components/supplier/Input";
 import Select from "../../components/boInfo/Select";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { ToastAlert } from "../../components/Alert";
 
 export const CreateSupplierPage = () => {
   const [type, setType] = useState();
@@ -119,19 +119,7 @@ export const CreateSupplierPage = () => {
         headers
       );
       if (response.data.status === true) {
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.addEventListener("mouseenter", Swal.stopTimer);
-            toast.addEventListener("mouseleave", Swal.resumeTimer);
-          },
-        });
+        ToastAlert("success", response.data.message);
         setFormValues({
           nama_supplier: "",
           alamat: "",

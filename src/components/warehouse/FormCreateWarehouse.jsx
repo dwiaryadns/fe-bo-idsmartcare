@@ -1,9 +1,8 @@
 import { useState } from "react";
 import Input from "./utils/Input";
-
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
 import axiosInstance from "../../dummy/axiosInstance";
+import { ToastAlert } from "../Alert";
 
 export const FormCreateWarehouse = () => {
   const [formValues, setFormValues] = useState({
@@ -34,21 +33,7 @@ export const FormCreateWarehouse = () => {
       .then(function (response) {
         if (response.data.status === true) {
           navigate("/warehouse");
-          const Toast = Swal.mixin({
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
-          Toast.fire({
-            icon: "success",
-            title: response.data.message,
-          });
+          ToastAlert("success", response.data.message);
         } else {
           const apiErrors = response.data.errors;
           const newApiErrors = {

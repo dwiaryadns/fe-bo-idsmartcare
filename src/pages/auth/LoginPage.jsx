@@ -12,7 +12,9 @@ import logoLogin from "../../assets/logo-login.png";
 import { Link, useNavigate } from "react-router-dom";
 import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
-import Swal from "sweetalert2";
+
+import { CenterAlert, ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 const LoginPage = () => {
   const [email, setEmail] = useState("");
@@ -48,25 +50,9 @@ const LoginPage = () => {
             localStorage.removeItem("email");
           }
           navigate("/dasbor");
-          Swal.fire({
-            icon: "success",
-            title: response.data.message,
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.addEventListener("mouseenter", Swal.stopTimer);
-              toast.addEventListener("mouseleave", Swal.resumeTimer);
-            },
-          });
+          ToastAlert("success", response.data.message);
         } else {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: response.data.message,
-          });
+          CenterAlert("error", "Oops...", response.data.message);
           setLoading(false);
         }
       })
@@ -80,11 +66,7 @@ const LoginPage = () => {
             };
             setErrors(newApiErrors);
           } else {
-            Swal.fire({
-              icon: "error",
-              title: "Oops...",
-              text: error.response.data.message,
-            });
+            CenterAlert("error", "Oops...", error.response.data.message);
             setErrors({ email: error.response.data.message, password: "" });
             setPassword("");
           }
@@ -211,20 +193,16 @@ const LoginPage = () => {
                   onClick={handleLogin}
                   className="btn btn-block bg-primary hover:bg-primary text-white rounded-md"
                 >
-                  {loading ? (
-                    <span className="loading loading-bars loading-sm"></span>
-                  ) : (
-                    "Login"
-                  )}
+                  {loading ? <Loading type={"bars"} size={"sm"} /> : "Login"}
                 </button>
                 <div className="mt-3 text-center">
                   <span className="text-xs font-semibold">
-                    Tidak punya akun? {" "}
+                    Tidak punya akun?{" "}
                     <Link
                       to="/register"
                       className="font-normal underline text-primary"
                     >
-                       Register
+                      Register
                     </Link>
                   </span>
                 </div>

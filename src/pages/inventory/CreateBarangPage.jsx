@@ -9,7 +9,8 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AsyncPaginate } from "react-select-async-paginate";
 import { Link, useNavigate } from "react-router-dom";
-import Swal from "sweetalert2";
+
+import { ToastAlert } from "../../components/Alert";
 
 export const CreateBarangPage = () => {
   const [formValues, setFormValues] = useState({
@@ -45,9 +46,7 @@ export const CreateBarangPage = () => {
   };
 
   const formatRupiah = (value) => {
-    // Menghapus karakter non-numeric kecuali titik
     const numberString = value.replace(/[^0-9]/g, "");
-    // Format menjadi format mata uang dengan titik sebagai pemisah ribuan
     return numberString
       .replace(/\B(?=(\d{3})+(?!\d))/g, ".")
       .replace(/^/, "Rp ");
@@ -174,39 +173,14 @@ export const CreateBarangPage = () => {
         headers
       );
       if (resSubmit.data.status === true) {
-        Swal.fire({
-          icon: "success",
-          title: resSubmit.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
+        ToastAlert("success", resSubmit.data.message);
         setFormValues({});
         navigate("/daftar-produk");
       } else {
-        Swal.fire({
-          icon: "error",
-          title: resSubmit.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-        });
+        ToastAlert("error", resSubmit.data.message);
       }
     } catch (error) {
-      console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-      });
+      ToastAlert("error", error.response.data.message);
       const simplifiedErrors = Object.keys(error.response.data.errors).reduce(
         (acc, key) => {
           acc[key] = error.response.data.errors[key];

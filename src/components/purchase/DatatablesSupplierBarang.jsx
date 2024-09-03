@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import  { useState, useEffect } from "react";
 import { useTable, usePagination, useGlobalFilter } from "react-table";
 import ReactPaginate from "react-paginate";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -8,6 +8,7 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
+import Loading from "../Loading";
 
 export const DatatablesSupplierBarang = ({ columns }) => {
   const [data, setData] = useState([]);
@@ -131,7 +132,7 @@ export const DatatablesSupplierBarang = ({ columns }) => {
                 colSpan={columns.length}
                 style={{ textAlign: "center", padding: "10px" }}
               >
-                <span className="loading loading-dots loading-md"></span>
+               <Loading type={"dots"} size={"md"} />{" "}
               </td>
             </tr>
           ) : page.length === 0 ? (

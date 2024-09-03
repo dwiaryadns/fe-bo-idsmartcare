@@ -20,10 +20,11 @@ import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
-import Swal from "sweetalert2";
 import Header from "../Header";
 import StepBar from "./utils/StepBar";
 import { packagePrices, plan } from "./utils/package";
+import { ToastAlert } from "../Alert";
+import Loading from "../Loading";
 export const FormCreateFasyankes = () => {
   const [duration, setDuration] = useState("Monthly");
   const [choosePlan, setChoosePlan] = useState({
@@ -42,7 +43,7 @@ export const FormCreateFasyankes = () => {
   };
 
   const [type, setType] = useState("");
-  const [step, setStep] = useState(3);
+  const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     nameFasyankes: "",
     picName: "",
@@ -106,17 +107,7 @@ export const FormCreateFasyankes = () => {
     setFormValues({ ...formValues, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
   };
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.onmouseenter = Swal.stopTimer;
-      toast.onmouseleave = Swal.resumeTimer;
-    },
-  });
+
   const handleSubmitWarehouse = () => {
     const payload = {
       name: formValues.warehouseName,
@@ -129,10 +120,7 @@ export const FormCreateFasyankes = () => {
       .then(function (response) {
         if (response.data.status === true) {
           navigate("/fasyankes/create");
-          Toast.fire({
-            icon: "success",
-            title: response.data.message,
-          });
+          ToastAlert("success", response.data.message);
           modalRef.current.close();
           setWarehouse([response.data.data]);
         } else {
@@ -156,10 +144,7 @@ export const FormCreateFasyankes = () => {
           picName: apiErrors.pic ? apiErrors.pic : "",
           picNumber: apiErrors.contact ? apiErrors.contact : "",
         };
-        Toast.fire({
-          icon: "error",
-          title: error.response.data.message,
-        });
+        ToastAlert("error", error.response.data.message);
         setErrorWarehouse(newApiErrors);
       });
   };
@@ -200,10 +185,7 @@ export const FormCreateFasyankes = () => {
           if (response.data.status === true) {
             const data = response.data.data;
             console.log(response.data);
-            Toast.fire({
-              icon: "success",
-              title: response.data.message,
-            });
+            ToastAlert("success", response.data.message);
             setFasyankesId(data.fasyankesId);
             setPayment({
               package: response.data.subscription.package_plan,
@@ -239,7 +221,6 @@ export const FormCreateFasyankes = () => {
           }
         })
         .catch(function (error) {
-          console.log(error);
           const apiErrors = error.response.data.errors;
           const newApiErrors = {
             type: apiErrors.type ? apiErrors.type : "",
@@ -258,10 +239,7 @@ export const FormCreateFasyankes = () => {
               : "",
           };
           setErrors(newApiErrors);
-          Toast.fire({
-            icon: "error",
-            title: error.response.data.message,
-          });
+          ToastAlert("error", error.response.data.message);
         });
     } else {
       setLoading(true);
@@ -283,10 +261,7 @@ export const FormCreateFasyankes = () => {
         .then((response) => {
           if (response.status === 200) {
             setLoading(false);
-            Toast.fire({
-              icon: "success",
-              title: "Upload Legal Doc Successfully",
-            });
+            ToastAlert("success", "Berhasil Upload Dokument Legal");
             if (choosePlan.paket === "FREE") {
               navigate("/fasyankes");
             } else {
@@ -304,10 +279,7 @@ export const FormCreateFasyankes = () => {
             siok: errApi.siok,
             password: errApi.password,
           });
-          Toast.fire({
-            icon: "error",
-            title: error.response.data.message,
-          });
+          ToastAlert("error", error.response.data.message);
         });
     }
   };
@@ -321,7 +293,6 @@ export const FormCreateFasyankes = () => {
     setStep(step - 1);
   };
 
-  // OTP
   const [otp, setOtp] = useState("");
   const [otpId, setOtpId] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -344,35 +315,11 @@ export const FormCreateFasyankes = () => {
 
       if (response.data.status === true) {
         setOtpId(response.data.data.id);
-        Swal.fire({
-          icon: "success",
-          title: "OTP sent successfully",
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-          timerProgressBar: true,
-          didOpen: (toast) => {
-            toast.onmouseenter = Swal.stopTimer;
-            toast.onmouseleave = Swal.resumeTimer;
-          },
-        });
+        ToastAlert("success", "OTP Berhasil Terkirim");
       }
     } catch (error) {
       console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
+      ToastAlert("error", error.response.data.message);
     }
   };
   const handleOtpChange = (e) => {
@@ -381,38 +328,14 @@ export const FormCreateFasyankes = () => {
 
   const handleGetOtp = () => {
     if (formData.emailFasyankes === "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please enter email",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
+      ToastAlert("error", "Masukkan Email Anda");
       return;
     }
     getOTP(formData.emailFasyankes);
   };
   const handleSendOtp = () => {
     if (otp === "") {
-      Swal.fire({
-        icon: "error",
-        title: "Please enter OTP",
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
+      ToastAlert("error", "Masukkan OTP!");
       return;
     }
     setLoading(true);
@@ -430,47 +353,17 @@ export const FormCreateFasyankes = () => {
       .then(function (response) {
         if (response.data.status === true) {
           setIsSuccess(true);
-          Swal.fire({
-            icon: "success",
-            title: "Berhasil",
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
+          ToastAlert("Berhasil");
         } else {
           setLoading(false);
           setIsSuccess(false);
-          Swal.fire({
-            icon: "error",
-            title: response.data.message,
-            toast: true,
-            position: "top-end",
-            showConfirmButton: false,
-            timer: 3000,
-            timerProgressBar: true,
-            didOpen: (toast) => {
-              toast.onmouseenter = Swal.stopTimer;
-              toast.onmouseleave = Swal.resumeTimer;
-            },
-          });
+          ToastAlert("error", response.data.message);
         }
       })
       .catch(function (error) {
         setLoading(false);
         setIsSuccess(false);
-        Swal.fire({
-          position: "top-end",
-          icon: "error",
-          title: error.response.data.message,
-          showConfirmButton: false,
-          timer: 1500,
-        });
+        ToastAlert("error", error.response.data.message);
       });
   };
 
@@ -635,7 +528,9 @@ export const FormCreateFasyankes = () => {
               {warehouses.length == 0 ? (
                 <div className="w-full">
                   {loading ? (
-                    <span className="loading loading-dots loading-md text-center"></span>
+                    <span className="text-white">
+                    <Loading type={"dots"}  size={"md"} />
+                    </span>
                   ) : (
                     <div>
                       <button

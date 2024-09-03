@@ -8,8 +8,10 @@ import { API_BASE_URL } from "../../dummy/const"; // Remove headers import here
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../dummy/axiosInstance";
-import Swal from "sweetalert2";
+
 import { DatatableWithPaginate } from "../../components/Datatable";
+import { CenterAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export const StockWarehousePage = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -39,11 +41,7 @@ export const StockWarehousePage = () => {
         )
       );
     } catch (error) {
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: "Something went wrong!",
-      });
+      CenterAlert("error", "Oops...", "Terjadi Kesahalan Server");
     }
   };
   const columns = useMemo(
@@ -177,7 +175,7 @@ export const StockWarehousePage = () => {
               <span className="font-bold text-lg">
                 Stock Barang - Gudang {selectedWarehouseName}{" "}
               </span>
-              <div >
+              <div>
                 <DatatableWithPaginate
                   columns={columns}
                   endpoint="/warehouses/stock-gudang"
@@ -218,8 +216,8 @@ export const StockWarehousePage = () => {
             <div className="card shadow-md ">
               <div className="card-body">
                 {loading ? (
-                  <div className="flex flex-col justify-center items-center">
-                    <span className="loading loading-spinner loading-lg text-primary text-center"></span>
+                  <div className="flex flex-col justify-center items-center text-primary text-center">
+                  <Loading type={"spinner"} size={"lg"} />
                     <span className="text-xs text-primary mt-2">Tunggu...</span>
                   </div>
                 ) : (

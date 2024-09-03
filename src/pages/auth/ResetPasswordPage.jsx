@@ -2,12 +2,13 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const"; // Ensure the path is correct
-import Swal from "sweetalert2";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import bgLogin from "../../assets/bg-login.png";
 import imgReset from "../../assets/img-reset.png";
 import logoLogin from "../../assets/logo-login.png";
 import { faEye, faEyeSlash, faXmark } from "@fortawesome/free-solid-svg-icons";
+import { CenterAlert, ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 const ResetPasswordPage = () => {
   const { search } = useLocation(); // Get the search query string
@@ -45,30 +46,12 @@ const ResetPasswordPage = () => {
       });
       setMessage(response.data.message);
       setIsFound(true);
-
-      Swal.fire({
-        icon: "success",
-        title: response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-        timerProgressBar: true,
-        didOpen: (toast) => {
-          toast.onmouseenter = Swal.stopTimer;
-          toast.onmouseleave = Swal.resumeTimer;
-        },
-      });
-
+      ToastAlert("success", response.data.message);
       navigate("/login");
     } catch (error) {
       console.log(error.response.data);
       if (error.response.data.status === false) {
-        Swal.fire({
-          icon: "error",
-          title: "Error",
-          text: error.response.data.message,
-        });
+        CenterAlert("error", "Error", error.response.data.message);
         setErrors({
           password: error.response.data.errors.password,
           password_confirmation:
@@ -99,7 +82,9 @@ const ResetPasswordPage = () => {
         <div className="relative z-10 flex flex-col items-center justify-center p-6 space-y-4">
           <div className="hero">
             {loading ? (
-              <span className="loading loading-spinner text-white loading-lg"></span>
+              <div className="text-white">
+              <Loading type={"spinner"} size={"lg"} />
+              </div>
             ) : isFound ? (
               <div className="hero-content flex gap-10 flex-col md:flex-row-reverse bg-white p-6 md:p-10 rounded-lg items-center justify-center">
                 <div className="flex flex-col items-center">

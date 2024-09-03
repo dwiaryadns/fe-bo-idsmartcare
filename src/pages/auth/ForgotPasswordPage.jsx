@@ -2,12 +2,13 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import bgLogin from "../../assets/bg-login.png";
 import imgForgot from "../../assets/img-forgot.png";
 import logoLogin from "../../assets/logo-login.png";
-import { faAngleLeft, faEnvelope } from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope } from "@fortawesome/free-solid-svg-icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
-import Swal from "sweetalert2";
+import { CenterAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -47,22 +48,18 @@ const ForgotPasswordPage = () => {
         email,
       });
       setMessage(response.data.message);
-      Swal.fire({
-        icon: "success",
-        title: "Link Send",
-        text: `We sent an e email to ${email} with a link to get back into your account`,
-      });
+      CenterAlert(
+        "success",
+        "Berhasil Terkirim",
+        `Silahkan cek di email ${email}`
+      );
       setEmail("");
       setLoading(false);
     } catch (error) {
       setErrors({
         email: "Failed to send reset email. Please check your email address.",
       });
-      Swal.fire({
-        icon: "error",
-        title: "Oops...",
-        text: error.response.data.message,
-      });
+      CenterAlert("error", "Oops...", error.response.data.message);
       setLoading(false);
     }
   };
@@ -123,7 +120,7 @@ const ForgotPasswordPage = () => {
                   className="btn btn-block bg-primary hover:bg-primary text-white rounded-md"
                 >
                   {loading ? (
-                    <span className="loading loading-bars loading-sm"></span>
+                    <Loading type={"bars"} size={"sm"} />
                   ) : (
                     "Forgot Password"
                   )}

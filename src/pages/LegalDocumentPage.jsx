@@ -13,9 +13,10 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../dummy/const";
 import { Link } from "react-router-dom";
-import Swal from "sweetalert2";
 import StatusLegal from "../components/legaldoc/StatusLegal";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { ToastAlert } from "../components/Alert";
+import Loading from "../components/Loading";
 
 const LegalDocumentPage = () => {
   const [type, setType] = useState("");
@@ -72,18 +73,6 @@ const LegalDocumentPage = () => {
     setPassword(e.target.value);
   };
 
-  const Toast = Swal.mixin({
-    toast: true,
-    position: "top-end",
-    showConfirmButton: false,
-    timer: 3000,
-    timerProgressBar: true,
-    didOpen: (toast) => {
-      toast.addEventListener("mouseenter", Swal.stopTimer);
-      toast.addEventListener("mouseleave", Swal.resumeTimer);
-    },
-  });
-
   const handleSubmit = async () => {
     setLoading(true);
     const formData = new FormData();
@@ -108,18 +97,12 @@ const LegalDocumentPage = () => {
       if (response.status === 200) {
         setStatus("apply");
         setLoading(false);
-        Toast.fire({
-          icon: "success",
-          title: response.data.message,
-        });
+        ToastAlert("success", response.data.message);
       }
     } catch (error) {
       setLoading(false);
       const errApi = error.response.data.errors;
-      Toast.fire({
-        icon: "error",
-        title: error.response.data.message,
-      });
+      ToastAlert("error", error.response.data.message);
       setErrors({
         ktp: errApi.ktp,
         akta: errApi.akta,
@@ -375,8 +358,8 @@ const LegalDocumentPage = () => {
           <div className="mx-10">
             <Header title="Dokumen Legal" icon={faLegal} />
             {loading ? (
-              <div className="flex justify-center mt-32">
-                <span className="loading loading-spinner text-primary loading-lg"></span>
+              <div className="flex justify-center mt-32 text-primary">
+                <Loading type={"spinner"} size={"lg"} />
               </div>
             ) : (
               <div>

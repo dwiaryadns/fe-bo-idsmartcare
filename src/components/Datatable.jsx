@@ -9,6 +9,7 @@ import { useState, useEffect } from "react";
 
 import axios from "axios";
 import { API_BASE_URL } from "../dummy/const";
+import Loading from "./Loading";
 
 export const Datatable = ({ columns, data, loading }) => {
   const {
@@ -88,7 +89,7 @@ export const Datatable = ({ columns, data, loading }) => {
                   style={{ textAlign: "center", padding: "10px" }}
                 >
                   {loading ? (
-                    <span className="loading loading-dots loading-md"></span>
+                    <Loading type={"dots"} size={"md"} />
                   ) : (
                     "No records found"
                   )}
@@ -260,7 +261,7 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
                   colSpan={columns.length}
                   style={{ textAlign: "center", padding: "10px" }}
                 >
-                  <span className="loading loading-dots loading-md"></span>
+                  <Loading type={"dots"} size={"md"} />{" "}
                 </td>
               </tr>
             ) : page.length === 0 ? (

@@ -7,10 +7,10 @@ import {
   faEyeSlash,
 } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
+import Loading from "../Loading";
 
 export const FormDocument = ({
   typeFasyankes,
-  packagePlan,
   handlePrevious,
   handleNext,
   files,
@@ -20,7 +20,6 @@ export const FormDocument = ({
   errors,
   loading,
 }) => {
-  const type = "Klinik";
   const handleFileChange = (label) => (event) => {
     setFiles({
       ...files,
@@ -87,7 +86,7 @@ export const FormDocument = ({
               className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
             >
               {loading ? (
-                <span className="loading loading-dots loading-md"></span>
+                <Loading type={"dots"}  size={"md"} />
               ) : (
                 <div>
                   Next <FontAwesomeIcon icon={faAngleRight} />
@@ -152,7 +151,7 @@ export const FormDocument = ({
               className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
             >
               {loading ? (
-                <span className="loading loading-dots loading-md"></span>
+                <Loading type={"dots"}  size={"md"} />
               ) : (
                 <div>
                   Next <FontAwesomeIcon icon={faAngleRight} />

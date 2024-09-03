@@ -6,8 +6,8 @@ import Sidebar from "../../components/Sidebar";
 import { DatatableWithPaginate } from "../../components/Datatable";
 import axiosInstance from "../../dummy/axiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Swal from "sweetalert2";
 import { useNavigate } from "react-router";
+import { ToastAlert } from "../../components/Alert";
 
 export const CreateDistribusiPage = () => {
   const [quantities, setQuantities] = useState({});
@@ -147,26 +147,11 @@ export const CreateDistribusiPage = () => {
     try {
       const response = await axiosInstance.post("/distribusi/store", payload);
       if (response.data.status === true) {
-        Swal.fire({
-          icon: "success",
-          title: response.data.message,
-          toast: true,
-          position: "top-end",
-          showConfirmButton: false,
-          timer: 3000,
-        });
+        ToastAlert("success", response.data.message);
         navigate("/distribusi");
       }
     } catch (error) {
-      console.log(error);
-      Swal.fire({
-        icon: "error",
-        title: error.response.data.message,
-        toast: true,
-        position: "top-end",
-        showConfirmButton: false,
-        timer: 3000,
-      });
+      ToastAlert("success", error.response.data.message);
     }
   };
 
