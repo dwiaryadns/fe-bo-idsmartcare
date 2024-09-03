@@ -1,4 +1,3 @@
-import React from "react";
 import Layout from "../../components/Layout";
 import {
   faChevronLeft,
@@ -17,6 +16,12 @@ export default function DetailFasyankesPage({ data, handleBack }) {
           <InputApproved label={"Email Fasyankes"} value={data.email} />
           <InputApproved label={"Tipe Fasyankes"} value={data.type} />
           <InputApproved label={"Nama PIC"} value={data.pic} />
+          <InputApproved label={"Nomor PIC"} value={data.pic_number} />
+          <InputApproved label={"Address"} value={data.address} />
+          <div className="grid md:grid-cols-2 grid-cols-1 gap-5">
+            <InputApproved label={"Latitude"} value={data.latitude} />
+            <InputApproved label={"Longitude"} value={data.longitude} />
+          </div>
           <InputApproved label={"Nomor PIC"} value={data.pic_number} />
           <InputApproved label={"Gudang"} value={data.warehouse.name} />
 

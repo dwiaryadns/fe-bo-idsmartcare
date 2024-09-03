@@ -46,6 +46,8 @@ export const FormCreateFasyankes = () => {
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({
     nameFasyankes: "",
+    latitude: "",
+    longitude: "",
     picName: "",
     picPhoneNumber: "",
     emailFasyankes: "",
@@ -166,6 +168,8 @@ export const FormCreateFasyankes = () => {
       const payload = {
         type: type,
         duration: duration,
+        latitude: formData.latitude,
+        longitude: formData.longitude,
         price: choosePlan.price,
         username: formData.username,
         package_plan: choosePlan.paket == undefined ? "" : choosePlan.paket,
@@ -202,6 +206,8 @@ export const FormCreateFasyankes = () => {
             const newApiErrors = {
               type: apiErrors.type ? apiErrors.type : "",
               username: apiErrors.username ? apiErrors.username : "",
+              latitude: apiErrors.latitude ? apiErrors.latitude : "",
+              longitude: apiErrors.longitude ? apiErrors.longitude : "",
               duration: apiErrors.duration ? apiErrors.duration : "",
               package_plan: apiErrors.package_plan
                 ? apiErrors.package_plan
@@ -225,6 +231,8 @@ export const FormCreateFasyankes = () => {
           const newApiErrors = {
             type: apiErrors.type ? apiErrors.type : "",
             username: apiErrors.username ? apiErrors.username : "",
+            latitude: apiErrors.latitude ? apiErrors.latitude : "",
+            longitude: apiErrors.longitude ? apiErrors.longitude : "",
             duration: apiErrors.duration ? apiErrors.duration : "",
             package_plan: apiErrors.package_plan ? apiErrors.package_plan : "",
             nameFasyankes: apiErrors.name ? apiErrors.name : "",
@@ -353,7 +361,7 @@ export const FormCreateFasyankes = () => {
       .then(function (response) {
         if (response.data.status === true) {
           setIsSuccess(true);
-          ToastAlert("Berhasil");
+          ToastAlert("success", "Berhasil Verfikasi Email");
         } else {
           setLoading(false);
           setIsSuccess(false);
@@ -529,7 +537,7 @@ export const FormCreateFasyankes = () => {
                 <div className="w-full">
                   {loading ? (
                     <span className="text-white">
-                    <Loading type={"dots"}  size={"md"} />
+                      <Loading type={"dots"} size={"md"} />
                     </span>
                   ) : (
                     <div>
@@ -657,6 +665,26 @@ export const FormCreateFasyankes = () => {
             value={formData.address}
             error={errors.address}
             tooltip="Alamat fasyankes yang didaftarkan"
+          />
+          <Input
+            type="text"
+            label="Latitude"
+            placeholder="Latitude"
+            name="latitude"
+            onChange={handleInputChange}
+            value={formData.latitude}
+            error={errors.latitude}
+            tooltip="Latitude yang valid dari Google Maps"
+          />
+          <Input
+            type="text"
+            label="Longitude"
+            placeholder="Longitude"
+            name="longitude"
+            onChange={handleInputChange}
+            value={formData.longitude}
+            error={errors.longitude}
+            tooltip="Longitude yang valid dari Google Maps"
           />
           <div
             className={` ${isSuccess ? "w-full" : "flex md:flex-row flex-col"}`}
