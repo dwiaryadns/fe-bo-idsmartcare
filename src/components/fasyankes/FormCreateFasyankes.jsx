@@ -536,7 +536,7 @@ export const FormCreateFasyankes = () => {
               {warehouses.length == 0 ? (
                 <div className="w-full">
                   {loading ? (
-                    <span className="text-white">
+                    <span className="text-primary">
                       <Loading type={"dots"} size={"md"} />
                     </span>
                   ) : (
@@ -667,7 +667,7 @@ export const FormCreateFasyankes = () => {
             tooltip="Alamat fasyankes yang didaftarkan"
           />
           <Input
-            type="text"
+            type="number"
             label="Latitude"
             placeholder="Latitude"
             name="latitude"
@@ -677,7 +677,7 @@ export const FormCreateFasyankes = () => {
             tooltip="Latitude yang valid dari Google Maps"
           />
           <Input
-            type="text"
+            type="number"
             label="Longitude"
             placeholder="Longitude"
             name="longitude"

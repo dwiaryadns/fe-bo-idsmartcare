@@ -5,6 +5,7 @@ import {
   faKey,
   faEye,
   faEyeSlash,
+  faPhone,
 } from "@fortawesome/free-solid-svg-icons";
 import bgLogin from "../../assets/bg-login.png";
 import imgLogin from "../../assets/img-login.png";
@@ -18,6 +19,7 @@ import Loading from "../../components/Loading";
 const RegisterPage = () => {
   const [fullname, setFullname] = useState("");
   const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
@@ -27,6 +29,7 @@ const RegisterPage = () => {
   const [errors, setErrors] = useState({
     fullname: "",
     email: "",
+    phone: "",
     password: "",
     confirmPassword: "",
     api: "",
@@ -35,17 +38,18 @@ const RegisterPage = () => {
   const [otpId, setOtpId] = useState();
 
   useEffect(() => {
-    const registerId = localStorage.getItem("register_id");
-    if (registerId) {
-      navigate(`/verify-otp/${registerId}`);
-    }
-  }, [navigate]);
-  useEffect(() => {
     if (otpId) {
       const registerId = localStorage.getItem("register_id");
       navigate(`/verify-otp/${registerId}`, { state: { otpId: otpId } });
     }
   }, [otpId, navigate]);
+
+  useEffect(() => {
+    const registerId = localStorage.getItem("register_id");
+    if (registerId) {
+      navigate(`/verify-otp/${registerId}`);
+    }
+  }, [navigate]);
 
   const getOTP = async (email) => {
     try {
@@ -75,6 +79,7 @@ const RegisterPage = () => {
     const payload = {
       email: email,
       name: fullname,
+      phone: phone,
       password: password,
       password_confirmation: confirmPassword,
     };
@@ -94,6 +99,7 @@ const RegisterPage = () => {
         setErrors({
           fullname: apiErrors.name ? apiErrors.name : "",
           email: apiErrors.email ? apiErrors.email : "",
+          phone: apiErrors.phone ? apiErrors.phone : "",
           password: apiErrors.password ? apiErrors.password : "",
           confirmPassword: "",
           api: "",
@@ -111,6 +117,11 @@ const RegisterPage = () => {
       setFullname(value);
       setErrors((prevErrors) => ({ ...prevErrors, fullname: "" }));
     }
+  };
+  const handlePhone = (e) => {
+    const value = e.target.value;
+    setPhone(value);
+    setErrors((prevErrors) => ({ ...prevErrors, phone: "" }));
   };
 
   const handleEmail = (e) => {
@@ -206,6 +217,29 @@ const RegisterPage = () => {
                 {errors.email && (
                   <div className="text-red-500 text-xs mt-1">
                     {errors.email}
+                  </div>
+                )}
+              </div>
+              <div className="mb-3">
+                <label className="font-bold text-sm">Phone</label>
+                <div className="relative w-full">
+                  <input
+                    type="number"
+                    className={`input ${
+                      errors.phone ? "input-error" : "input-primary"
+                    } w-full rounded-md pl-10 pr-10 p-2`}
+                    placeholder="Phone (cth: 08xxxxx)"
+                    value={phone}
+                    onChange={handlePhone}
+                  />
+                  <FontAwesomeIcon
+                    icon={faPhone}
+                    className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+                  />
+                </div>
+                {errors.phone && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.phone}
                   </div>
                 )}
               </div>
