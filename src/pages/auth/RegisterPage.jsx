@@ -12,7 +12,7 @@ import imgLogin from "../../assets/img-login.png";
 import logoLogin from "../../assets/logo-login.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
+import {  API_BASE_URL } from "../../dummy/const";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Loading from "../../components/Loading";
 
@@ -50,30 +50,6 @@ const RegisterPage = () => {
       navigate(`/verify-otp/${registerId}`);
     }
   }, [navigate]);
-
-  const getOTP = async (email) => {
-    try {
-      const response = await axios.post(
-        API_BASE_URL + "/get-otp",
-        {
-          email: email,
-          phone: "",
-          gateway_key: GATEWAY_KEY,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_HEADER}`,
-          },
-        }
-      );
-
-      if (response.data.status === true) {
-        setOtpId(response.data.data.id);
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  };
   const handleRegister = async () => {
     setLoading(true);
     const payload = {
@@ -85,14 +61,19 @@ const RegisterPage = () => {
     };
     try {
       const response = await axios.post(API_BASE_URL + "/register", payload);
+      console.log(response);
       if (response.data.status === true) {
         const registerId = response.data.register_id;
         localStorage.setItem("register_id", registerId);
         localStorage.setItem("email", response.data.user.email);
         ToastAlert("success", response.data.message);
-        await getOTP(response.data.user.email);
+        setOtpId(response.data.otp_id);
+      } else {
+        setLoading(false);
+        CenterAlert("error", "Oops...", response.data.message);
       }
     } catch (error) {
+      console.log(error);
       setLoading(false);
       if (error.response && error.response.data && error.response.data.errors) {
         const apiErrors = error.response.data.errors;

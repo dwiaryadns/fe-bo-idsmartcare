@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router";
 import axios from "axios";
-import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL } from "../../dummy/const";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faChevronCircleLeft,
@@ -10,13 +10,13 @@ import {
 import bgLogin from "../../assets/bg-login.png";
 import logoLogin from "../../assets/logo.png";
 import imgOtp from "../../assets/img-otp.png";
-import { ToastAlert } from "../../components/Alert";
+import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Loading from "../../components/Loading";
 
 export const VerifyOtpPage = () => {
   const [otp, setOtp] = useState("");
-  const [countdownSendOtp, setCountdownSendOtp] = useState(120); // 2 minutes
-  const [countdownVerifyOtp, setCountdownVerifyOtp] = useState(300); // 5 minutes
+  const [countdownSendOtp, setCountdownSendOtp] = useState(120);
+  const [countdownVerifyOtp, setCountdownVerifyOtp] = useState(300);
   const [isSendButtonActive, setIsSendButtonActive] = useState(false);
   const [isVerifyButtonActive, setIsVerifyButtonActive] = useState(false);
 
@@ -120,6 +120,10 @@ export const VerifyOtpPage = () => {
   };
 
   const handleSendOtp = () => {
+    if(!otp) {
+      ToastAlert('error','OTP Wajib Diisi.')
+      return;
+    }
     setLoading(true);
     const payload = {
       email: email,
@@ -127,7 +131,6 @@ export const VerifyOtpPage = () => {
       otp_id:
         resendOtpId == null || resendOtpId == undefined ? otpId : resendOtpId,
     };
-    console.log(payload);
     axios
       .post(API_BASE_URL + "/store-otp", payload, {
         headers: {
@@ -155,60 +158,60 @@ export const VerifyOtpPage = () => {
       });
   };
 
-  const getOTP = async (inputEmail) => {
+  const handleResendOtp = async () => {
     try {
-      const payload = {
-        email: newEmail != null ? email : inputEmail,
-        phone: "",
-        gateway_key: GATEWAY_KEY,
-        newEmail: newEmail,
-      };
-
-      const response = await axios.post(API_BASE_URL + "/get-otp", payload, {
-        headers: {
-          Authorization: `Bearer ${ACCESS_HEADER}`,
-        },
+      const response = await axios.post(API_BASE_URL + "/resend-otp", {
+        email: email,
       });
-
       if (response.data.status === true) {
-        setResentOtpId(response.data.data.id);
         setStep(0);
-        setNewEmail(null);
-        if (newEmail != null) {
-          localStorage.setItem("email", newEmail);
-        }
+        setResentOtpId(response.data.otp_id);
+        setCountdownSendOtp(120);
+        setIsSendButtonActive(false);
+        setOtp("");
+        ToastAlert("success", "Silahkan Cek Email Kembali");
+        localStorage.setItem(
+          "resend_countdown_start_time",
+          Math.floor(Date.now() / 1000)
+        );
+        setCountdownSendOtp(120);
+      } else {
+        setLoading(false);
+        CenterAlert("error", "Oops...", response.data.message);
+      }
+    } catch (error) {
+      setLoading(false);
+      ToastAlert("error", error.response.data.message);
+    }
+  };
+
+  const handleSubmitClickHere = async () => {
+    setLoading(true);
+    try {
+      const response = await axios.post(API_BASE_URL + "/change-email", {
+        old_email: email,
+        new_email: newEmail,
+      });
+      if (response.data.status === true) {
+        setStep(0);
+        setLoading(false);
+        setResentOtpId(response.data.otp_id);
+        localStorage.setItem("email", newEmail);
+        ToastAlert("success", "Email Berhasil Diubah");
         localStorage.setItem(
           "resend_countdown_start_time",
           Math.floor(Date.now() / 1000)
         );
         setCountdownSendOtp(120);
         setIsSendButtonActive(false);
+      } else {
         setLoading(false);
+        CenterAlert("error", "Oops...", response.data.message);
       }
     } catch (error) {
       setLoading(false);
-      setErrors({
-        email: error.response.data.errors.email,
-        newEmail: error.response.data.errors.newEmail,
-      });
       ToastAlert("error", error.response.data.message);
     }
-  };
-
-  const handleResendOtp = () => {
-    localStorage.setItem(
-      "resend_countdown_start_time",
-      Math.floor(Date.now() / 1000)
-    );
-    setCountdownSendOtp(120);
-    setIsSendButtonActive(false);
-    setOtp("");
-    getOTP(email);
-  };
-
-  const handleSubmitClickHere = () => {
-    getOTP(newEmail);
-    setLoading(true);
   };
 
   return (

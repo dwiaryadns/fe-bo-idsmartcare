@@ -19,7 +19,7 @@ import { useNavigate } from "react-router-dom";
 import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
-import { ACCESS_HEADER, API_BASE_URL, GATEWAY_KEY } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL } from "../../dummy/const";
 import Header from "../Header";
 import StepBar from "./utils/StepBar";
 import { packagePrices, plan } from "./utils/package";
@@ -138,7 +138,6 @@ export const FormCreateFasyankes = () => {
       })
       .catch(function (error) {
         modalRef.current.close();
-
         const apiErrors = error.response.data.errors;
         const newApiErrors = {
           warehouseName: apiErrors.name ? apiErrors.name : "",
@@ -302,51 +301,48 @@ export const FormCreateFasyankes = () => {
   };
 
   const [otp, setOtp] = useState("");
-  const [otpId, setOtpId] = useState("");
+  const [otpId, setOtpId] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
 
-  const getOTP = async (email) => {
-    try {
-      const response = await axios.post(
-        API_BASE_URL + "/get-otp",
-        {
-          email: email,
-          phone: "",
-          gateway_key: GATEWAY_KEY,
-        },
-        {
-          headers: {
-            Authorization: `Bearer ${ACCESS_HEADER}`,
-          },
-        }
-      );
-
-      if (response.data.status === true) {
-        setOtpId(response.data.data.id);
-        ToastAlert("success", "OTP Berhasil Terkirim");
-      }
-    } catch (error) {
-      console.log(error);
-      ToastAlert("error", error.response.data.message);
-    }
-  };
+  const [loadingOTP, setLoadingOTP] = useState(false);
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
   };
 
-  const handleGetOtp = () => {
+  const handleGetOtp = async () => {
+    setLoadingOTP(true);
     if (formData.emailFasyankes === "") {
+      setLoadingOTP(false);
       ToastAlert("error", "Masukkan Email Anda");
       return;
     }
-    getOTP(formData.emailFasyankes);
+    try {
+      const response = await axios.post(
+        API_BASE_URL + "/fasyankes/send-otp",
+        { email: formData.emailFasyankes },
+        {
+          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+        }
+      );
+      if (response.data.status === true) {
+        setOtpId(response.data.otp_id);
+        setLoadingOTP(false);
+        ToastAlert("success", response.data.message);
+      } else {
+        setLoadingOTP(false);
+        ToastAlert("error", response.data.message);
+      }
+    } catch (error) {
+      console.log(error);
+      setLoadingOTP(false);
+      ToastAlert("error", "Gagal Mengambil OTP");
+    }
   };
   const handleSendOtp = () => {
     if (otp === "") {
       ToastAlert("error", "Masukkan OTP!");
       return;
     }
-    setLoading(true);
     const payload = {
       email: formData.emailFasyankes,
       otp: otp,
@@ -363,13 +359,11 @@ export const FormCreateFasyankes = () => {
           setIsSuccess(true);
           ToastAlert("success", "Berhasil Verfikasi Email");
         } else {
-          setLoading(false);
           setIsSuccess(false);
           ToastAlert("error", response.data.message);
         }
       })
       .catch(function (error) {
-        setLoading(false);
         setIsSuccess(false);
         ToastAlert("error", error.response.data.message);
       });
@@ -435,7 +429,7 @@ export const FormCreateFasyankes = () => {
                 </div>
               </span>
             </div>
-            <div className="flex flex-row shadow-md justify-center gap-5 bg-base-100 mb-3 mx-2 md:mx-72 rounded-full p-2">
+            <div className="flex flex-row shadow-md justify-center gap-5 bg-base-100 mb-3 mx-2 md:mx-48 rounded-full p-2">
               <div
                 onClick={() => handleChangeDuration("Monthly")}
                 className={`${
@@ -647,7 +641,7 @@ export const FormCreateFasyankes = () => {
             tooltip="Nama PIC ini adalah nama untuk pihak yang bertanggung jawab operasional apotek"
           />
           <Input
-            type="text"
+            type="number"
             label="PIC Phone Number"
             placeholder="PIC Phone Number"
             name="picPhoneNumber"
@@ -705,7 +699,11 @@ export const FormCreateFasyankes = () => {
                 isSuccess ? "hidden" : ""
               } mt-3 bg-primary hover:bg-primary text-white rounded-md`}
             >
-              Kirim OTP
+              {loadingOTP ? (
+                <Loading type={"spinner"} size={"sm"} />
+              ) : (
+                "Kirim OTP"
+              )}
             </button>
           </div>
 
@@ -727,6 +725,9 @@ export const FormCreateFasyankes = () => {
                   placeholder="Kode OTP"
                 />
                 <button
+                  disabled={
+                    otpId === null || otpId === undefined ? "disabled" : ""
+                  }
                   onClick={handleSendOtp}
                   className="btn bg-primary hover:bg-primary text-white rounded-md w-full md:w-auto"
                 >
