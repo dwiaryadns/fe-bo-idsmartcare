@@ -8,22 +8,29 @@ import axiosInstance from "../../dummy/axiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import { ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export const CreateDistribusiPage = () => {
   const [quantities, setQuantities] = useState({});
 
-  const handleIncrement = (barangId) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [barangId]: (prev[barangId] || 0) + 1,
-    }));
+  const handleIncrement = (barangId, maxStock) => {
+    setQuantities((prev) => {
+      const currentQuantity = prev[barangId] || 0;
+      if (currentQuantity < maxStock) {
+        const newQuantity = currentQuantity + 1;
+        updateDetails(barangId, newQuantity); // Memperbarui detail setelah kuantitas berubah
+        return { ...prev, [barangId]: newQuantity };
+      }
+      return prev;
+    });
   };
 
   const handleDecrement = (barangId) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [barangId]: Math.max((prev[barangId] || 0) - 1, 0),
-    }));
+    setQuantities((prev) => {
+      const newQuantity = Math.max((prev[barangId] || 0) - 1, 0);
+      updateDetails(barangId, newQuantity);
+      return { ...prev, [barangId]: newQuantity };
+    });
   };
 
   const handleQuantityChange = (barangId, value) => {
@@ -42,8 +49,27 @@ export const CreateDistribusiPage = () => {
       [barangId]: parsedValue,
     }));
 
-    handleDetailChange(barangId, parsedValue.toString());
+    updateDetails(barangId, parsedValue);
   };
+
+  const updateDetails = useCallback((barangId, quantity) => {
+    setDetails((prevDetails) => {
+      const existingDetailIndex = prevDetails.findIndex(
+        (detail) => detail.barang_id === barangId
+      );
+
+      if (existingDetailIndex !== -1) {
+        const newDetails = [...prevDetails];
+        newDetails[existingDetailIndex] = {
+          ...newDetails[existingDetailIndex],
+          jumlah: quantity,
+        };
+        return newDetails;
+      } else {
+        return [...prevDetails, { barang_id: barangId, jumlah: quantity }];
+      }
+    });
+  }, []);
   const columns = useMemo(
     () => [
       {
@@ -82,7 +108,12 @@ export const CreateDistribusiPage = () => {
             />
             <button
               className="btn btn-sm rounded-l-none rounded-r-md btn-primary"
-              onClick={() => handleIncrement(row.original.barang.barang_id)}
+              onClick={() =>
+                handleIncrement(
+                  row.original.barang.barang_id,
+                  row.original.stok
+                )
+              }
             >
               +
             </button>
@@ -115,43 +146,43 @@ export const CreateDistribusiPage = () => {
   };
 
   const [details, setDetails] = useState([]);
-  const handleDetailChange = useCallback((barangId, value) => {
-    setDetails((prevDetails) => {
-      const existingDetail = prevDetails.find(
-        (detail) => detail.barang_id === barangId
-      );
-      if (existingDetail) {
-        return prevDetails.map((detail) =>
-          detail.barang_id === barangId ? { ...detail, jumlah: value } : detail
-        );
-      } else {
-        return [...prevDetails, { barang_id: barangId, jumlah: value }];
-      }
-    });
-  }, []);
+  // const handleDetailChange = useCallback((barangId, value) => {
+  //   setDetails((prevDetails) => {
+  //     const existingDetail = prevDetails.find(
+  //       (detail) => detail.barang_id === barangId
+  //     );
+  //     if (existingDetail) {
+  //       return prevDetails.map((detail) =>
+  //         detail.barang_id === barangId ? { ...detail, jumlah: value } : detail
+  //       );
+  //     } else {
+  //       return [...prevDetails, { barang_id: barangId, jumlah: value }];
+  //     }
+  //   });
+  // }, []);
 
   const navigate = useNavigate();
   const handleSave = async () => {
+    setLoading(true);
     const payload = {
       warehouse_id: selectedWarehouse,
       fasyankes_id: selectedFasyankes,
       status: "Pending",
       keterangan: "",
-      details: details.map((detail) => ({
-        barang_id: detail.barang_id,
-        jumlah: detail.jumlah,
-      })),
+      details: details.filter((detail) => detail.jumlah > 0),
     };
     console.log(payload);
 
     try {
       const response = await axiosInstance.post("/distribusi/store", payload);
       if (response.data.status === true) {
+        setLoading(false);
         ToastAlert("success", response.data.message);
         navigate("/distribusi");
       }
     } catch (error) {
-      ToastAlert("success", error.response.data.message);
+      setLoading(false);
+      ToastAlert("error", error.response.data.message);
     }
   };
 
@@ -232,10 +263,17 @@ export const CreateDistribusiPage = () => {
                       />
                       <div className="flex justify-end mt-4">
                         <button
+                          disabled={loading}
                           onClick={handleSave}
                           className="btn bg-primary hover:bg-primary text-white rounded-md"
                         >
-                          <FontAwesomeIcon icon={faSave} /> Simpan
+                          {loading ? (
+                            <Loading type={"bars"} size={"md"} />
+                          ) : (
+                            <span>
+                              <FontAwesomeIcon icon={faSave} /> Simpan
+                            </span>
+                          )}
                         </button>
                       </div>
                     </div>

@@ -5,7 +5,6 @@ const axiosInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Interceptor untuk menambahkan token ke setiap request
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -15,6 +14,7 @@ axiosInstance.interceptors.request.use(
     return config;
   },
   (error) => {
+    console.log(error.response.status === 403 ? 'Tidak ': 'Ya');
     return Promise.reject(error);
   }
 );
