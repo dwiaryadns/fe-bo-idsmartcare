@@ -2,10 +2,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo3 from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
 import { sidebarItemsRev } from "../dummy/data"; // Pastikan Anda menggunakan sidebarItemsRev
-import {
-  faChevronDown,
-  faChevronRight,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
 const Sidebar = () => {

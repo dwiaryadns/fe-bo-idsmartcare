@@ -3,11 +3,11 @@ import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
-import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import { RincianPembelianPage } from "./RincianPembelianPage";
 import { DatatableWithPaginate } from "../../components/Datatable";
 import { CenterAlert } from "../../components/Alert";
+import axiosInstance from "../../dummy/axiosInstance";
 
 export const CreatePurchasePage = () => {
   const [tanggalPemesanan, setTanggalPemesanan] = useState(
@@ -114,14 +114,10 @@ export const CreatePurchasePage = () => {
     [selectedItems, selectedSupplier]
   );
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   useEffect(() => {
     const fetchWarehouse = async () => {
       try {
-        const response = await axios.get(`${API_BASE_URL}/warehouses`, headers);
+        const response = await axiosInstance.get(`${API_BASE_URL}/warehouses`);
         setWarehouses(response.data.data);
       } catch (error) {
         console.error(error);
