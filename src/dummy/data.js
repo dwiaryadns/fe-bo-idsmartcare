@@ -116,11 +116,11 @@ export const sidebarItemsRev = [
       },
     ],
   },
-  {
-    title: "Keamanan Akun",
-    icon: faLock,
-    link: "password-security",
-  },
+  // {
+  //   title: "Keamanan Akun",
+  //   icon: faLock,
+  //   link: "password-security",
+  // },
 ];
 
 export const navbarItems = [

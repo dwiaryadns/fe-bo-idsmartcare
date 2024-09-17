@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
@@ -10,7 +10,7 @@ import bgLogin from "../../assets/bg-login.png";
 import imgLogin from "../../assets/img-login.png";
 import logoLogin from "../../assets/logo-login.png";
 import { Link, useNavigate } from "react-router-dom";
-import { API_BASE_URL } from "../../dummy/const";
+import { ACCESS_HEADER, API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 
 import { CenterAlert, ToastAlert } from "../../components/Alert";
@@ -21,9 +21,14 @@ const LoginPage = () => {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [errors, setErrors] = useState({ email: "", password: "" });
-  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
+  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [otpId, setOtpId] = useState("");
+  const [token, setToken] = useState("");
+  const [dataUser, setDataUser] = useState({});
+
+  const navigate = useNavigate();
 
   useEffect(() => {
     const storedEmail = localStorage.getItem("email");
@@ -33,46 +38,181 @@ const LoginPage = () => {
     }
   }, []);
 
+  const Modal2FA = () => {
+    const modalRef = useRef(null);
+    const [otp, setOtp] = useState(""); // OTP tetap ada di state
+    const [showModal, setShowModal] = useState(true); // Modal tetap terbuka
+    const [loadingModal, setLoadingModal] = useState(false);
+
+    const navigate = useNavigate();
+
+    const handleSendOtp = async (e) => {
+      e.preventDefault(); // Cegah form submission otomatis yang bisa mereset input
+
+      setLoadingModal(true); // Tampilkan loading saat OTP diverifikasi
+
+      const payload = {
+        email: email,
+        otp: otp,
+        otp_id: otpId,
+      };
+
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/store-otp`,
+          payload,
+          {
+            headers: {
+              Authorization: `Bearer ${ACCESS_HEADER}`,
+            },
+          }
+        );
+
+        if (response.data.status) {
+          setLoadingModal(false);
+          ToastAlert("success", "Verifikasi OTP Berhasil");
+          localStorage.setItem("token", token);
+          localStorage.setItem("dataBo", dataUser);
+          setShowModal(false);
+          navigate("/dasbor");
+        } else {
+          setLoadingModal(false);
+          ToastAlert("error", response.data.message);
+        }
+      } catch (error) {
+        setLoadingModal(false);
+        ToastAlert(
+          "error",
+          error.response?.data?.message || "Terjadi kesalahan"
+        );
+      }
+    };
+
+    useEffect(() => {
+      const handleKeyDown = (e) => {
+        if (e.key === "Escape") {
+          e.preventDefault(); // Disable the default behavior of the Escape key
+        }
+      };
+
+      if (showModal && modalRef.current) {
+        modalRef.current.showModal();
+        window.addEventListener("keydown", handleKeyDown); // Tambahkan event listener untuk mencegah Esc menutup modal
+      } else if (modalRef.current) {
+        modalRef.current.close();
+        window.removeEventListener("keydown", handleKeyDown); // Hapus event listener saat modal ditutup
+      }
+
+      return () => {
+        window.removeEventListener("keydown", handleKeyDown);
+      };
+    }, [showModal]);
+
+    return (
+      <div>
+        <dialog id="my_modal_1" className="modal" ref={modalRef}>
+          <div className="modal-box">
+            <h3 className="font-bold text-lg">OTP Verification</h3>
+            <p className="mt-2">Enter the code sent to your email</p>
+            <input
+              type="text"
+              maxLength={6}
+              placeholder="Code"
+              value={otp} // Bind input value ke state otp
+              onChange={(e) => setOtp(e.target.value)} // Update state otp sesuai dengan input user
+              className="input input-bordered rounded-md w-full mt-5"
+            />
+            <div className="modal-action">
+              <button
+                onClick={handleSendOtp}
+                className={`btn btn-block bg-primary hover:bg-primary text-white rounded-md ${
+                  loadingModal ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+                disabled={loadingModal}
+              >
+                {loadingModal ? (
+                  <Loading type={"bars"} size={"md"} />
+                ) : (
+                  "Verify"
+                )}
+              </button>
+            </div>
+          </div>
+        </dialog>
+      </div>
+    );
+  };
+
   const handleLogin = async () => {
     setLoading(true);
 
     const payload = { email, password };
-    axios
-      .post(API_BASE_URL + "/login", payload)
-      .then((response) => {
-        if (response.data.status === true) {
+
+    try {
+      const response = await axios.post(API_BASE_URL + "/login", payload);
+
+      if (response.data.status === true) {
+        // Remember the email if "Remember Me" is checked
+        if (rememberMe) {
+          localStorage.setItem("email", email);
+        } else {
+          localStorage.removeItem("email");
+        }
+
+        setToken(response.data.token);
+        setDataUser(JSON.stringify(response.data.data));
+
+        // localStorage.setItem("token", response.data.token);
+        // localStorage.setItem("dataBo", JSON.stringify(response.data.data));
+
+        console.log("is 2fa : " + response.data.data.is_2fa);
+
+        // If 2FA is required, show the modal
+        if (response.data.data.is_2fa === 1) {
+          // ToastAlert("success", response.data.message); // Optional toast
+          const response = await axios.post(API_BASE_URL + "/get-otp/" + email);
+          console.log(response);
+          if (response.data.status === true) {
+            // localStorage.setItem("token", response.data.token);
+            // localStorage.setItem("dataBo", JSON.stringify(response.data.data));
+            setOtpId(response.data.data.id);
+            setLoading(false);
+            setShowModal(true);
+          } else {
+            CenterAlert("error", "Oops...", response.data.message);
+            setLoading(false);
+          }
+        } else {
+          // If no 2FA is required, store the token and data, then navigate to the dashboard
+          setShowModal(false);
+          ToastAlert("success", response.data.message);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("dataBo", JSON.stringify(response.data.data));
-
-          if (rememberMe) {
-            localStorage.setItem("email", email);
-          } else {
-            localStorage.removeItem("email");
-          }
           navigate("/dasbor");
-          ToastAlert("success", response.data.message);
-        } else {
-          CenterAlert("error", "Oops...", response.data.message);
-          setLoading(false);
         }
-      })
-      .catch((error) => {
-        if (error.response && error.response.data) {
-          const message = error.response.data.errors;
-          if (message) {
-            const newApiErrors = {
-              email: message.email ? message.email[0] : "",
-              password: message.password ? message.password[0] : "",
-            };
-            setErrors(newApiErrors);
-          } else {
-            CenterAlert("error", "Oops...", error.response.data.message);
-            setErrors({ email: error.response.data.message, password: "" });
-            setPassword("");
-          }
-        }
+      } else {
+        // Show error message if the response status is false
+        CenterAlert("error", "Oops...", response.data.message);
         setLoading(false);
-      });
+      }
+    } catch (error) {
+      setLoading(false);
+      // Handle API errors
+      if (error.response && error.response.data) {
+        const message = error.response.data.errors;
+        if (message) {
+          const newApiErrors = {
+            email: message.email ? message.email[0] : "",
+            password: message.password ? message.password[0] : "",
+          };
+          setErrors(newApiErrors);
+        } else {
+          CenterAlert("error", "Oops...", error.response.data.message);
+          setErrors({ email: error.response.data.message, password: "" });
+          setPassword("");
+        }
+      }
+    }
   };
 
   const handleEmailChange = (e) => {
@@ -189,6 +329,7 @@ const LoginPage = () => {
               </div>
 
               <div className="mt-4">
+                {showModal && <Modal2FA />}
                 <button
                   onClick={handleLogin}
                   className="btn btn-block bg-primary hover:bg-primary text-white rounded-md"
