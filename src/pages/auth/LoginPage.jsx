@@ -168,7 +168,7 @@ const LoginPage = () => {
         console.log("is 2fa : " + response.data.data.is_2fa);
 
         // If 2FA is required, show the modal
-        if (response.data.data.is_2fa === 1) {
+        if (response.data.data.is_2fa === 1 || response.data.data.is_2fa === true ) {
           // ToastAlert("success", response.data.message); // Optional toast
           const response = await axios.post(API_BASE_URL + "/get-otp/" + email);
           console.log(response);
