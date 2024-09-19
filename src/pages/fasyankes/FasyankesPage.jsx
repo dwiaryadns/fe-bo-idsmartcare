@@ -9,6 +9,7 @@ import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import { Datatable } from "../../components/Datatable";
 import DetailFasyankesPage from "./DetailFasyankesPage";
+import Button from "../../components/Button";
 
 const FasyankesPage = () => {
   const [loading, setLoading] = useState(true);
@@ -81,10 +82,11 @@ const FasyankesPage = () => {
                   <div className="card-title flex md:flex-row flex-col justify-between">
                     <p className="text-lg ">List Fasyankes</p>
                     <Link to={"/fasyankes/create"}>
-                      <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
-                        <FontAwesomeIcon icon={faPlus} />
-                        Tambah Fasyankes
-                      </button>
+                      <Button
+                        showIcon={true}
+                        icon={faPlus}
+                        title={"Tambah Fasyankes"}
+                      />
                     </Link>
                   </div>
                   <hr></hr>
