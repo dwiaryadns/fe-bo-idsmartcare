@@ -25,6 +25,7 @@ import StepBar from "./utils/StepBar";
 import { packagePrices, plan } from "./utils/package";
 import { ToastAlert } from "../Alert";
 import Loading from "../Loading";
+import Select from "../boInfo/Select";
 export const FormCreateFasyankes = () => {
   const [duration, setDuration] = useState("Monthly");
   const [choosePlan, setChoosePlan] = useState({
@@ -93,6 +94,28 @@ export const FormCreateFasyankes = () => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+  const [selectedNames, setSelectedNames] = useState({
+    provinsi: "",
+    kabupaten: "",
+    kecamatan: "",
+    desa: "",
+  });
+
+  const handleSelectChange = (name, value, text) => {
+    setFormValues((prevValues) => ({
+      ...prevValues,
+      [name]: value,
+    }));
+
+    setSelectedNames((prevNames) => ({
+      ...prevNames,
+      [name]: text,
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      [name]: "",
+    }));
   };
 
   const modalRef = useRef(null);
@@ -179,6 +202,10 @@ export const FormCreateFasyankes = () => {
         pic: formData.picName,
         pic_number: formData.picPhoneNumber,
         email: formData.emailFasyankes,
+        province: selectedNames.provinsi,
+        city: selectedNames.kabupaten,
+        subdistrict: selectedNames.kecamatan,
+        village: selectedNames.desa,
         password: formData.password,
         password_confirmation: formData.confirmPassword,
       };
@@ -325,6 +352,7 @@ export const FormCreateFasyankes = () => {
         }
       );
       if (response.data.status === true) {
+        console.log(response.data.otp_id);
         setOtpId(response.data.otp_id);
         setLoadingOTP(false);
         ToastAlert("success", response.data.message);
@@ -348,6 +376,7 @@ export const FormCreateFasyankes = () => {
       otp: otp,
       otp_id: otpId,
     };
+    console.log(payload);
     axios
       .post(API_BASE_URL + "/store-otp", payload, {
         headers: {
@@ -355,6 +384,7 @@ export const FormCreateFasyankes = () => {
         },
       })
       .then(function (response) {
+        console.log(response);
         if (response.data.status === true) {
           setIsSuccess(true);
           ToastAlert("success", "Berhasil Verfikasi Email");
@@ -680,6 +710,7 @@ export const FormCreateFasyankes = () => {
             error={errors.longitude}
             tooltip="Longitude yang valid dari Google Maps"
           />
+
           <div
             className={` ${isSuccess ? "w-full" : "flex md:flex-row flex-col"}`}
           >
@@ -736,6 +767,11 @@ export const FormCreateFasyankes = () => {
               </div>
             </div>
           </div>
+          <Select
+            formValues={formValues}
+            onSelectChange={handleSelectChange}
+            errors={errors}
+          />
 
           {isSuccess ? (
             <div>

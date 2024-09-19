@@ -147,34 +147,23 @@ const LoginPage = () => {
     setLoading(true);
 
     const payload = { email, password };
-
     try {
       const response = await axios.post(API_BASE_URL + "/login", payload);
-
       if (response.data.status === true) {
-        // Remember the email if "Remember Me" is checked
         if (rememberMe) {
           localStorage.setItem("email", email);
         } else {
           localStorage.removeItem("email");
         }
-
         setToken(response.data.token);
         setDataUser(JSON.stringify(response.data.data));
 
-        // localStorage.setItem("token", response.data.token);
-        // localStorage.setItem("dataBo", JSON.stringify(response.data.data));
-
         console.log("is 2fa : " + response.data.data.is_2fa);
 
-        // If 2FA is required, show the modal
-        if (response.data.data.is_2fa === 1 || response.data.data.is_2fa === true ) {
-          // ToastAlert("success", response.data.message); // Optional toast
+        if (response.data.data.is_2fa) {
           const response = await axios.post(API_BASE_URL + "/get-otp/" + email);
           console.log(response);
           if (response.data.status === true) {
-            // localStorage.setItem("token", response.data.token);
-            // localStorage.setItem("dataBo", JSON.stringify(response.data.data));
             setOtpId(response.data.data.id);
             setLoading(false);
             setShowModal(true);
@@ -183,7 +172,6 @@ const LoginPage = () => {
             setLoading(false);
           }
         } else {
-          // If no 2FA is required, store the token and data, then navigate to the dashboard
           setShowModal(false);
           ToastAlert("success", response.data.message);
           localStorage.setItem("token", response.data.token);
@@ -191,7 +179,6 @@ const LoginPage = () => {
           navigate("/dasbor");
         }
       } else {
-        // Show error message if the response status is false
         CenterAlert("error", "Oops...", response.data.message);
         setLoading(false);
       }
