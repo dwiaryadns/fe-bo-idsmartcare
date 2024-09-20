@@ -14,6 +14,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { ModalDetailPurchase } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
+import Button from "../../components/Button";
 
 export const PurchasePage = () => {
   const [loading, setLoading] = useState(true);
@@ -152,12 +153,10 @@ export const PurchasePage = () => {
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
                   <p className="text-lg ">List Pemesanan</p>
-                  <Link
-                    className="btn cursor-pointer bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
-                    to={"/purchase/create"}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                    Tambah Pemesanan
+                  <Link to={"/purchase/create"}>
+                    <Button icon={faPlus} showIcon={true}>
+                      Tambah Pesanan
+                    </Button>
                   </Link>
                 </div>
                 <hr></hr>

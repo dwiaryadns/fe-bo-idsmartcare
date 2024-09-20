@@ -15,6 +15,7 @@ import Swal from "sweetalert2";
 import { ModalDetailSupplier } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
+import Button from "../../components/Button";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
@@ -46,7 +47,7 @@ export const SupplierPage = () => {
         Cell: ({ row }) => (
           <div className="">
             <div className="dropdown dropdown-left dropdown-end">
-              <div tabIndex={0} role="button" className="m-1">
+              <div tabIndex={0} role="buttonbutton" className="m-1">
                 <FontAwesomeIcon icon={faEllipsisV} />
               </div>
               <ul
@@ -165,12 +166,10 @@ export const SupplierPage = () => {
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
                   <p className="text-lg">List Supplier</p>
-                  <Link
-                    to={"/supplier/create"}
-                    className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                    Tambah Supplier
+                  <Link to={"/supplier/create"}>
+                    <Button icon={faPlus} showIcon={true}>
+                      Tambah Supplier
+                    </Button>
                   </Link>
                 </div>
                 <hr></hr>

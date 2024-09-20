@@ -9,6 +9,7 @@ import Loading from "../components/Loading";
 import axiosInstance from "../dummy/axiosInstance";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL } from "../dummy/const";
+import Button from "../components/Button";
 
 export const ProfilePage = () => {
   const [name, setName] = useState("");
@@ -28,8 +29,10 @@ export const ProfilePage = () => {
   const [newPassword, setNewPassword] = useState("");
   const [confirmNewPassword, setConfirmNewPassword] = useState("");
   const [check, setCheck] = useState(0);
+  const [role, setRole] = useState("");
 
   const getDataBo = localStorage.getItem("dataBo");
+  console.log(getDataBo);
   const dataBoObj = JSON.parse(getDataBo);
 
   useEffect(() => {
@@ -37,6 +40,7 @@ export const ProfilePage = () => {
     setPhone(dataBoObj?.phone);
     setName(dataBoObj?.name);
     setCheck(dataBoObj?.is_2fa);
+    setRole(dataBoObj?.role);
 
     if (dataBoObj?.is_2fa == 1) {
       setCheck(1);
@@ -199,12 +203,9 @@ export const ProfilePage = () => {
           </div>
 
           <div className="mt-5">
-            <button
-              onClick={handleSend}
-              className="btn bg-primary hover:bg-primary text-white btn-block rounded-md"
-            >
+            <Button onClick={handleSend} w="full">
               {loading ? <Loading type={"bars"} size={"md"} /> : "Kirim"}
-            </button>
+            </Button>
           </div>
         </div>
       );
@@ -367,6 +368,7 @@ export const ProfilePage = () => {
                               type="checkbox"
                               checked={check}
                               onChange={() => handle2FA()}
+                              disabled={role === "pentest"}
                               className="checkbox checkbox-primary rounded-md checkbox-sm"
                             />
                           )}

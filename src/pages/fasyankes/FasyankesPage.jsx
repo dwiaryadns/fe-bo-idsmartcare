@@ -2,7 +2,6 @@ import { faHospital, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
@@ -82,11 +81,9 @@ const FasyankesPage = () => {
                   <div className="card-title flex md:flex-row flex-col justify-between">
                     <p className="text-lg ">List Fasyankes</p>
                     <Link to={"/fasyankes/create"}>
-                      <Button
-                        showIcon={true}
-                        icon={faPlus}
-                        title={"Tambah Fasyankes"}
-                      />
+                      <Button showIcon={true} icon={faPlus}>
+                        Tambah Fasyankes
+                      </Button>
                     </Link>
                   </div>
                   <hr></hr>

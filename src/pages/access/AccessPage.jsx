@@ -4,10 +4,10 @@ import { Datatable } from "../../components/Datatable";
 import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../dummy/axiosInstance";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { API_BASE_URL } from "../../dummy/const";
 import { ToastAlert } from "../../components/Alert";
 import Swal from "sweetalert2";
+import Button from "../../components/Button";
 
 const AccessPage = () => {
   const [data, setData] = useState([]);
@@ -108,10 +108,9 @@ const AccessPage = () => {
           <div className="card-title flex md:flex-row flex-col justify-between">
             <p className="text-lg">List Hak Akses</p>
             <Link to={"/access/create"}>
-              <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
-                <FontAwesomeIcon icon={faPlus} />
+              <Button showIcon={true} icon={faPlus}>
                 Tambah Hak Akses
-              </button>
+              </Button>
             </Link>
           </div>
           <hr></hr>
