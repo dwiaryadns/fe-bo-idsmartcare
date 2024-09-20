@@ -113,10 +113,7 @@ export const SupplierPage = () => {
   useEffect(() => {
     const fetchSupplier = async () => {
       try {
-        const response = await axios.get(
-          import.meta.env.VITE_API_BASE_URL + "/supplier",
-          headers
-        );
+        const response = await axios.get(API_BASE_URL + "/supplier", headers);
         setSupplier(response.data.data);
         setLoading(false);
       } catch (error) {
