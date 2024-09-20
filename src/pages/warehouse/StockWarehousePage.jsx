@@ -5,13 +5,13 @@ import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const"; // Remove headers import here
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../dummy/axiosInstance";
 
 import { DatatableWithPaginate } from "../../components/Datatable";
 import { CenterAlert } from "../../components/Alert";
 import Loading from "../../components/Loading";
+import Button from "../../components/Button";
 
 export const StockWarehousePage = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -192,13 +192,10 @@ export const StockWarehousePage = () => {
       return (
         <div className="flex flex-col justify-center items-center">
           <span>Data gudang tidak ditemukan</span>
-          <Link
-            to={"/warehouse/create"}
-            className="btn bg-primary hover:bg-primary text-white rounded-md btn-sm mt-2"
-          >
-            <button>
-              <FontAwesomeIcon icon={faPlus} /> Tambah Gudang
-            </button>
+          <Link to={"/warehouse/create"}>
+            <Button icon={faPlus} showIcon={true}>
+              Tambah Gudang
+            </Button>
           </Link>
         </div>
       );
@@ -217,7 +214,7 @@ export const StockWarehousePage = () => {
               <div className="card-body">
                 {loading ? (
                   <div className="flex flex-col justify-center items-center text-primary text-center">
-                  <Loading type={"spinner"} size={"lg"} />
+                    <Loading type={"spinner"} size={"lg"} />
                     <span className="text-xs text-primary mt-2">Tunggu...</span>
                   </div>
                 ) : (

@@ -1,14 +1,14 @@
-import {  faPlus, faReceipt } from "@fortawesome/free-solid-svg-icons";
+import { faPlus, faReceipt } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import { ModalUpdateStock } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
+import Button from "../../components/Button";
 
 export const ReceiptionPage = () => {
   const [loading, setLoading] = useState(true);
@@ -108,12 +108,10 @@ export const ReceiptionPage = () => {
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
                   <p className="text-lg">List Penerimaan</p>
-                  <Link
-                    to={"/good-receipt/create"}
-                    className="cursor-pointer btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                    Tambah Penerimaan
+                  <Link to={"/good-receipt/create"}>
+                    <Button showIcon={true} icon={faPlus}>
+                      Tambah Penerimaan
+                    </Button>
                   </Link>
                 </div>
                 <hr></hr>

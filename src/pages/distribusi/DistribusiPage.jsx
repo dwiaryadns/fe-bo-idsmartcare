@@ -3,10 +3,10 @@ import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
 import { Link } from "react-router-dom";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../dummy/axiosInstance";
 import { Datatable } from "../../components/Datatable";
+import Button from "../../components/Button";
 
 export const DistribusiPage = () => {
   const columns = useMemo(
@@ -62,10 +62,9 @@ export const DistribusiPage = () => {
                 <div className="card-title flex md:flex-row flex-col justify-between">
                   <p className="text-lg">List Distribusi</p>
                   <Link to={"/distribusi/create"}>
-                    <button className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md">
-                      <FontAwesomeIcon icon={faPlus} />
+                    <Button showIcon={true} icon={faPlus}>
                       Tambah Distribusi
-                    </button>
+                    </Button>
                   </Link>
                 </div>
                 <hr></hr>

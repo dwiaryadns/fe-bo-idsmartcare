@@ -8,8 +8,10 @@ import { StateStatus } from "./StateStatus";
 import { faHourglass, faSave } from "@fortawesome/free-solid-svg-icons";
 import { CenterAlert, ToastAlert } from "../Alert";
 import Loading from "../Loading";
+import { getData } from "../../dummy/pentest";
 
 const FormBoInfo = () => {
+  const [datas, setDatas] = useState({});
   const [loading, setLoading] = useState(true);
   const [stateStatus, setStateStatus] = useState(null);
   const [formValues, setFormValues] = useState({
@@ -32,6 +34,11 @@ const FormBoInfo = () => {
   const [errors, setErrors] = useState({});
 
   const navigate = useNavigate();
+
+  useEffect(() => {
+    const data = getData();
+    setDatas(data.role);
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -299,13 +306,15 @@ const FormBoInfo = () => {
             </span>
           </div>
           <div className="flex justify-end">
-            <button
-              disabled={!isFormValid()}
-              onClick={handleSubmitBoInfo}
-              className="btn bg-primary text-white rounded-md btn-sm hover:bg-primary border-none"
-            >
-              Save
-            </button>
+            {datas !== "pentest" && (
+              <button
+                disabled={!isFormValid()}
+                onClick={handleSubmitBoInfo}
+                className="btn bg-primary text-white rounded-md btn-sm hover:bg-primary border-none"
+              >
+                Save
+              </button>
+            )}
           </div>
         </div>
       </div>

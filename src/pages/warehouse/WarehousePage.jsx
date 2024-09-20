@@ -8,6 +8,7 @@ import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../dummy/axiosInstance";
 import { ModalDetailWarehouse } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
+import Button from "../../components/Button";
 
 const WarehousePage = () => {
   const columns = useMemo(
@@ -82,12 +83,10 @@ const WarehousePage = () => {
               <div className="card-body">
                 <div className="card-title flex md:flex-row flex-col justify-between">
                   <p className="text-lg ">List Gudang</p>
-                  <Link
-                    className="btn bg-primary md:btn-md btn-sm hover:bg-primary text-white rounded-md"
-                    to={"/warehouse/create"}
-                  >
-                    <FontAwesomeIcon icon={faPlus} />
-                    Tambah Gudang
+                  <Link to={"/warehouse/create"}>
+                    <Button showIcon={true} icon={faPlus}>
+                      Tambah Gudang
+                    </Button>
                   </Link>
                 </div>
                 <hr></hr>
