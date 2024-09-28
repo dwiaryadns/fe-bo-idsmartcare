@@ -33,27 +33,29 @@ const Input = ({
             </div>
           </span>
         </div>
-        <div className="w-full mr-3 relative">
-          <input
-            type={`${type === "password" && showPassword ? "text" : type}`}
-            placeholder={placeholder}
-            name={name}
-            onChange={onChange}
-            value={value}
-            className={`input input-bordered w-full input-primary rounded-md pr-10 ${
-              error ? "border-red-600" : ""
-            }`}
-          />
-
-          {error && <span className="text-red-600">{error}</span>}
-          {type === "password" && (
-            <FontAwesomeIcon
-              icon={showPassword ? faEyeSlash : faEye}
-              onClick={() => setShowPassword(!showPassword)}
-              className="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+        <div className="w-full mr-3">
+          <div className="relative">
+            <input
+              type={`${type === "password" && showPassword ? "text" : type}`}
+              placeholder={placeholder}
+              name={name}
+              onChange={onChange}
+              value={value}
+              className={`input input-bordered w-full input-primary rounded-md pr-10 ${
+                error ? "border-red-600" : ""
+              }`}
             />
-          )}
-          {name === "emailFasyankes" ? <div></div> : ""}
+
+            {type === "password" && (
+              <FontAwesomeIcon
+                icon={showPassword ? faEyeSlash : faEye}
+                onClick={() => setShowPassword(!showPassword)}
+                className="cursor-pointer absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500"
+              />
+            )}
+            {name === "email" ? <div></div> : ""}
+          </div>
+          {error && <span className="text-red-600 mt-1 text-sm block">{error}</span>}
         </div>
       </div>
     </div>

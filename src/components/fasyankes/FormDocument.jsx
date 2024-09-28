@@ -83,10 +83,11 @@ export const FormDocument = ({
 
             <button
               onClick={handleNext}
+              disabled={loading}
               className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
             >
               {loading ? (
-                <Loading type={"dots"}  size={"md"} />
+                <Loading type={"dots"} size={"md"} />
               ) : (
                 <div>
                   Next <FontAwesomeIcon icon={faAngleRight} />
@@ -148,10 +149,11 @@ export const FormDocument = ({
 
             <button
               onClick={handleNext}
+              disabled={loading}
               className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
             >
               {loading ? (
-                <Loading type={"dots"}  size={"md"} />
+                <Loading type={"dots"} size={"md"} />
               ) : (
                 <div>
                   Next <FontAwesomeIcon icon={faAngleRight} />

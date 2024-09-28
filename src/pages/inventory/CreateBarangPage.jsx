@@ -52,6 +52,22 @@ export const CreateBarangPage = () => {
       .replace(/^/, "Rp ");
   };
 
+  const today = new Date();
+  const minDate = new Date(
+    today.getFullYear() - 10,
+    today.getMonth(),
+    today.getDate()
+  )
+    .toISOString()
+    .split("T")[0];
+  const maxDate = new Date(
+    today.getFullYear() + 10,
+    today.getMonth(),
+    today.getDate()
+  )
+    .toISOString()
+    .split("T")[0];
+
   const handleChange = (e) => {
     const { name, value } = e.target;
 
@@ -59,7 +75,10 @@ export const CreateBarangPage = () => {
       name === "harga_beli" || name === "harga_jual"
         ? formatRupiah(value)
         : value;
+
     if (name === "expired_at") {
+      const inputDate = new Date(value);
+
       if (value && !/^\d{4}-\d{2}-\d{2}$/.test(value)) {
         setErrors((prevErrors) => ({
           ...prevErrors,
@@ -67,7 +86,35 @@ export const CreateBarangPage = () => {
         }));
         return;
       }
+
+      if (inputDate > new Date(maxDate)) {
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: today.toISOString().split("T")[0],
+        }));
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: `Tanggal melebihi batas maksimum, diatur ulang ke hari ini (${
+            today.toISOString().split("T")[0]
+          })`,
+        }));
+        return;
+      }
+
+      if (inputDate < new Date(minDate)) {
+        setFormValues((prevValues) => ({
+          ...prevValues,
+          [name]: today.toISOString().split("T")[0],
+        }));
+        setErrors((prevErrors) => ({
+          ...prevErrors,
+          [name]: `Tanggal harus diisi dengan benar, pilih melalui tanggal yang sudah disediakan!`,
+        }));
+        return;
+      }
     }
+
+    // Jika tidak ada error, update nilai form dan reset error
     setFormValues((prevValues) => ({
       ...prevValues,
       [name]: formattedValue,
@@ -77,6 +124,7 @@ export const CreateBarangPage = () => {
       [name]: "",
     }));
   };
+
   const handleSelectChange = (e) => {
     const { name, value } = e.target;
 
@@ -413,6 +461,8 @@ export const CreateBarangPage = () => {
                   errors={errors.expired_at}
                   label={"Tanggal Kadaluarsa"}
                   onChange={handleChange}
+                  min={minDate} // Menetapkan tanggal minimal
+                  max={maxDate}
                 />
 
                 <div className="flex flex-col">

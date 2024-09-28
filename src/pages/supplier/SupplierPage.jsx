@@ -1,7 +1,9 @@
 import {
-  faEllipsisV,
+  faEye,
   faIndustry,
+  faPencil,
   faPlus,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
@@ -12,13 +14,16 @@ import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
-import { ModalDetailSupplier } from "../../components/Modal";
+import { ModalSupplier } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Button from "../../components/Button";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
+  const [type, setType] = useState(null);
+  const [currentSupplierId, setCurrentSupplierId] = useState(null);
+  
   const columns = useMemo(
     () => [
       {
@@ -45,65 +50,51 @@ export const SupplierPage = () => {
         Header: "Aksi",
         accessor: "aksi",
         Cell: ({ row }) => (
-          <div className="">
-            <div className="dropdown dropdown-left dropdown-end">
-              <div tabIndex={0} role="buttonbutton" className="m-1">
-                <FontAwesomeIcon icon={faEllipsisV} />
-              </div>
-              <ul
-                tabIndex={0}
-                className="dropdown-content menu bg-base-100 rounded-box z-[9999999] w-52 p-2 shadow"
-              >
-                <li>
-                  <a
-                    onClick={() =>
-                      document
-                        .getElementById(row.original.supplier_id)
-                        .showModal()
-                    }
-                  >
-                    Detail
-                  </a>
-                </li>
-                <li>
-                  <a>Edit</a>
-                </li>
-                <li>
-                  <a onClick={() => handleDelete(row.original.supplier_id)}>
-                    Hapus
-                  </a>
-                </li>
-              </ul>
-            </div>
-            <ModalDetailSupplier
-              supplierId={row.original.supplier_id}
-              data={{
-                supplier_id: row.original.supplier_id,
-                alamat: row.original.alamat,
-                nama: row.original.nama_supplier,
-                telp: row.original.nomor_telepon,
-                tipe: row.original.tipe_supplier,
-                kota: row.original.kabupaten,
-                provinsi: row.original.provinsi,
-                kode_pos: row.original.kode_pos,
-                email: row.original.email,
-                website: row.original.website,
-                pic_name: row.original.kontak_person,
-                pic_contact: row.original.nomor_kontak_person,
-                pic_email: row.original.email_kontak_person,
-                npwp: row.original.nomor_npwp,
-                start_pks_date: row.original.start_pks_date,
-                end_pks_date: row.original.end_pks_date,
-                desa: row.original.desa,
-                kecamatan: row.original.kecamatan,
+          <div className="flex">
+            <button
+              onClick={() => {
+                setType("detail");
+                setCurrentSupplierId(row.original.supplier_id); // Set supplierId
               }}
+              className="btn rounded-md bg-primary text-white hover:bg-primary btn-sm"
+            >
+              <FontAwesomeIcon icon={faEye} />
+            </button>
+
+            <button
+              onClick={() => {
+                setType("edit");
+                setCurrentSupplierId(row.original.supplier_id); // Set supplierId
+              }}
+              className="btn rounded-md bg-success text-white hover:bg-success btn-sm"
+            >
+              <FontAwesomeIcon icon={faPencil} />
+            </button>
+
+            <button
+              onClick={() => handleDelete(row.original.supplier_id)}
+              className="btn rounded-md bg-error text-white hover:bg-error btn-sm"
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+
+            <ModalSupplier
+              supplierId={row.original.supplier_id}
+              type={type}
+              data={row.original}
             />
           </div>
         ),
       },
     ],
-    []
+    [type]
   );
+
+  useEffect(() => {
+    if (type && currentSupplierId) {
+      document.getElementById(currentSupplierId).showModal();
+    }
+  }, [type, currentSupplierId]);
 
   const [supplier, setSupplier] = useState([]);
   const token = localStorage.getItem("token");

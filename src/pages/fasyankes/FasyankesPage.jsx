@@ -2,7 +2,7 @@ import { faHospital, faPlus } from "@fortawesome/free-solid-svg-icons";
 import Header from "../../components/Header";
 import Navbar from "../../components/Navbar";
 import Sidebar from "../../components/Sidebar";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
@@ -14,12 +14,17 @@ const FasyankesPage = () => {
   const [loading, setLoading] = useState(true);
   const [step, setStep] = useState(0);
   const [data, setData] = useState();
+  const navigate = useNavigate();
   const handleStep = (fasyankes) => {
     setStep(step + 1);
     setData(fasyankes);
   };
   const handleBack = () => {
     setStep(step - 1);
+  };
+  const handleActived = (isLegalDoc) => {
+    const newStep = isLegalDoc != null ? 3 : 2;
+    navigate("/fasyankes/create", { state: { step: newStep } });
   };
   const columns = useMemo(
     () => [
@@ -32,15 +37,40 @@ const FasyankesPage = () => {
         accessor: "type",
       },
       {
+        Header: "Status",
+        accessor: "",
+        Cell: ({ row }) => {
+          return (
+            <span
+              className={`badge text-white ${
+                row.original.is_active ? "bg-primary" : "badge-error "
+              }`}
+            >
+              {" "}
+              {row.original.is_active ? "Aktif" : "Belum Aktif"}{" "}
+            </span>
+          );
+        },
+      },
+      {
         Header: "Aksi",
         accessor: "information",
         Cell: ({ row }) => {
-          return (
+          return row.original.is_active ? (
             <button
+              title="Lihat Detail"
               className="btn bg-primary hover:bg-primary text-white rounded-md btn-sm"
               onClick={() => handleStep(row.original)}
             >
-              Lihat Detail
+              Lihat Detail{" "}
+            </button>
+          ) : (
+            <button
+              onClick={() => handleActived(row.original.legal_doc)}
+              title="Aktifkan"
+              className="btn bg-error hover:bg-error text-white rounded-md btn-sm"
+            >
+              Aktifkan
             </button>
           );
         },

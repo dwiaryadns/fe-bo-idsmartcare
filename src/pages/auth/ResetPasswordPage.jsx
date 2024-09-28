@@ -83,7 +83,7 @@ const ResetPasswordPage = () => {
           <div className="hero">
             {loading ? (
               <div className="text-white">
-              <Loading type={"spinner"} size={"lg"} />
+                <Loading type={"spinner"} size={"lg"} />
               </div>
             ) : isFound ? (
               <div className="hero-content flex gap-10 flex-col md:flex-row-reverse bg-white p-6 md:p-10 rounded-lg items-center justify-center">

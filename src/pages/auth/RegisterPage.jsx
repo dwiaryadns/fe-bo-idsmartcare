@@ -12,7 +12,7 @@ import imgLogin from "../../assets/img-login.png";
 import logoLogin from "../../assets/logo-login.png";
 import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
-import {  API_BASE_URL } from "../../dummy/const";
+import { API_BASE_URL } from "../../dummy/const";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Loading from "../../components/Loading";
 
@@ -82,7 +82,9 @@ const RegisterPage = () => {
           email: apiErrors.email ? apiErrors.email : "",
           phone: apiErrors.phone ? apiErrors.phone : "",
           password: apiErrors.password ? apiErrors.password : "",
-          confirmPassword: "",
+          confirmPassword: apiErrors.password_confirmation
+            ? apiErrors.password_confirmation
+            : "",
           api: "",
         });
       } else {
@@ -202,14 +204,14 @@ const RegisterPage = () => {
                 )}
               </div>
               <div className="mb-3">
-                <label className="font-bold text-sm">Phone</label>
+                <label className="font-bold text-sm">Nomor HP</label>
                 <div className="relative w-full">
                   <input
                     type="number"
                     className={`input ${
                       errors.phone ? "input-error" : "input-primary"
                     } w-full rounded-md pl-10 pr-10 p-2`}
-                    placeholder="Phone (cth: 08xxxxx)"
+                    placeholder="Nomor HP (cth: 08xxxxx)"
                     value={phone}
                     onChange={handlePhone}
                   />
@@ -254,7 +256,7 @@ const RegisterPage = () => {
               </div>
 
               <div className="mb-3">
-                <label className="font-bold text-sm">Confirm Password</label>
+                <label className="font-bold text-sm">Konfirmasi Password</label>
                 <div className="relative w-full">
                   <input
                     type={showConfirmPassword ? "text" : "password"}

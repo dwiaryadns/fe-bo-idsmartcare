@@ -12,6 +12,14 @@ export default function DetailFasyankesPage({ data, handleBack }) {
     <Layout title={`Detail Fasyankes  - ${data.name}`} icon={faHospital}>
       <div className="card">
         <div className="card-body shadow-md rounded-md">
+        <div className="flex justify-start">
+          <button
+            className="btn bg-primary btn-sm hover:bg-primary text-white rounded-md"
+            onClick={handleBack}
+          >
+            <FontAwesomeIcon icon={faChevronLeft} /> Kembali
+          </button>
+        </div>
           <InputApproved label={"Nama Fasyankes"} value={data.name} />
           <InputApproved label={"Email Fasyankes"} value={data.email} />
           <InputApproved label={"Tipe Fasyankes"} value={data.type} />
@@ -49,15 +57,6 @@ export default function DetailFasyankesPage({ data, handleBack }) {
               />
             </div>
           )}
-
-          <div className="flex justify-end">
-            <button
-              className="btn bg-primary hover:bg-primary text-white rounded-md"
-              onClick={handleBack}
-            >
-              <FontAwesomeIcon icon={faChevronLeft} /> Kembali
-            </button>
-          </div>
         </div>
       </div>
     </Layout>

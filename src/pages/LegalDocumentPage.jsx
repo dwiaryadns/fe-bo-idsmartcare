@@ -103,15 +103,7 @@ const LegalDocumentPage = () => {
       setLoading(false);
       const errApi = error.response.data.errors;
       ToastAlert("error", error.response.data.message);
-      setErrors({
-        ktp: errApi.ktp,
-        akta: errApi.akta,
-        npwp: errApi.npwp,
-        sk_kemenkumham: errApi.sk_kemenkumham,
-        nib: errApi.nib,
-        iso: errApi.iso,
-        password: errApi.password,
-      });
+      setErrors(errApi);
     }
   };
 
@@ -131,7 +123,7 @@ const LegalDocumentPage = () => {
           />
           <InputFile
             label="SK Kemenkumham Akta (Perubahan/Terbaru)"
-            errors={errors.ktp}
+            errors={errors.sk_kemenkumham}
             onFileChange={handleFileChange("sk_kemenkumham")}
           />
           <InputFile

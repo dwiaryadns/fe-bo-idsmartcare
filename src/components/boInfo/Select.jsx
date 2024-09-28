@@ -7,7 +7,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
   const [kecamatan, setKecamatan] = useState([]);
   const [desa, setDesa] = useState([]);
   const [error, setError] = useState("");
-
+  console.log(error.provinsi);
   useEffect(() => {
     axios
       .get("https://dev.farizdotid.com/api/daerahindonesia/provinsi")
@@ -93,9 +93,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             </span>
           </div>
           <select
-            className={`select select-bordered ${
-              isSupplier ? "select-primary" : ""
-            } rounded-md`}
+            className={`select ${
+              errors.provinsi ? "select-error" : ""
+            } select-bordered ${isSupplier ? "select-primary" : ""} rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("provinsi", e.target.value, selectedOption.text);
@@ -103,7 +103,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             name="provinsi"
             value={formValues.provinsi}
           >
-            <option value="">
+            <option value="" selected hidden>
               {isSupplier ? "Pilih Provinsi" : "Select Province"}
             </option>
             {provinsi.map((prov) => (
@@ -125,9 +125,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             </span>
           </div>
           <select
-            className={`select select-bordered ${
-              isSupplier ? "select-primary" : ""
-            } rounded-md`}
+            className={`select ${
+              errors.kabupaten ? "select-error" : ""
+            } select-bordered ${isSupplier ? "select-primary" : ""} rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("kabupaten", e.target.value, selectedOption.text);
@@ -136,7 +136,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             value={formValues.kabupaten}
             disabled={!formValues.provinsi}
           >
-            <option value="">
+            <option value="" selected hidden>
               {" "}
               {isSupplier ? "Pilih Kota" : "Select City"}
             </option>
@@ -161,9 +161,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             </span>
           </div>
           <select
-            className={`select select-bordered ${
-              isSupplier ? "select-primary" : ""
-            } rounded-md`}
+            className={`select ${
+              errors.kecamatan ? "select-error" : ""
+            } select-bordered ${isSupplier ? "select-primary" : ""} rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("kecamatan", e.target.value, selectedOption.text);
@@ -172,7 +172,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             value={formValues.kecamatan}
             disabled={!formValues.kabupaten}
           >
-            <option value="">
+            <option value="" selected hidden>
               {" "}
               {isSupplier ? "Pilih Kecamatan" : "Select Subdistrict"}
             </option>
@@ -196,9 +196,9 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             </span>
           </div>
           <select
-            className={`select select-bordered ${
-              isSupplier ? "select-primary" : ""
-            } rounded-md`}
+            className={`select ${
+              errors.desa ? "select-error" : ""
+            } select-bordered ${isSupplier ? "select-primary" : ""} rounded-md`}
             onChange={(e) => {
               const selectedOption = e.target.options[e.target.selectedIndex];
               onSelectChange("desa", e.target.value, selectedOption.text);
@@ -207,7 +207,7 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
             value={formValues.desa}
             disabled={!formValues.kecamatan}
           >
-            <option value="">
+            <option value="" selected hidden>
               {isSupplier ? "Pilih Kelurahan" : "Select Village"}
             </option>
             {desa.map((des) => (

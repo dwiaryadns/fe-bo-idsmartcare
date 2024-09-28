@@ -7,6 +7,7 @@ export const Input = ({
   onChange,
   errors,
   max,
+  min,
   isOptional,
 }) => {
   return (
@@ -23,7 +24,9 @@ export const Input = ({
           name={name}
           value={value}
           onChange={onChange}
-          maxLength={max}
+          maxLength={type !== "date" ? max : undefined} // maxLength hanya jika bukan tipe date
+          max={type === "date" ? max : undefined} // max hanya jika tipe date
+          min={type === "date" ? min : undefined}
           className={`input input-bordered input-primary w-full rounded-md ${
             errors ? "border-red-400" : ""
           }`}

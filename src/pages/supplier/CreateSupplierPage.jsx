@@ -112,6 +112,13 @@ export const CreateSupplierPage = () => {
       desa: selectedNames.desa,
     };
 
+    if (selectedNames.desa === "Pilih Kelurahan") {
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        desa: "Kelurahan wajib diisi",
+      }));
+      return;
+    }
     try {
       const response = await axios.post(
         API_BASE_URL + "/supplier/store",

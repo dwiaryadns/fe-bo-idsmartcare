@@ -18,7 +18,7 @@ export default function StepBar({ step }) {
               />
             </svg>
           </div>
-          <div className="timeline-end timeline-box text-xs md:text-lg">
+          <div className="timeline-end timeline-box text-xs ">
             Info Fasyankes
           </div>
           <hr className={`${step >= 2 ? "bg-primary" : ""}`} />
@@ -39,7 +39,7 @@ export default function StepBar({ step }) {
               />
             </svg>
           </div>
-          <div className="timeline-end timeline-box text-xs md:text-lg">
+          <div className="timeline-end timeline-box text-xs ">
             Dokumen Legal
           </div>
           <hr className={`${step >= 3 ? "bg-primary" : ""}`} />
@@ -60,7 +60,7 @@ export default function StepBar({ step }) {
               />
             </svg>
           </div>
-          <div className="timeline-end timeline-box text-xs md:text-lg">
+          <div className="timeline-end timeline-box text-xs ">
             Pembayaran
           </div>
         </li>

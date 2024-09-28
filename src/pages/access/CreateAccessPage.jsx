@@ -1,5 +1,10 @@
 import { useState } from "react";
-import { faKey, faSave } from "@fortawesome/free-solid-svg-icons";
+import {
+  faEye,
+  faEyeSlash,
+  faKey,
+  faSave,
+} from "@fortawesome/free-solid-svg-icons";
 import Layout from "../../components/Layout";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import axiosInstance from "../../dummy/axiosInstance";
@@ -34,7 +39,8 @@ export default function CreateAccessPage() {
     role: "Admin",
     hakAkses: hakAksesOptions["Admin"],
   });
-
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
     if (type === "checkbox") {
@@ -48,13 +54,14 @@ export default function CreateAccessPage() {
       setFormData((prev) => ({
         ...prev,
         role: value,
-        hakAkses: hakAksesOptions[value], // Update hakAkses based on selected role
+        hakAkses: hakAksesOptions[value],
       }));
     } else {
       setFormData((prev) => ({
         ...prev,
         [name]: value,
       }));
+      setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
     }
   };
   const navigate = useNavigate();
@@ -64,7 +71,7 @@ export default function CreateAccessPage() {
 
     const submissionData = {
       ...formData,
-      permission: formData.hakAkses, // Attach the selected permissions
+      permission: formData.hakAkses,
     };
     console.log(submissionData);
 
@@ -73,18 +80,21 @@ export default function CreateAccessPage() {
         API_BASE_URL + "/delegate-access/store",
         submissionData
       );
-      // swal fire top end
       if (response.data.status === true) {
         ToastAlert("success", "Berhasil Menambahkan Hak Akses");
-        navigate("/access"); // Redirect to access list page after successful submission
+        navigate("/access");
       } else {
         ToastAlert("success", "Gagal Menambahkan Hak Akses");
       }
     } catch (error) {
       console.error(error);
-      ToastAlert("error", "Terjadi Kesalahan Server");
+      ToastAlert("error", error.response.data.message);
+      setErrors(error.response.data.errors);
+      console.log(errors);
     }
   };
+
+  const [errors, setErrors] = useState({});
 
   return (
     <Layout title="Tambah Hak Akses" icon={faKey}>
@@ -98,10 +108,15 @@ export default function CreateAccessPage() {
                   type="text"
                   name="name" // Changed from "Nama" to "name" to match state key
                   placeholder="Nama"
-                  className="input input-primary input-bordered w-full rounded"
+                  className={`input ${
+                    errors.name ? "input-error" : "input-primary"
+                  }  input-bordered w-full rounded`}
                   value={formData.name}
                   onChange={handleChange}
                 />
+                {errors.name && (
+                  <div className="text-red-500 text-xs mt-1">{errors.name}</div>
+                )}
               </div>
               <div className="flex flex-col w-full mb-3">
                 <label className="font-bold">Email</label>
@@ -109,33 +124,75 @@ export default function CreateAccessPage() {
                   type="email"
                   name="email"
                   placeholder="Email"
-                  className="input input-primary input-bordered rounded-md"
+                  className={`input  ${
+                    errors.email ? "input-error" : "input-primary"
+                  }  input-bordered rounded-md`}
                   value={formData.email}
                   onChange={handleChange}
                 />
+                {errors.email && (
+                  <div className="text-red-500 text-xs mt-1">
+                    {errors.email}
+                  </div>
+                )}
               </div>
-              <div className="flex md:flex-row flex-col gap-3 mb-3">
-                <div className="flex flex-col w-full">
-                  <label className="font-bold">Password</label>
-                  <input
-                    type="password"
-                    name="password"
-                    placeholder="Password"
-                    className="input input-primary input-bordered rounded-md"
-                    value={formData.password}
-                    onChange={handleChange}
-                  />
+              <div className="grid md:grid-cols-2 grid-cols-1  flex-col gap-3 mb-3">
+                <div className="mb-3">
+                  <label className="font-bold text-sm">Password</label>
+                  <div className="relative w-full">
+                    <input
+                      type={showPassword ? "text" : "password"}
+                      className={`input ${
+                        errors.password ? "input-error" : "input-primary"
+                      } w-full rounded-md pl-4 pr-10 p-2`}
+                      value={formData.password}
+                      onChange={handleChange}
+                      placeholder="Password"
+                      name="password"
+                    />
+                    <FontAwesomeIcon
+                      icon={showPassword ? faEyeSlash : faEye}
+                      onClick={() => setShowPassword(!showPassword)}
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    />
+                  </div>
+                  {errors.password && (
+                    <div className="text-red-500 text-xs mt-1">
+                      {errors.password}
+                    </div>
+                  )}
                 </div>
-                <div className="flex flex-col w-full">
-                  <label className="font-bold">Confirm Password</label>
-                  <input
-                    type="password"
-                    name="password_confirmation" // Added password confirmation input
-                    placeholder="Confirm Password"
-                    className="input input-primary input-bordered rounded-md"
-                    value={formData.password_confirmation}
-                    onChange={handleChange}
-                  />
+
+                <div className="mb-3">
+                  <label className="font-bold text-sm">
+                    Konfirmasi Password
+                  </label>
+                  <div className="relative w-full">
+                    <input
+                      type={showConfirmPassword ? "text" : "password"}
+                      className={`input ${
+                        errors.password_confirmation
+                          ? "input-error"
+                          : "input-primary"
+                      } w-full rounded-md pl-4 pr-10 p-2`}
+                      value={formData.password_confirmation}
+                      onChange={handleChange}
+                      name="password_confirmation"
+                      placeholder="Confirm Password"
+                    />
+                    <FontAwesomeIcon
+                      icon={showConfirmPassword ? faEyeSlash : faEye}
+                      onClick={() =>
+                        setShowConfirmPassword(!showConfirmPassword)
+                      }
+                      className="absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"
+                    />
+                  </div>
+                  {errors.password_confirmation && (
+                    <div className="text-red-500 text-xs mt-1">
+                      {errors.password_confirmation}
+                    </div>
+                  )}
                 </div>
               </div>
               <div className="flex flex-col mb-3">

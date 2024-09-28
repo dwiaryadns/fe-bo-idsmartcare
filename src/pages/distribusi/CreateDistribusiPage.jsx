@@ -146,21 +146,6 @@ export const CreateDistribusiPage = () => {
   };
 
   const [details, setDetails] = useState([]);
-  // const handleDetailChange = useCallback((barangId, value) => {
-  //   setDetails((prevDetails) => {
-  //     const existingDetail = prevDetails.find(
-  //       (detail) => detail.barang_id === barangId
-  //     );
-  //     if (existingDetail) {
-  //       return prevDetails.map((detail) =>
-  //         detail.barang_id === barangId ? { ...detail, jumlah: value } : detail
-  //       );
-  //     } else {
-  //       return [...prevDetails, { barang_id: barangId, jumlah: value }];
-  //     }
-  //   });
-  // }, []);
-
   const navigate = useNavigate();
   const handleSave = async () => {
     setLoading(true);

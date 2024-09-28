@@ -15,25 +15,30 @@ import { CenterAlert, ToastAlert } from "../../components/Alert";
 
 export const CreateReceiptPage = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const toggleOpen = () => {
-    setIsOpen(!isOpen);
-  };
+  const [penerima, setPenerima] = useState();
+  const [pengirim, setPengirim] = useState();
+  const [pengecek, setPengecek] = useState();
+  const [supplierInvoice, setSupplierInvoice] = useState();
+  const [tanggal, setTanggal] = useState();
+  const [note, setNote] = useState("");
+  const [error, setError] = useState({});
   const navigate = useNavigate();
   const [step, setStep] = useState(1);
-
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
-  const [status, setStatus] = useState("");
   const [conditions, setConditions] = useState("");
 
   const token = localStorage.getItem("token");
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };
+
   const handleSearchChange = (e) => {
     setSearch(e.target.value);
   };
-
+  const toggleOpen = () => {
+    setIsOpen(!isOpen);
+  };
   const handleClickSearch = async () => {
     try {
       const response = await axios.get(`${API_BASE_URL}/good-receipt/search`, {
@@ -62,14 +67,7 @@ export const CreateReceiptPage = () => {
     }
   };
 
-  const handleChangeStatus = (index, val) => {
-    setStatus((prevStatus) => {
-      const newStatus = { ...prevStatus };
-      newStatus[index] = val;
-      return newStatus;
-    });
-  };
-
+  
   const handleBarangDatangChange = (index, value) => {
     setData((prevData) => {
       const newData = { ...prevData };
@@ -102,13 +100,6 @@ export const CreateReceiptPage = () => {
     });
   };
 
-  const [penerima, setPenerima] = useState();
-  const [pengirim, setPengirim] = useState();
-  const [pengecek, setPengecek] = useState();
-  const [supplierInvoice, setSupplierInvoice] = useState();
-  const [tanggal, setTanggal] = useState();
-  const [note, setNote] = useState("");
-  const [error, setError] = useState({});
 
   const handleChangeNote = (e) => {
     setNote(e.target.value);

@@ -15,7 +15,7 @@ import Input from "./utils/Input";
 import InputWarehouse from "../../components/warehouse/utils/Input";
 import { FormDocument } from "./FormDocument";
 import { FormPembayaranFasyankes } from "./FormPembayaranFasyankes";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { CardPackage } from "./utils/CardPackage";
 import { useEffect } from "react";
 import axios from "axios";
@@ -28,6 +28,31 @@ import Loading from "../Loading";
 import Select from "../boInfo/Select";
 export const FormCreateFasyankes = () => {
   const [duration, setDuration] = useState("Monthly");
+  const [errors, setErrors] = useState({});
+  const [type, setType] = useState("");
+  const [step, setStep] = useState(1);
+  const [formData, setFormData] = useState({});
+  const [warehouses, setWarehouse] = useState([]);
+  const [loadingNext, setLoadingNext] = useState(false);
+  const [formValues, setFormValues] = useState({});
+  const [errorWarehouse, setErrorWarehouse] = useState({});
+  const [loading, setLoading] = useState(true);
+  const [payment, setPayment] = useState({});
+  const [files, setFiles] = useState({});
+  const [password, setPassword] = useState("");
+  const [fasyankesId, setFasyankesId] = useState(null);
+  const [checkbox, setCheckbox] = useState(false);
+  const [otp, setOtp] = useState("");
+  const [otpId, setOtpId] = useState(null);
+  const [isSuccess, setIsSuccess] = useState(false);
+  const [loadingOTP, setLoadingOTP] = useState(false);
+  const modalRef = useRef(null);
+  const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
+  const location = useLocation();
   const [choosePlan, setChoosePlan] = useState({
     paket: "",
     price: "",
@@ -43,29 +68,9 @@ export const FormCreateFasyankes = () => {
     setErrors((prevErrors) => ({ ...prevErrors, package_plan: "" }));
   };
 
-  const [type, setType] = useState("");
-  const [step, setStep] = useState(1);
-  const [formData, setFormData] = useState({
-    nameFasyankes: "",
-    latitude: "",
-    longitude: "",
-    picName: "",
-    picPhoneNumber: "",
-    emailFasyankes: "",
-    password: "",
-    confirmPassword: "",
-  });
-
-  const [warehouses, setWarehouse] = useState([]);
-
   const handleSelectWarehouse = (e) => {
-    setFormData({ ...formData, warehouseId: e.target.value });
-    setErrors((prevErrors) => ({ ...prevErrors, warehouseId: "" }));
-  };
-
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
+    setFormData({ ...formData, warehouse_id: e.target.value });
+    setErrors((prevErrors) => ({ ...prevErrors, warehouse_id: "" }));
   };
   useEffect(() => {
     axios
@@ -77,8 +82,12 @@ export const FormCreateFasyankes = () => {
       .catch(function (error) {
         console.log(error);
       });
+      const newStep = location.state?.step;
+      if(newStep >= 2){
+        console.log('step : ' + newStep)
+        setStep(newStep);
+      }
   }, []);
-  const [errors, setErrors] = useState({});
 
   const handleType = (e) => {
     setType(e);
@@ -102,6 +111,14 @@ export const FormCreateFasyankes = () => {
     desa: "",
   });
 
+  if (selectedNames.desa === "Pilih Kelurahan") {
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      desa: "Kelurahan wajib diisi",
+    }));
+    return;
+  }
+
   const handleSelectChange = (name, value, text) => {
     setFormValues((prevValues) => ({
       ...prevValues,
@@ -118,15 +135,6 @@ export const FormCreateFasyankes = () => {
     }));
   };
 
-  const modalRef = useRef(null);
-  const navigate = useNavigate();
-  const [formValues, setFormValues] = useState({
-    warehouseName: "",
-    warehouseAddress: "",
-    picName: "",
-    picNumber: "",
-  });
-  const [errorWarehouse, setErrorWarehouse] = useState({});
   const handleChangeInputWarehouse = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -150,44 +158,26 @@ export const FormCreateFasyankes = () => {
           setWarehouse([response.data.data]);
         } else {
           const apiErrors = response.data.errors;
-          const newApiErrors = {
-            warehouseName: apiErrors.name ? apiErrors.name : "",
-            warehouseAddress: apiErrors.address ? apiErrors.address : "",
-            picName: apiErrors.pic ? apiErrors.pic : "",
-            picNumber: apiErrors.contact ? apiErrors.contact : "",
-          };
-          setErrorWarehouse(newApiErrors);
+          setErrorWarehouse(apiErrors);
         }
       })
       .catch(function (error) {
         modalRef.current.close();
         const apiErrors = error.response.data.errors;
-        const newApiErrors = {
-          warehouseName: apiErrors.name ? apiErrors.name : "",
-          warehouseAddress: apiErrors.address ? apiErrors.address : "",
-          picName: apiErrors.pic ? apiErrors.pic : "",
-          picNumber: apiErrors.contact ? apiErrors.contact : "",
-        };
         ToastAlert("error", error.response.data.message);
-        setErrorWarehouse(newApiErrors);
+        setErrorWarehouse(apiErrors);
       });
   };
-
-  const [loading, setLoading] = useState(true);
-  const [payment, setPayment] = useState({});
-  const [files, setFiles] = useState({});
-
-  const [password, setPassword] = useState("");
 
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
   };
 
-  const [fasyankesId, setFasyankesId] = useState();
-
   const handleNext = () => {
+    setLoadingNext(true);
     if (step === 1) {
       const payload = {
+        fasyankesId: fasyankesId,
         type: type,
         duration: duration,
         latitude: formData.latitude,
@@ -196,27 +186,27 @@ export const FormCreateFasyankes = () => {
         username: formData.username,
         package_plan: choosePlan.paket == undefined ? "" : choosePlan.paket,
         warehouse_id:
-          formData.warehouseId == undefined ? "" : formData.warehouseId,
-        name: formData.nameFasyankes,
+          formData.warehouse_id == undefined ? "" : formData.warehouse_id,
+        name: formData.name,
         address: formData.address,
-        pic: formData.picName,
-        pic_number: formData.picPhoneNumber,
-        email: formData.emailFasyankes,
+        pic: formData.pic,
+        pic_number: formData.pic_number,
+        email: formData.email,
         province: selectedNames.provinsi,
         city: selectedNames.kabupaten,
         subdistrict: selectedNames.kecamatan,
         village: selectedNames.desa,
         password: formData.password,
-        password_confirmation: formData.confirmPassword,
+        password_confirmation: formData.password_confirmation,
       };
       axios
         .post(API_BASE_URL + "/fasyankes/store", payload, headers)
         .then(function (response) {
           if (response.data.status === true) {
             const data = response.data.data;
-            console.log(response.data);
             ToastAlert("success", response.data.message);
             setFasyankesId(data.fasyankesId);
+            setLoadingNext(false);
             setPayment({
               package: response.data.subscription.package_plan,
               duration: response.data.subscription.duration,
@@ -226,53 +216,17 @@ export const FormCreateFasyankes = () => {
               subscription_id: response.data.subscription.id,
             });
             setStep(step + 1);
+            setCheckbox(false);
           } else {
+            setLoadingNext(false);
             const apiErrors = response.data.errors;
-            console.log(apiErrors);
-            const newApiErrors = {
-              type: apiErrors.type ? apiErrors.type : "",
-              username: apiErrors.username ? apiErrors.username : "",
-              latitude: apiErrors.latitude ? apiErrors.latitude : "",
-              longitude: apiErrors.longitude ? apiErrors.longitude : "",
-              duration: apiErrors.duration ? apiErrors.duration : "",
-              package_plan: apiErrors.package_plan
-                ? apiErrors.package_plan
-                : "",
-              nameFasyankes: apiErrors.name ? apiErrors.name : "",
-              address: apiErrors.address ? apiErrors.address : "",
-              warehouseId: apiErrors.warehouse_id ? apiErrors.warehouse_id : "",
-              picName: apiErrors.pic ? apiErrors.pic : "",
-              picPhoneNumber: apiErrors.pic_number ? apiErrors.pic_number : "",
-              emailFasyankes: apiErrors.email ? apiErrors.email : "",
-              password: apiErrors.password ? apiErrors.password : "",
-              confirmPassword: apiErrors.password_confirmation
-                ? apiErrors.password_confirmation
-                : "",
-            };
-            setErrors(newApiErrors);
+            setErrors(apiErrors);
           }
         })
         .catch(function (error) {
+          setLoadingNext(false);
           const apiErrors = error.response.data.errors;
-          const newApiErrors = {
-            type: apiErrors.type ? apiErrors.type : "",
-            username: apiErrors.username ? apiErrors.username : "",
-            latitude: apiErrors.latitude ? apiErrors.latitude : "",
-            longitude: apiErrors.longitude ? apiErrors.longitude : "",
-            duration: apiErrors.duration ? apiErrors.duration : "",
-            package_plan: apiErrors.package_plan ? apiErrors.package_plan : "",
-            nameFasyankes: apiErrors.name ? apiErrors.name : "",
-            address: apiErrors.address ? apiErrors.address : "",
-            warehouseId: apiErrors.warehouse_id ? apiErrors.warehouse_id : "",
-            picName: apiErrors.pic ? apiErrors.pic : "",
-            picPhoneNumber: apiErrors.pic_number ? apiErrors.pic_number : "",
-            emailFasyankes: apiErrors.email ? apiErrors.email : "",
-            password: apiErrors.password ? apiErrors.password : "",
-            confirmPassword: apiErrors.password_confirmation
-              ? apiErrors.password_confirmation
-              : "",
-          };
-          setErrors(newApiErrors);
+          setErrors(apiErrors);
           ToastAlert("error", error.response.data.message);
         });
     } else {
@@ -306,32 +260,24 @@ export const FormCreateFasyankes = () => {
         .catch((error) => {
           setLoading(false);
           const errApi = error.response.data.errors;
-          setErrors({
-            sia: errApi.sia,
-            sipa: errApi.sipa,
-            simk: errApi.simk,
-            siok: errApi.siok,
-            password: errApi.password,
-          });
+          setErrors(errApi);
           ToastAlert("error", error.response.data.message);
         });
     }
   };
 
-  const [checkbox, setCheckbox] = useState(false);
   const handleCheckbox = () => {
     setCheckbox(!checkbox);
   };
 
   const handlePrevious = () => {
     setStep(step - 1);
+    setLoadingNext(false);
+    setErrors((prev) => {
+      return { ...prev, sia: "", sipa: "", simk: "", siok: "", password: "" };
+    });
   };
 
-  const [otp, setOtp] = useState("");
-  const [otpId, setOtpId] = useState(null);
-  const [isSuccess, setIsSuccess] = useState(false);
-
-  const [loadingOTP, setLoadingOTP] = useState(false);
   const handleOtpChange = (e) => {
     setOtp(e.target.value);
   };
@@ -352,7 +298,6 @@ export const FormCreateFasyankes = () => {
         }
       );
       if (response.data.status === true) {
-        console.log(response.data.otp_id);
         setOtpId(response.data.otp_id);
         setLoadingOTP(false);
         ToastAlert("success", response.data.message);
@@ -361,7 +306,6 @@ export const FormCreateFasyankes = () => {
         ToastAlert("error", response.data.message);
       }
     } catch (error) {
-      console.log(error);
       setLoadingOTP(false);
       ToastAlert("error", "Gagal Mengambil OTP");
     }
@@ -376,7 +320,6 @@ export const FormCreateFasyankes = () => {
       otp: otp,
       otp_id: otpId,
     };
-    console.log(payload);
     axios
       .post(API_BASE_URL + "/store-otp", payload, {
         headers: {
@@ -384,7 +327,6 @@ export const FormCreateFasyankes = () => {
         },
       })
       .then(function (response) {
-        console.log(response);
         if (response.data.status === true) {
           setIsSuccess(true);
           ToastAlert("success", "Berhasil Verfikasi Email");
@@ -583,33 +525,33 @@ export const FormCreateFasyankes = () => {
                               label="Warehouse Name"
                               placeholder="Warehouse Name"
                               name="warehouseName"
-                              value={formValues.warehouseName}
+                              value={formValues.name}
                               onChange={handleChangeInputWarehouse}
-                              errors={errorWarehouse.warehouseName}
+                              errors={errorWarehouse.name}
                             />
                             <InputWarehouse
                               label="Warehouse Address"
                               placeholder="Warehouse Address"
                               name="warehouseAddress"
-                              value={formValues.warehouseAddress}
+                              value={formValues.address}
                               onChange={handleChangeInputWarehouse}
-                              errors={errorWarehouse.warehouseAddress}
+                              errors={errorWarehouse.address}
                             />
                             <InputWarehouse
                               label="PIC Name"
                               placeholder="PIC Name"
                               name="picName"
-                              value={formValues.picName}
+                              value={formValues.pic}
                               onChange={handleChangeInputWarehouse}
-                              errors={errorWarehouse.picName}
+                              errors={errorWarehouse.pic}
                             />
                             <InputWarehouse
                               label="PIC Number"
                               placeholder="PIC Number"
                               name="picNumber"
-                              value={formValues.picNumber}
+                              value={formValues.contact}
                               onChange={handleChangeInputWarehouse}
-                              errors={errorWarehouse.picNumber}
+                              errors={errorWarehouse.contact}
                             />
                           </form>
                           <button
@@ -631,7 +573,7 @@ export const FormCreateFasyankes = () => {
                   <select
                     onChange={handleSelectWarehouse}
                     className={`select select-info rounded-md ${
-                      errors.warehouseId && "select-error"
+                      errors.warehouse_id && "select-error"
                     }`}
                   >
                     <option disabled selected>
@@ -643,8 +585,8 @@ export const FormCreateFasyankes = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.warehouseId && (
-                    <span className="text-red-600">{errors.warehouseId}</span>
+                  {errors.warehouse_id && (
+                    <span className="text-red-600">{errors.warehouse_id}</span>
                   )}
                 </div>
               )}
@@ -654,30 +596,30 @@ export const FormCreateFasyankes = () => {
             type="text"
             label="Name Fasyankes"
             placeholder="Name Fasyankes"
-            name="nameFasyankes"
+            name="name"
             onChange={handleInputChange}
-            value={formData.nameFasyankes}
-            error={errors.nameFasyankes}
+            value={formData.name}
+            error={errors.name}
             tooltip="Informasi ini digunakan untuk mendetailkan data fasyankes yang akan didaftarkan"
           />
           <Input
             type="text"
             label="PIC Name"
             placeholder="PIC Name"
-            name="picName"
+            name="pic"
             onChange={handleInputChange}
-            value={formData.picName}
-            error={errors.picName}
+            value={formData.pic}
+            error={errors.pic}
             tooltip="Nama PIC ini adalah nama untuk pihak yang bertanggung jawab operasional apotek"
           />
           <Input
             type="number"
             label="PIC Phone Number"
             placeholder="PIC Phone Number"
-            name="picPhoneNumber"
+            name="pic_number"
             onChange={handleInputChange}
-            value={formData.picPhoneNumber}
-            error={errors.picPhoneNumber}
+            value={formData.pic_number}
+            error={errors.pic_number}
             tooltip="Nomor PIC yang dapat dihubungi terkait dengan fasyankes yang didaftarkan"
           />
           <Input
@@ -718,10 +660,10 @@ export const FormCreateFasyankes = () => {
               type="email"
               label="Email Fasyankes"
               placeholder="Email Fasyankes"
-              name="emailFasyankes"
+              name="email"
               onChange={handleInputChange}
-              value={formData.emailFasyankes}
-              error={errors.emailFasyankes}
+              value={formData.email}
+              error={errors.email}
               tooltip="Email fasyankes yang akan dikirimkan seputar informasi penting dan dijadikan username admin"
             />
             <button
@@ -773,83 +715,89 @@ export const FormCreateFasyankes = () => {
             errors={errors}
           />
 
-          {isSuccess ? (
-            <div>
-              <div className="my-4">
-                <Header title="Credential Data" icon={faUser} />
-              </div>
-
-              <Input
-                type="text"
-                label="Username"
-                placeholder="Username"
-                name="username"
-                onChange={handleInputChange}
-                value={formData.username}
-                error={errors.username}
-                tooltip="Username untuk login masuk ke halaman admin"
-              />
-              <Input
-                type="password"
-                label="Password"
-                placeholder="Password"
-                name="password"
-                onChange={handleInputChange}
-                value={formData.password}
-                error={errors.password}
-                tooltip="Password untuk login masuk ke halaman admin"
-              />
-              <Input
-                type="password"
-                label="Confirm Password"
-                placeholder="Confirm Password"
-                name="confirmPassword"
-                onChange={handleInputChange}
-                value={formData.confirmPassword}
-                error={errors.confirmPassword}
-                tooltip="Confirm password untuk memastikan password yang sudah di buat"
-              />
-              <div className="form-control mt-10">
-                <label className="flex items-center gap-5">
-                  <input
-                    type="checkbox"
-                    onClick={handleCheckbox}
-                    className="checkbox checkbox-primary rounded-md"
-                  />
-                  <span className="label-text">
-                    Dengan membuat akun, Anda setuju dengan{" "}
-                    <a
-                      href="/syarat-dan-ketentuan"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Syarat dan Ketentuan
-                    </a>{" "}
-                    serta{" "}
-                    <a
-                      href="/kebijakan-privasi"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Kebijakan Privasi{" "}
-                    </a>
-                    <span className="font-bold"> idSmartCare.</span>
-                  </span>
-                </label>
-              </div>
-              <div className="flex justify-end mt-5">
-                <button
-                  onClick={handleNext}
-                  disabled={!checkbox}
-                  className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
-                >
-                  Next <FontAwesomeIcon icon={faAngleRight} />
-                </button>
-              </div>
+          {/* {isSuccess ? ( */}
+          <div>
+            <div className="my-4">
+              <Header title="Credential Data" icon={faUser} />
             </div>
-          ) : (
+
+            <Input
+              type="text"
+              label="Username"
+              placeholder="Username"
+              name="username"
+              onChange={handleInputChange}
+              value={formData.username}
+              error={errors.username}
+              tooltip="Username untuk login masuk ke halaman admin"
+            />
+            <Input
+              type="password"
+              label="Password"
+              placeholder="Password"
+              name="password"
+              onChange={handleInputChange}
+              value={formData.password}
+              error={errors.password}
+              tooltip="Password untuk login masuk ke halaman admin"
+            />
+            <Input
+              type="password"
+              label="Confirm Password"
+              placeholder="Confirm Password"
+              name="password_confirmation"
+              onChange={handleInputChange}
+              value={formData.password_confirmation}
+              error={errors.password_confirmation}
+              tooltip="Confirm password untuk memastikan password yang sudah di buat"
+            />
+            <div className="form-control mt-10">
+              <label className="flex items-center gap-5">
+                <input
+                  type="checkbox"
+                  onClick={handleCheckbox}
+                  className="checkbox checkbox-primary rounded-md"
+                />
+                <span className="label-text">
+                  Dengan membuat akun, Anda setuju dengan{" "}
+                  <a
+                    href="/syarat-dan-ketentuan"
+                    target="_blank"
+                    className="font-bold italic text-primary"
+                  >
+                    Syarat dan Ketentuan
+                  </a>{" "}
+                  serta{" "}
+                  <a
+                    href="/kebijakan-privasi"
+                    target="_blank"
+                    className="font-bold italic text-primary"
+                  >
+                    Kebijakan Privasi{" "}
+                  </a>
+                  <span className="font-bold"> idSmartCare.</span>
+                </span>
+              </label>
+            </div>
+            <div className="flex justify-end mt-5">
+              <button
+                onClick={handleNext}
+                disabled={!checkbox || loadingNext}
+                className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+              >
+                {loadingNext ? (
+                  <Loading type={"spinner"} size={"sm"} />
+                ) : (
+                  <div>
+                    Next <FontAwesomeIcon icon={faAngleRight} />
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+          {/* ) : (
             ""
-          )}
+          )} */}
         </div>
       ) : step === 2 ? (
         <FormDocument

@@ -23,7 +23,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showModal, setShowModal] = useState(false); // State to control modal visibility
+  const [showModal, setShowModal] = useState(false); 
   const [otpId, setOtpId] = useState("");
   const [token, setToken] = useState("");
   const [dataUser, setDataUser] = useState({});
@@ -40,16 +40,15 @@ const LoginPage = () => {
 
   const Modal2FA = () => {
     const modalRef = useRef(null);
-    const [otp, setOtp] = useState(""); // OTP tetap ada di state
-    const [showModal, setShowModal] = useState(true); // Modal tetap terbuka
+    const [otp, setOtp] = useState("");
+    const [showModal, setShowModal] = useState(true);
     const [loadingModal, setLoadingModal] = useState(false);
 
     const navigate = useNavigate();
 
     const handleSendOtp = async (e) => {
-      e.preventDefault(); // Cegah form submission otomatis yang bisa mereset input
-
-      setLoadingModal(true); // Tampilkan loading saat OTP diverifikasi
+      e.preventDefault();
+      setLoadingModal(true);
 
       const payload = {
         email: email,
@@ -91,16 +90,16 @@ const LoginPage = () => {
     useEffect(() => {
       const handleKeyDown = (e) => {
         if (e.key === "Escape") {
-          e.preventDefault(); // Disable the default behavior of the Escape key
+          e.preventDefault();
         }
       };
 
       if (showModal && modalRef.current) {
         modalRef.current.showModal();
-        window.addEventListener("keydown", handleKeyDown); // Tambahkan event listener untuk mencegah Esc menutup modal
+        window.addEventListener("keydown", handleKeyDown); 
       } else if (modalRef.current) {
         modalRef.current.close();
-        window.removeEventListener("keydown", handleKeyDown); // Hapus event listener saat modal ditutup
+        window.removeEventListener("keydown", handleKeyDown);
       }
 
       return () => {
@@ -184,15 +183,12 @@ const LoginPage = () => {
       }
     } catch (error) {
       setLoading(false);
-      // Handle API errors
       if (error.response && error.response.data) {
         const message = error.response.data.errors;
+        console.log(message);
         if (message) {
-          const newApiErrors = {
-            email: message.email ? message.email[0] : "",
-            password: message.password ? message.password[0] : "",
-          };
-          setErrors(newApiErrors);
+          setErrors(message);
+          ToastAlert('error',error.response.data.message)
         } else {
           CenterAlert("error", "Oops...", error.response.data.message);
           setErrors({ email: error.response.data.message, password: "" });
@@ -213,6 +209,11 @@ const LoginPage = () => {
     setPassword(e.target.value);
     if (e.target.value) {
       setErrors((prevErrors) => ({ ...prevErrors, password: "" }));
+    }
+  };
+  const handleEnter = (e) => {
+    if (e.key === "Enter") {
+      handleLogin();
     }
   };
 
@@ -255,6 +256,7 @@ const LoginPage = () => {
                     placeholder="Email"
                     value={email}
                     onChange={handleEmailChange}
+                    onKeyDown={handleEnter}
                   />
                   <FontAwesomeIcon
                     icon={faEnvelope}
@@ -278,6 +280,7 @@ const LoginPage = () => {
                     } w-full rounded-md pl-10 pr-10 p-2`}
                     placeholder="Password"
                     value={password}
+                    onKeyDown={handleEnter}
                     onChange={handlePasswordChange}
                   />
                   <FontAwesomeIcon

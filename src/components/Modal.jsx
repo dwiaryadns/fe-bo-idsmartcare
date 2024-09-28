@@ -6,6 +6,7 @@ import { API_BASE_URL } from "../dummy/const";
 import axios from "axios";
 import { ToastAlert } from "./Alert";
 import Loading from "./Loading";
+import axiosInstance from "../dummy/axiosInstance";
 
 export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
   const modalRef = useRef();
@@ -112,11 +113,37 @@ export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
   );
 };
 
-export const ModalDetailSupplier = ({ supplierId, data }) => {
+export const ModalSupplier = ({
+  supplierId,
+  data,
+  type,
+}) => {
   const modalRef = useRef();
-
   const [copiedField, setCopiedField] = useState(null);
+  const [formData, setFormData] = useState(data);
+  console.log(formData);
+  useEffect(() => {
+    setFormData(data);
+  }, [data]);
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSave = async () => {
+    const response = await axiosInstance.post(
+      API_BASE_URL + "/supplier/store",
+      formData
+    );
+    if (response.data.status === true) {
+      ToastAlert("success", "Berhasil Menyimpan Supplier");
+      modalRef.current.close();
+    }
+  };
   const handleCopy = (value, field) => {
     window.navigator.clipboard.writeText(value).then(() => {
       setCopiedField(field);
@@ -147,85 +174,269 @@ export const ModalDetailSupplier = ({ supplierId, data }) => {
       </div>
     </div>
   );
+  const renderDetail = () => {
+    return (
+      <div>
+        <div className="flex justify-between bg-primary text-white rounded-md p-4 items-center text-md border-b-2">
+          <p>Detail Supplier ( {data.supplier_id} )</p>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="table text-lg">
+            <tbody>
+              <tr>
+                <td>Nama Supplier</td>
+                <td>{data.nama_supplier}</td>
+              </tr>
+              <tr>
+                <td>Email Supplier</td>
+                <td>
+                  <div className="flex flex-row gap-3">
+                    {data.email}
+                    {renderCopyIcon("pic_email", data.email)}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Tipe Supplier</td>
+                <td>{data.tipe_supplier}</td>
+              </tr>
+              <tr>
+                <td>Alamat Supplier</td>
+                <td>
+                  {data.alamat}, {data.desa}, {data.kecamatan}, {data.kota},{" "}
+                  {data.provinsi}, {data.kode_pos}
+                </td>
+              </tr>
+              <tr>
+                <td>Website</td>
+                <td>{data.website}</td>
+              </tr>
+              <tr>
+                <td>NPWP</td>
+                <td>{data.nomor_npwp}</td>
+              </tr>
+              <tr>
+                <td>Kontak</td>
+                <td>
+                  <div className="flex flex-row gap-3">
+                    {data.nomor_telepon}
+                    {renderCopyIcon("telp", data.nomor_telepon)}
+                  </div>
+                </td>
+              </tr>
 
+              <tr>
+                <td>Nama PIC</td>
+                <td>
+                  <div className="flex flex-row gap-3">
+                    {data.kontak_person}
+                    {renderCopyIcon("kontak_person", data.kontak_person)}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Email PIC</td>
+                <td>
+                  <div className="flex flex-row gap-3">
+                    {data.email_kontak_person}
+                    {renderCopyIcon(
+                      "email_kontak_person",
+                      data.email_kontak_person
+                    )}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Kontak PIC</td>
+                <td>
+                  <div className="flex flex-row gap-3">
+                    {data.nomor_kontak_person}
+                    {renderCopyIcon(
+                      "pic_kontak_person",
+                      data.nomor_kontak_person
+                    )}
+                  </div>
+                </td>
+              </tr>
+              <tr>
+                <td>Tanggal Kerjasama</td>
+                <td>
+                  {data.start_pks_date} s.d. {data.end_pks_date}
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
+  const renderEditForm = () => {
+    return (
+      <div>
+        <div className="flex justify-between bg-success text-white rounded-md p-4 items-center text-md border-b-2">
+          <p>Edit Supplier ( {formData.supplier_id} )</p>
+          <button
+            onClick={handleSave}
+            className="btn rounded-md px-5 btn-sm bg-primary text-white"
+          >
+            Save
+          </button>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="table text-lg">
+            <tbody>
+              <tr>
+                <td>Nama Supplier</td>
+                <td>
+                  <input
+                    type="text"
+                    name="nama_supplier"
+                    value={formData.nama_supplier}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Tipe Supplier</td>
+                <td>
+                  <input
+                    type="text"
+                    name="tipe_supplier"
+                    value={formData.tipe_supplier}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Alamat Supplier</td>
+                <td>
+                  <textarea
+                    name="alamat"
+                    value={formData.alamat}
+                    onChange={handleInputChange}
+                    className="textarea textarea-bordered w-full rounded-md"
+                  ></textarea>
+                </td>
+              </tr>
+              <tr>
+                <td>Website</td>
+                <td>
+                  <input
+                    type="text"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>NPWP</td>
+                <td>
+                  <input
+                    type="number"
+                    name="nomor_npwp"
+                    value={formData.nomor_npwp}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Kontak</td>
+                <td>
+                  <input
+                    type="number"
+                    name="nomor_telepon"
+                    value={formData.nomor_telepon}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Email</td>
+                <td>
+                  <input
+                    type="email"
+                    name="email"
+                    value={formData.email}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Nama PIC</td>
+                <td>
+                  <input
+                    type="text"
+                    name="kontak_person"
+                    value={formData.kontak_person}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Email PIC</td>
+                <td>
+                  <input
+                    type="text"
+                    name="email_kontak_person"
+                    value={formData.email_kontak_person}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Kontak PIC</td>
+                <td>
+                  <input
+                    type="text"
+                    name="nomor_kontak_person"
+                    value={formData.nomor_kontak_person}
+                    onChange={handleInputChange}
+                    className="input input-bordered w-full rounded-md"
+                  />
+                </td>
+              </tr>
+              <tr>
+                <td>Tanggal Kerjasama</td>
+                <td>
+                  <div className="flex items-center gap-3">
+                    <input
+                      type="date"
+                      name="start_pks_date"
+                      value={formData.start_pks_date}
+                      onChange={handleInputChange}
+                      className="input input-bordered w-full rounded-md"
+                    />
+                    <span> s.d. </span>
+                    <input
+                      type="date"
+                      name="end_pks_date"
+                      value={formData.end_pks_date}
+                      onChange={handleInputChange}
+                      className="input input-bordered w-full rounded-md"
+                    />
+                  </div>
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
+  };
   return (
     <div>
       <dialog id={supplierId} className="modal" ref={modalRef}>
         <div className="modal-box w-11/12 max-w-5xl px-10 text-lg">
-          <div className="flex justify-between bg-primary text-white rounded-md p-4 items-center text-md border-b-2">
-            <p>Detail Supplier ( {data.supplier_id} )</p>
-          </div>
-          <div className="overflow-x-auto">
-            <table className="table text-lg">
-              <tbody>
-                <tr>
-                  <td>Nama Supplier</td>
-                  <td>{data.nama}</td>
-                </tr>
-                <tr>
-                  <td>Tipe Supplier</td>
-                  <td>{data.tipe}</td>
-                </tr>
-                <tr>
-                  <td>Alamat Supplier</td>
-                  <td>
-                    {data.alamat}, {data.desa}, {data.kecamatan}, {data.kota},{" "}
-                    {data.provinsi}, {data.kode_pos}
-                  </td>
-                </tr>
-                <tr>
-                  <td>Website</td>
-                  <td>{data.website}</td>
-                </tr>
-                <tr>
-                  <td>NPWP</td>
-                  <td>{data.npwp}</td>
-                </tr>
-                <tr>
-                  <td>Kontak</td>
-                  <td>
-                    <div className="flex flex-row gap-3">
-                      {data.telp}
-                      {renderCopyIcon("telp", data.telp)}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Email</td>
-                  <td>
-                    <div className="flex flex-row gap-3">
-                      {data.pic_email}
-                      {renderCopyIcon("pic_email", data.pic_email)}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Nama PIC</td>
-                  <td>
-                    <div className="flex flex-row gap-3">
-                      {data.pic_name}
-                      {renderCopyIcon("pic_name", data.pic_name)}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Kontak PIC</td>
-                  <td>
-                    <div className="flex flex-row gap-3">
-                      {data.pic_contact}
-                      {renderCopyIcon("pic_contact", data.pic_contact)}
-                    </div>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Tanggal Kerjasama</td>
-                  <td>
-                    {data.start_pks_date} s.d. {data.end_pks_date}
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          {type === "detail" ? renderDetail() : renderEditForm()}
         </div>
         <form method="dialog" className="modal-backdrop">
           <button>close</button>
@@ -560,7 +771,7 @@ export const ModalDetailPurchase = ({ poId, data, total }) => {
               className="btn btn-error text-white btn-sm"
             >
               {loading ? (
-                <Loading type={"spinner"}  size={"sm"} />
+                <Loading type={"spinner"} size={"sm"} />
               ) : (
                 <div>
                   <FontAwesomeIcon icon={faFilePdf} /> Download Invoice
@@ -612,40 +823,44 @@ export const ModalDetailPurchase = ({ poId, data, total }) => {
 export const ModalOpname = ({ id, barang }) => {
   const modalRef = useRef();
   const [check, setCheck] = useState(false);
-  // const [physicalStock, setPhysicalStock] = useState("");
 
   const handleCheckbox = () => {
     setCheck(!check);
   };
 
-  // const handlePhysicalStockChange = (e) => {
-  //   const inputValue = e.target.value;
-  //   if (
-  //     inputValue === "" ||
-  //     (Number(inputValue) >= 0 && Number(inputValue) <= barang.stok)
-  //   ) {
-  //     setPhysicalStock(inputValue);
-  //   }
-  // };
-
   const [petugas, setPetugas] = useState(null);
   const [keterangan, setKeterangan] = useState(null);
   const [jumlahFisik, setJumlahFisik] = useState(0);
   const [jumlahPenyesuaian, setJumlahPenyesuaian] = useState("");
-  const handleJumlahFisik = (e) => {
-    setJumlahFisik(e.target.value);
-    setJumlahPenyesuaian(e.target.value - barang.stok);
+
+  const handleJumlahFisikChange = (newQuantity) => {
+    setJumlahFisik(newQuantity);
+    setJumlahPenyesuaian(newQuantity - barang.stok);
   };
+
+  const handleIncrement = () => {
+    handleJumlahFisikChange(jumlahFisik + 1);
+  };
+
+  const handleDecrement = () => {
+    if (jumlahFisik > 0) {
+      handleJumlahFisikChange(jumlahFisik - 1);
+    }
+  };
+
   const handleChangePetugas = (e) => {
     setPetugas(e.target.value);
   };
+
   const handleChangeKeterangan = (e) => {
     setKeterangan(e.target.value);
   };
+
   const token = localStorage.getItem("token");
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };
+
   const handleSubmit = async () => {
     const payload = {
       petugas: petugas,
@@ -673,13 +888,14 @@ export const ModalOpname = ({ id, barang }) => {
       ToastAlert("error", "Gagal Menyimpan Stock Opname");
     }
   };
+
   return (
     <div>
       <dialog id={id} className="modal" ref={modalRef}>
         <div className="modal-box w-11/12 max-w-6xl px-10 text-lg">
           <div className="flex justify-center bg-primary text-white rounded-md p-4 text-wrap items-center text-md border-b-2">
             Stok Opname; {barang.barang.nama_barang} -{" "}
-            {barang.fasyankes_warehouse != undefined
+            {barang.fasyankes_warehouse !== undefined
               ? barang.fasyankes_warehouse.fasyankes.name
               : barang.warehouse.name}
           </div>
@@ -689,7 +905,7 @@ export const ModalOpname = ({ id, barang }) => {
                 <tr>
                   <th>Nama Pertugas</th>
                   <th>Jumlah Tercatat</th>
-                  <th>Jumlah Fisik</th>
+                  <th className="text-center">Jumlah Fisik</th>
                   <th>Jumlah Penyesuaian</th>
                   <th>Keterangan</th>
                   <th>Verifikasi</th>
@@ -709,15 +925,29 @@ export const ModalOpname = ({ id, barang }) => {
                   <td>
                     {barang.stok} {barang.barang.satuan}
                   </td>
-                  <td>
-                    <div className="flex items-center gap-2">
+                  <td className="flex flex-row justify-center items-center">
+                    <div className="flex items-center">
+                      <button
+                        className="btn btn-sm rounded-r-none rounded-l-md btn-primary"
+                        onClick={handleDecrement}
+                      >
+                        -
+                      </button>
                       <input
                         type="number"
                         value={jumlahFisik}
-                        onChange={handleJumlahFisik}
-                        className="input max-w-16 input-bordered input-sm rounded-md"
-                      />{" "}
-                      {barang.barang.satuan}
+                        onChange={(e) =>
+                          handleJumlahFisikChange(Number(e.target.value))
+                        }
+                        className="input max-w-16 input-bordered input-sm rounded-none text-center"
+                      />
+                      <button
+                        className="btn btn-sm rounded-l-none rounded-r-md btn-primary"
+                        onClick={handleIncrement}
+                      >
+                        +
+                      </button>
+                      <span className="ml-2">{barang.barang.satuan}</span>
                     </div>
                   </td>
                   <td>
