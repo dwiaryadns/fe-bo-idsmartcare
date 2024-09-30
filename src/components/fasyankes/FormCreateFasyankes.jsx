@@ -82,11 +82,11 @@ export const FormCreateFasyankes = () => {
       .catch(function (error) {
         console.log(error);
       });
-      const newStep = location.state?.step;
-      if(newStep >= 2){
-        console.log('step : ' + newStep)
-        setStep(newStep);
-      }
+    const newStep = location.state?.step;
+    if (newStep >= 2) {
+      console.log("step : " + newStep);
+      setStep(newStep);
+    }
   }, []);
 
   const handleType = (e) => {
@@ -151,6 +151,7 @@ export const FormCreateFasyankes = () => {
     axios
       .post(API_BASE_URL + "/warehouses/store", payload, headers)
       .then(function (response) {
+        console.log(response);
         if (response.data.status === true) {
           navigate("/fasyankes/create");
           ToastAlert("success", response.data.message);
@@ -159,13 +160,14 @@ export const FormCreateFasyankes = () => {
         } else {
           const apiErrors = response.data.errors;
           setErrorWarehouse(apiErrors);
+          return;
         }
       })
       .catch(function (error) {
-        modalRef.current.close();
         const apiErrors = error.response.data.errors;
         ToastAlert("error", error.response.data.message);
         setErrorWarehouse(apiErrors);
+        return;
       });
   };
 
@@ -715,89 +717,89 @@ export const FormCreateFasyankes = () => {
             errors={errors}
           />
 
-          {/* {isSuccess ? ( */}
-          <div>
-            <div className="my-4">
-              <Header title="Credential Data" icon={faUser} />
-            </div>
+          {isSuccess ? (
+            <div>
+              <div className="my-4">
+                <Header title="Credential Data" icon={faUser} />
+              </div>
 
-            <Input
-              type="text"
-              label="Username"
-              placeholder="Username"
-              name="username"
-              onChange={handleInputChange}
-              value={formData.username}
-              error={errors.username}
-              tooltip="Username untuk login masuk ke halaman admin"
-            />
-            <Input
-              type="password"
-              label="Password"
-              placeholder="Password"
-              name="password"
-              onChange={handleInputChange}
-              value={formData.password}
-              error={errors.password}
-              tooltip="Password untuk login masuk ke halaman admin"
-            />
-            <Input
-              type="password"
-              label="Confirm Password"
-              placeholder="Confirm Password"
-              name="password_confirmation"
-              onChange={handleInputChange}
-              value={formData.password_confirmation}
-              error={errors.password_confirmation}
-              tooltip="Confirm password untuk memastikan password yang sudah di buat"
-            />
-            <div className="form-control mt-10">
-              <label className="flex items-center gap-5">
-                <input
-                  type="checkbox"
-                  onClick={handleCheckbox}
-                  className="checkbox checkbox-primary rounded-md"
-                />
-                <span className="label-text">
-                  Dengan membuat akun, Anda setuju dengan{" "}
-                  <a
-                    href="/syarat-dan-ketentuan"
-                    target="_blank"
-                    className="font-bold italic text-primary"
-                  >
-                    Syarat dan Ketentuan
-                  </a>{" "}
-                  serta{" "}
-                  <a
-                    href="/kebijakan-privasi"
-                    target="_blank"
-                    className="font-bold italic text-primary"
-                  >
-                    Kebijakan Privasi{" "}
-                  </a>
-                  <span className="font-bold"> idSmartCare.</span>
-                </span>
-              </label>
+              <Input
+                type="text"
+                label="Username"
+                placeholder="Username"
+                name="username"
+                onChange={handleInputChange}
+                value={formData.username}
+                error={errors.username}
+                tooltip="Username untuk login masuk ke halaman admin"
+              />
+              <Input
+                type="password"
+                label="Password"
+                placeholder="Password"
+                name="password"
+                onChange={handleInputChange}
+                value={formData.password}
+                error={errors.password}
+                tooltip="Password untuk login masuk ke halaman admin"
+              />
+              <Input
+                type="password"
+                label="Confirm Password"
+                placeholder="Confirm Password"
+                name="password_confirmation"
+                onChange={handleInputChange}
+                value={formData.password_confirmation}
+                error={errors.password_confirmation}
+                tooltip="Confirm password untuk memastikan password yang sudah di buat"
+              />
+              <div className="form-control mt-10">
+                <label className="flex items-center gap-5">
+                  <input
+                    type="checkbox"
+                    onClick={handleCheckbox}
+                    className="checkbox checkbox-primary rounded-md"
+                  />
+                  <span className="label-text">
+                    Dengan membuat akun, Anda setuju dengan{" "}
+                    <a
+                      href="/syarat-dan-ketentuan"
+                      target="_blank"
+                      className="font-bold italic text-primary"
+                    >
+                      Syarat dan Ketentuan
+                    </a>{" "}
+                    serta{" "}
+                    <a
+                      href="/kebijakan-privasi"
+                      target="_blank"
+                      className="font-bold italic text-primary"
+                    >
+                      Kebijakan Privasi{" "}
+                    </a>
+                    <span className="font-bold"> idSmartCare.</span>
+                  </span>
+                </label>
+              </div>
+              <div className="flex justify-end mt-5">
+                <button
+                  onClick={handleNext}
+                  disabled={!checkbox || loadingNext}
+                  className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+                >
+                  {loadingNext ? (
+                    <Loading type={"spinner"} size={"sm"} />
+                  ) : (
+                    <div>
+                      Next <FontAwesomeIcon icon={faAngleRight} />
+                    </div>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="flex justify-end mt-5">
-              <button
-                onClick={handleNext}
-                disabled={!checkbox || loadingNext}
-                className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
-              >
-                {loadingNext ? (
-                  <Loading type={"spinner"} size={"sm"} />
-                ) : (
-                  <div>
-                    Next <FontAwesomeIcon icon={faAngleRight} />
-                  </div>
-                )}
-              </button>
-            </div>
-          </div>
-          {/* ) : (
+          ) : (
             ""
-          )} */}
+          )}
         </div>
       ) : step === 2 ? (
         <FormDocument

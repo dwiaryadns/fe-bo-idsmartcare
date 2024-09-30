@@ -17,7 +17,7 @@ const Input = ({ label, placeholder, name, value, onChange, errors }) => {
             errors ? "border-red-600" : ""
           }`}
         />
-        {errors && <span className="text-red-600">{errors}</span>}
+        {errors && <span className="text-red-600 text-xs">{errors}</span>}
       </label>
     </div>
   );
