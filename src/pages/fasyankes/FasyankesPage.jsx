@@ -22,9 +22,22 @@ const FasyankesPage = () => {
   const handleBack = () => {
     setStep(step - 1);
   };
-  const handleActived = (isLegalDoc) => {
-    const newStep = isLegalDoc != null ? 3 : 2;
-    navigate("/fasyankes/create", { state: { step: newStep } });
+  const handleActived = (data) => {
+    console.log(data);
+    const newStep = data.legal_doc != null ? 3 : 2;
+    const payments = {
+      package: data.subscription_plan.package_plan,
+      duration: data.subscription_plan.duration,
+      fasyankes: data,
+      subscription_id: data.subscription_plan.id,
+    };
+    navigate("/fasyankes/create", {
+      state: {
+        step: newStep,
+        type: data.type,
+        payments: payments,
+      },
+    });
   };
   const columns = useMemo(
     () => [
@@ -66,7 +79,7 @@ const FasyankesPage = () => {
             </button>
           ) : (
             <button
-              onClick={() => handleActived(row.original.legal_doc)}
+              onClick={() => handleActived(row.original)}
               title="Aktifkan"
               className="btn bg-error hover:bg-error text-white rounded-md btn-sm"
             >

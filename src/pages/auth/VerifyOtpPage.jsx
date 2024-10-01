@@ -120,8 +120,8 @@ export const VerifyOtpPage = () => {
   };
 
   const handleSendOtp = () => {
-    if(!otp) {
-      ToastAlert('error','OTP Wajib Diisi.')
+    if (!otp) {
+      ToastAlert("error", "OTP Wajib Diisi.");
       return;
     }
     setLoading(true);
@@ -130,6 +130,7 @@ export const VerifyOtpPage = () => {
       otp: otp,
       otp_id:
         resendOtpId == null || resendOtpId == undefined ? otpId : resendOtpId,
+      is_register: true,
     };
     axios
       .post(API_BASE_URL + "/store-otp", payload, {

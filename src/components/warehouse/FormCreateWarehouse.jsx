@@ -46,7 +46,6 @@ export const FormCreateWarehouse = () => {
         }
       })
       .catch(function (error) {
-        console.log(error);
         const apiErrors = error.response.data.errors;
         const newApiErrors = {
           warehouseName: apiErrors.name ? apiErrors.name : "",

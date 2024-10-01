@@ -7,7 +7,6 @@ const Select = ({ formValues, onSelectChange, errors, isSupplier }) => {
   const [kecamatan, setKecamatan] = useState([]);
   const [desa, setDesa] = useState([]);
   const [error, setError] = useState("");
-  console.log(error.provinsi);
   useEffect(() => {
     axios
       .get("https://dev.farizdotid.com/api/daerahindonesia/provinsi")

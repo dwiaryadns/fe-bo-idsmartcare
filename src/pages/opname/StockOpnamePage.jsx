@@ -1,9 +1,7 @@
-import React, { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import Layout from "../../components/Layout";
 import { faBox } from "@fortawesome/free-solid-svg-icons";
-import { Datatable, DatatableWithPaginate } from "../../components/Datatable";
-import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const";
+import { DatatableWithPaginate } from "../../components/Datatable";
 import axiosInstance from "../../dummy/axiosInstance";
 import { ModalOpname } from "../../components/Modal";
 
@@ -178,7 +176,7 @@ export default function StockOpnamePage() {
             </div>
           </div>
           <hr></hr>
-          <div >
+          <div>
             <DatatableWithPaginate
               endpoint={"/stok-opname/barang"}
               columns={columns}

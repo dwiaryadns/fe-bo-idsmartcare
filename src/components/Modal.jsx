@@ -113,15 +113,10 @@ export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
   );
 };
 
-export const ModalSupplier = ({
-  supplierId,
-  data,
-  type,
-}) => {
+export const ModalSupplier = ({ supplierId, data, type }) => {
   const modalRef = useRef();
   const [copiedField, setCopiedField] = useState(null);
   const [formData, setFormData] = useState(data);
-  console.log(formData);
   useEffect(() => {
     setFormData(data);
   }, [data]);
@@ -568,7 +563,6 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
         payload,
         headers
       );
-      console.log(response);
       setLoading(false);
       if (response.data.status === true) {
         window.location.reload();
@@ -834,6 +828,9 @@ export const ModalOpname = ({ id, barang }) => {
   const [jumlahPenyesuaian, setJumlahPenyesuaian] = useState("");
 
   const handleJumlahFisikChange = (newQuantity) => {
+    if (newQuantity < 0) {
+      return;
+    }
     setJumlahFisik(newQuantity);
     setJumlahPenyesuaian(newQuantity - barang.stok);
   };
@@ -872,7 +869,6 @@ export const ModalOpname = ({ id, barang }) => {
       stock_gudang_id: barang.stock_gudang_id ? barang.stock_gudang_id : null,
       stok_barang_id: barang.stok_barang_id ? barang.stok_barang_id : null,
     };
-    console.log(payload);
     try {
       const response = await axios.post(
         `${API_BASE_URL}/stok-opname/store`,
@@ -884,7 +880,6 @@ export const ModalOpname = ({ id, barang }) => {
         ToastAlert("success", response.data.message);
       }
     } catch (error) {
-      console.log(error);
       ToastAlert("error", "Gagal Menyimpan Stock Opname");
     }
   };
@@ -936,6 +931,7 @@ export const ModalOpname = ({ id, barang }) => {
                       <input
                         type="number"
                         value={jumlahFisik}
+                        min={0}
                         onChange={(e) =>
                           handleJumlahFisikChange(Number(e.target.value))
                         }

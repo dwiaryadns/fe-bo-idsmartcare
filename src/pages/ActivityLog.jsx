@@ -92,8 +92,6 @@ const ActivityLog = () => {
     [startDate, endDate, isSearch]
   );
 
-  console.log(startDate.toISOString().split("T")[0]);
-  console.log(endDate.toISOString().split("T")[0]);
   return (
     <Layout title="Histori Aktivitas" icon={faHistory}>
       <div className="card">

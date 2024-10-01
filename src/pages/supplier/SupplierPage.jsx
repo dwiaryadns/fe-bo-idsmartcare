@@ -23,7 +23,7 @@ export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState(null);
   const [currentSupplierId, setCurrentSupplierId] = useState(null);
-  
+
   const columns = useMemo(
     () => [
       {
@@ -54,9 +54,9 @@ export const SupplierPage = () => {
             <button
               onClick={() => {
                 setType("detail");
-                setCurrentSupplierId(row.original.supplier_id); // Set supplierId
+                setCurrentSupplierId(row.original.supplier_id);
               }}
-              className="btn rounded-md bg-primary text-white hover:bg-primary btn-sm"
+              className="btn rounded-md bg-primary text-white hover:bg-primary btn-xs"
             >
               <FontAwesomeIcon icon={faEye} />
             </button>
@@ -64,16 +64,16 @@ export const SupplierPage = () => {
             <button
               onClick={() => {
                 setType("edit");
-                setCurrentSupplierId(row.original.supplier_id); // Set supplierId
+                setCurrentSupplierId(row.original.supplier_id);
               }}
-              className="btn rounded-md bg-success text-white hover:bg-success btn-sm"
+              className="btn rounded-md bg-success text-white hover:bg-success btn-xs"
             >
               <FontAwesomeIcon icon={faPencil} />
             </button>
 
             <button
               onClick={() => handleDelete(row.original.supplier_id)}
-              className="btn rounded-md bg-error text-white hover:bg-error btn-sm"
+              className="btn rounded-md bg-error text-white hover:bg-error btn-xs"
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>

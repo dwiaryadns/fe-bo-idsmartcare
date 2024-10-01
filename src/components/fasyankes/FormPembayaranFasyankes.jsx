@@ -14,9 +14,6 @@ import { ToastAlert } from "../Alert";
 export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const [diskon, setDiskon] = useState(0);
   const [total, setTotal] = useState(0);
-  console.log(total);
-
-  console.log(payment);
   useEffect(() => {
     let calculatedDiskon = 0;
     let calculatedTotal = 0;
@@ -44,7 +41,6 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
     setTotal(calculatedTotal);
   }, [payment]);
 
-  console.log(payment.fasyankes);
   const navigate = useNavigate();
 
   const [snapToken, setSnapToken] = useState();

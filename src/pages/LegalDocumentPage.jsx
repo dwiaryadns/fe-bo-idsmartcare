@@ -291,7 +291,6 @@ const LegalDocumentPage = () => {
       );
     } else if (status === "approved") {
       const dataFix = JSON.parse(dataLegal);
-      console.log(dataFix);
       return (
         <div>
           {type === "Perorangan" ? (

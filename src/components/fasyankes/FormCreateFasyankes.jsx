@@ -49,6 +49,8 @@ export const FormCreateFasyankes = () => {
   const modalRef = useRef(null);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+
+  const [newState, setNewState] = useState(false);
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -83,9 +85,21 @@ export const FormCreateFasyankes = () => {
         console.log(error);
       });
     const newStep = location.state?.step;
-    if (newStep >= 2) {
-      console.log("step : " + newStep);
+    const newType = location.state?.type;
+    const newPayments = location.state?.payments;
+    if (newStep == 2) {
+      setFasyankesId(newPayments.fasyankes.fasyankesId);
       setStep(newStep);
+      setType(newType);
+      setNewState(true);
+    } else if (newStep == 3) {
+      setStep(newStep);
+      setNewState(true);
+      setPayment({
+        ...newPayments,
+        type: newType,
+        price: packagePrices[newType],
+      });
     }
   }, []);
 
@@ -151,7 +165,6 @@ export const FormCreateFasyankes = () => {
     axios
       .post(API_BASE_URL + "/warehouses/store", payload, headers)
       .then(function (response) {
-        console.log(response);
         if (response.data.status === true) {
           navigate("/fasyankes/create");
           ToastAlert("success", response.data.message);
@@ -273,7 +286,7 @@ export const FormCreateFasyankes = () => {
   };
 
   const handlePrevious = () => {
-    setStep(step - 1);
+    setStep(newState ? step : step - 1);
     setLoadingNext(false);
     setErrors((prev) => {
       return { ...prev, sia: "", sipa: "", simk: "", siok: "", password: "" };
@@ -286,7 +299,7 @@ export const FormCreateFasyankes = () => {
 
   const handleGetOtp = async () => {
     setLoadingOTP(true);
-    if (formData.emailFasyankes === "") {
+    if (formData.email === "") {
       setLoadingOTP(false);
       ToastAlert("error", "Masukkan Email Anda");
       return;
@@ -294,7 +307,7 @@ export const FormCreateFasyankes = () => {
     try {
       const response = await axios.post(
         API_BASE_URL + "/fasyankes/send-otp",
-        { email: formData.emailFasyankes },
+        { email: formData.email },
         {
           headers: { Authorization: "Bearer " + localStorage.getItem("token") },
         }
@@ -318,10 +331,11 @@ export const FormCreateFasyankes = () => {
       return;
     }
     const payload = {
-      email: formData.emailFasyankes,
+      email: formData.email,
       otp: otp,
       otp_id: otpId,
     };
+
     axios
       .post(API_BASE_URL + "/store-otp", payload, {
         headers: {
@@ -717,89 +731,89 @@ export const FormCreateFasyankes = () => {
             errors={errors}
           />
 
-          {isSuccess ? (
-            <div>
-              <div className="my-4">
-                <Header title="Credential Data" icon={faUser} />
-              </div>
-
-              <Input
-                type="text"
-                label="Username"
-                placeholder="Username"
-                name="username"
-                onChange={handleInputChange}
-                value={formData.username}
-                error={errors.username}
-                tooltip="Username untuk login masuk ke halaman admin"
-              />
-              <Input
-                type="password"
-                label="Password"
-                placeholder="Password"
-                name="password"
-                onChange={handleInputChange}
-                value={formData.password}
-                error={errors.password}
-                tooltip="Password untuk login masuk ke halaman admin"
-              />
-              <Input
-                type="password"
-                label="Confirm Password"
-                placeholder="Confirm Password"
-                name="password_confirmation"
-                onChange={handleInputChange}
-                value={formData.password_confirmation}
-                error={errors.password_confirmation}
-                tooltip="Confirm password untuk memastikan password yang sudah di buat"
-              />
-              <div className="form-control mt-10">
-                <label className="flex items-center gap-5">
-                  <input
-                    type="checkbox"
-                    onClick={handleCheckbox}
-                    className="checkbox checkbox-primary rounded-md"
-                  />
-                  <span className="label-text">
-                    Dengan membuat akun, Anda setuju dengan{" "}
-                    <a
-                      href="/syarat-dan-ketentuan"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Syarat dan Ketentuan
-                    </a>{" "}
-                    serta{" "}
-                    <a
-                      href="/kebijakan-privasi"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Kebijakan Privasi{" "}
-                    </a>
-                    <span className="font-bold"> idSmartCare.</span>
-                  </span>
-                </label>
-              </div>
-              <div className="flex justify-end mt-5">
-                <button
-                  onClick={handleNext}
-                  disabled={!checkbox || loadingNext}
-                  className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
-                >
-                  {loadingNext ? (
-                    <Loading type={"spinner"} size={"sm"} />
-                  ) : (
-                    <div>
-                      Next <FontAwesomeIcon icon={faAngleRight} />
-                    </div>
-                  )}
-                </button>
-              </div>
+          {/* {isSuccess ? ( */}
+          <div>
+            <div className="my-4">
+              <Header title="Credential Data" icon={faUser} />
             </div>
-          ) : (
+
+            <Input
+              type="text"
+              label="Username"
+              placeholder="Username"
+              name="username"
+              onChange={handleInputChange}
+              value={formData.username}
+              error={errors.username}
+              tooltip="Username untuk login masuk ke halaman admin"
+            />
+            <Input
+              type="password"
+              label="Password"
+              placeholder="Password"
+              name="password"
+              onChange={handleInputChange}
+              value={formData.password}
+              error={errors.password}
+              tooltip="Password untuk login masuk ke halaman admin"
+            />
+            <Input
+              type="password"
+              label="Confirm Password"
+              placeholder="Confirm Password"
+              name="password_confirmation"
+              onChange={handleInputChange}
+              value={formData.password_confirmation}
+              error={errors.password_confirmation}
+              tooltip="Confirm password untuk memastikan password yang sudah di buat"
+            />
+            <div className="form-control mt-10">
+              <label className="flex items-center gap-5">
+                <input
+                  type="checkbox"
+                  onClick={handleCheckbox}
+                  className="checkbox checkbox-primary rounded-md"
+                />
+                <span className="label-text">
+                  Dengan membuat akun, Anda setuju dengan{" "}
+                  <a
+                    href="/syarat-dan-ketentuan"
+                    target="_blank"
+                    className="font-bold italic text-primary"
+                  >
+                    Syarat dan Ketentuan
+                  </a>{" "}
+                  serta{" "}
+                  <a
+                    href="/kebijakan-privasi"
+                    target="_blank"
+                    className="font-bold italic text-primary"
+                  >
+                    Kebijakan Privasi{" "}
+                  </a>
+                  <span className="font-bold"> idSmartCare.</span>
+                </span>
+              </label>
+            </div>
+            <div className="flex justify-end mt-5">
+              <button
+                onClick={handleNext}
+                disabled={!checkbox || loadingNext}
+                className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+              >
+                {loadingNext ? (
+                  <Loading type={"spinner"} size={"sm"} />
+                ) : (
+                  <div>
+                    Next <FontAwesomeIcon icon={faAngleRight} />
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+          {/* ) : (
             ""
-          )}
+          )} */}
         </div>
       ) : step === 2 ? (
         <FormDocument
