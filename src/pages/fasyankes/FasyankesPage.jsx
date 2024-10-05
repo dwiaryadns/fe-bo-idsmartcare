@@ -23,7 +23,6 @@ const FasyankesPage = () => {
     setStep(step - 1);
   };
   const handleActived = (data) => {
-    console.log(data);
     const newStep = data.legal_doc != null ? 3 : 2;
     const payments = {
       package: data.subscription_plan.package_plan,

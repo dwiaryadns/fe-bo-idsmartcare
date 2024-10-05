@@ -56,7 +56,7 @@ export const SupplierPage = () => {
                 setType("detail");
                 setCurrentSupplierId(row.original.supplier_id);
               }}
-              className="btn rounded-md bg-primary text-white hover:bg-primary btn-xs"
+              className="btn rounded-md bg-primary text-white hover:bg-primary btn-sm"
             >
               <FontAwesomeIcon icon={faEye} />
             </button>
@@ -66,14 +66,14 @@ export const SupplierPage = () => {
                 setType("edit");
                 setCurrentSupplierId(row.original.supplier_id);
               }}
-              className="btn rounded-md bg-success text-white hover:bg-success btn-xs"
+              className="btn rounded-md bg-success text-white hover:bg-success btn-sm"
             >
               <FontAwesomeIcon icon={faPencil} />
             </button>
 
             <button
               onClick={() => handleDelete(row.original.supplier_id)}
-              className="btn rounded-md bg-error text-white hover:bg-error btn-xs"
+              className="btn rounded-md bg-error text-white hover:bg-error btn-sm"
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>

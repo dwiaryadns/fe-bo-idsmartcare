@@ -18,7 +18,11 @@ const FormBoInfo = () => {
   const [datas, setDatas] = useState({});
   const [loading, setLoading] = useState(true);
   const [stateStatus, setStateStatus] = useState(null);
+  const [boInfo, setBoInfo] = useState(null);
+  const [errors, setErrors] = useState({});
   const [formValues, setFormValues] = useState({
+    id: "",
+    businessId: "",
     businessType: "",
     businessName: "",
     businessEmail: "",
@@ -32,12 +36,11 @@ const FormBoInfo = () => {
     kodePos: "",
     checked: false,
   });
-
-  const [boInfo, setBoInfo] = useState(null);
-
-  const [errors, setErrors] = useState({});
-
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+  const headers = {
+    headers: { Authorization: `Bearer ${token}` },
+  };
 
   useEffect(() => {
     const data = getData();
@@ -108,10 +111,6 @@ const FormBoInfo = () => {
     );
   };
 
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: { Authorization: `Bearer ${token}` },
-  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -120,6 +119,23 @@ const FormBoInfo = () => {
         setBoInfo(data);
         setStateStatus(data.status);
         setLoading(false);
+
+        setFormValues({
+          id: data.id || "",
+          businessId: data.businessId || "", // Atur sesuai kebutuhan
+          businessType: data.businessType || "",
+          businessName: data.businessName || "",
+          businessEmail: data.businessEmail || "",
+          phoneNumber: data.phone || "",
+          mobilePhone: data.mobile || "",
+          streetAddress: data.address || "",
+          provinsi: data.provinsi || "",
+          kabupaten: data.kabupaten || "",
+          kecamatan: data.kecamatan || "",
+          desa: data.desa || "",
+          kodePos: data.postal_code || "",
+          checked: false, // Atur sesuai kebutuhan
+        });
       } catch (error) {
         setLoading(false);
       }
@@ -136,7 +152,8 @@ const FormBoInfo = () => {
     setLoading(true);
     e.preventDefault();
     const payload = {
-      // businessId: formValues.businessId,
+      id: formValues.id,
+      businessId: formValues.businessId,
       businessType: formValues.businessType,
       businessName: formValues.businessName,
       businessEmail: formValues.businessEmail,
@@ -149,6 +166,7 @@ const FormBoInfo = () => {
       village: selectedNames.desa,
       postal_code: formValues.kodePos,
     };
+    console.log(payload);
 
     await axios
       .post(API_BASE_URL + "/bo-info/store", payload, headers)
@@ -203,6 +221,7 @@ const FormBoInfo = () => {
       </div>
     );
   }
+  console.log(boInfo);
 
   const renderForm = () => {
     return (

@@ -1,4 +1,9 @@
-import { faCheck, faClone, faFilePdf } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faClone,
+  faClose,
+  faFilePdf,
+} from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router";
@@ -8,7 +13,7 @@ import { ToastAlert } from "./Alert";
 import Loading from "./Loading";
 import axiosInstance from "../dummy/axiosInstance";
 
-export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
+export const ModalPayNow = ({ data }) => {
   const modalRef = useRef();
   const navigate = useNavigate();
 
@@ -18,6 +23,31 @@ export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
     window.location.reload();
     modalRef.current.close();
   };
+  const [countdown, setCountdown] = useState(null);
+
+  useEffect(() => {
+    const expiredAt = new Date(data.expired_at);
+
+    const updateCountdown = () => {
+      const now = new Date();
+      const timeDiff = expiredAt.getTime() - now.getTime();
+
+      if (timeDiff > 0) {
+        const timeLeft = Math.floor(timeDiff / 1000);
+        const hours = Math.floor((timeLeft % (60 * 60 * 24)) / (60 * 60));
+        const minutes = Math.floor((timeLeft % (60 * 60)) / 60);
+        const seconds = timeLeft % 60;
+
+        const countdownText = ` ${hours} jam ${minutes} menit ${seconds} detik`;
+        setCountdown(countdownText);
+      } else {
+        setCountdown("Waktu pembayaran telah habis");
+        clearInterval(intervalId);
+      }
+    };
+    const intervalId = setInterval(updateCountdown, 1000);
+    return () => clearInterval(intervalId);
+  }, [data.expired_at]);
 
   const handleCopy = () => {
     setIsCopy(true);
@@ -28,21 +58,21 @@ export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
 
   return (
     <div>
-      <dialog id={id} className="modal" ref={modalRef}>
+      <dialog id={data.transaction_id} className="modal" ref={modalRef}>
         <div className="modal-box w-11/12 max-w-lg px-10">
           <form method="dialog">
-            {type === "qris" ? (
+            {data.payment_type === "QRIS" ? (
               <div>
                 <div className="flex justify-between mt-10 items-center text-md border-b-2">
                   <p>Total Pembayaran</p>
-                  <p>{amount}</p>
+                  <p className="text-end">{data.amount}</p>
                 </div>
                 <div className="flex justify-between mt-5 items-center text-md border-b-2">
                   <p>Jatuh Tempo</p>
-                  <p>23 Jam 15 Menit 5 Detik</p>
+                  <p className="text-end">{countdown}</p>
                 </div>
                 <div className="flex flex-col justify-center">
-                  <img className="w-72 self-center" src={qr} />
+                  <img className="w-72 self-center" src={data.qr_code} />
                 </div>
               </div>
             ) : (
@@ -50,16 +80,16 @@ export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
                 <div className="">
                   <div className="flex justify-between mt-10 items-center text-md border-b-2">
                     <p>Total Pembayaran</p>
-                    <p>{amount}</p>
+                    <p className="text-end">{data.amount}</p>
                   </div>
                   <div className="flex justify-between mt-5 items-center text-md border-b-2">
                     <p>Jatuh Tempo</p>
-                    <p>23 Jam 15 Menit 5 Detik</p>
+                    <p className="text-end">{countdown}</p>
                   </div>
                   <div className="flex justify-between mt-10 items-center mb-10">
                     <div> Kode Pembayaran</div>
                     <div className="flex gap-4 items-center">
-                      <p className="text-lg">{va}</p>
+                      <p className="text-lg">{data.va_number}</p>
                       <div
                         className={`${
                           isCopy ? "tooltip tooltip-open" : ""
@@ -71,7 +101,9 @@ export const ModalPayNow = ({ id, qr, type, va, amount, refreshData }) => {
                             isCopy ? " text-green-500" : "text-primary"
                           }`}
                           onClick={() => {
-                            window.navigator.clipboard.writeText(va);
+                            window.navigator.clipboard.writeText(
+                              data.va_number
+                            );
                             handleCopy();
                           }}
                         >
@@ -441,52 +473,6 @@ export const ModalSupplier = ({ supplierId, data, type }) => {
   );
 };
 
-export const ModalDetailWarehouse = ({ warehouse, fasyankes }) => {
-  const modalRef = useRef();
-
-  return (
-    <div>
-      <dialog id={warehouse} className="modal" ref={modalRef}>
-        <div className="modal-box w-11/12 max-w-2xl px-10 text-lg">
-          <div className="flex justify-between bg-primary text-white rounded-md p-4 items-center text-md border-b-2">
-            {warehouse}
-          </div>
-          <div className="overflow-x-auto">
-            <table className="table">
-              <thead>
-                <tr>
-                  <th>No</th>
-                  <th>Fasyankes</th>
-                  <th>Type</th>
-                </tr>
-              </thead>
-              <tbody>
-                {fasyankes.map((data, index) => (
-                  <tr key={index}>
-                    <td>{index + 1}</td>
-                    <td>{data.name}</td>
-                    <td>{data.type}</td>
-                  </tr>
-                ))}
-                {fasyankes.length === 0 && (
-                  <tr>
-                    <td colSpan={3} className="text-center">
-                      Belum ada Fasyankes terdaftar
-                    </td>
-                  </tr>
-                )}
-              </tbody>
-            </table>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
-    </div>
-  );
-};
-
 export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
   const modalRef = useRef();
 
@@ -703,117 +689,6 @@ export const ModalUpdateStock = ({ grn_id, data, file_grn }) => {
   );
 };
 
-export const ModalDetailPurchase = ({ poId, data, total }) => {
-  const modalRef = useRef();
-
-  const formatRupiah = (number) => {
-    return new Intl.NumberFormat("id-ID", {
-      style: "currency",
-      currency: "IDR",
-    }).format(number);
-  };
-
-  const [loading, setLoading] = useState(false);
-
-  const token = localStorage.getItem("token");
-  const headers = {
-    headers: {
-      Authorization: `Bearer ${token}`,
-    },
-    responseType: "arraybuffer",
-  };
-
-  const downloadPdf = async () => {
-    setLoading(true);
-    try {
-      const response = await axios.post(
-        `${API_BASE_URL}/purchase/download`,
-        { po_id: poId },
-        headers
-      );
-      const blob = new Blob([response.data], { type: "application/pdf" });
-      const url = window.URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `purchase_order_${poId}.pdf`);
-      document.body.appendChild(link);
-      link.click();
-
-      window.URL.revokeObjectURL(url);
-      link.remove();
-      ToastAlert("success", "Berhasil Download PDF");
-      setLoading(false);
-    } catch (error) {
-      setLoading(false);
-      ToastAlert("error", "Gagal Download PDF");
-    }
-  };
-
-  return (
-    <div>
-      <dialog id={poId} className="modal" ref={modalRef}>
-        <div className="modal-box w-11/12 max-w-5xl px-10">
-          <form method="dialog">
-            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-              ✕
-            </button>
-          </form>
-          <div>
-            <button
-              onClick={downloadPdf}
-              disabled={loading}
-              className="btn btn-error text-white btn-sm"
-            >
-              {loading ? (
-                <Loading type={"spinner"} size={"sm"} />
-              ) : (
-                <div>
-                  <FontAwesomeIcon icon={faFilePdf} /> Download Invoice
-                </div>
-              )}
-            </button>
-            <div className="overflow-x-auto">
-              <table className="table">
-                <thead>
-                  <tr>
-                    <th>No</th>
-                    <th>Nama Produk</th>
-                    <th>Kuantitas</th>
-                    <th>Catatan</th>
-                    <th>Harga</th>
-                    <th>Total</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {data.map((detail, index) => (
-                    <tr key={index}>
-                      <td>{index + 1}</td>
-                      <td>{detail.barang.nama_barang}</td>
-                      <td>{detail.jumlah}</td>
-                      <td>{detail.notes}</td>
-                      <td>{formatRupiah(detail.harga_satuan)}</td>
-                      <td>{formatRupiah(detail.total_harga)}</td>
-                    </tr>
-                  ))}
-                  <tr>
-                    <td colSpan={5} className="text-right italic font-bold">
-                      Total
-                    </td>
-                    <td>{formatRupiah(total)}</td>
-                  </tr>
-                </tbody>
-              </table>
-            </div>
-          </div>
-        </div>
-        <form method="dialog" className="modal-backdrop">
-          <button>close</button>
-        </form>
-      </dialog>
-    </div>
-  );
-};
-
 export const ModalOpname = ({ id, barang }) => {
   const modalRef = useRef();
   const [check, setCheck] = useState(false);
@@ -985,5 +860,24 @@ export const ModalOpname = ({ id, barang }) => {
         </form>
       </dialog>
     </div>
+  );
+};
+
+export const Modal = ({ id, children, style }) => {
+  const modalRef = useRef();
+  return (
+    <dialog id={id} className="modal" ref={modalRef}>
+      <div className={`modal-box ${style ?? "w-11/12 max-w-2xl  text-lg"}`}>
+        <form method="dialog" className="flex justify-end px-0 mb-2">
+          <button className="btn btn-ghost btn-sm">
+            <FontAwesomeIcon icon={faClose} />
+          </button>
+        </form>
+        <div className="px-5 mb-10">{children}</div>
+      </div>
+      <form method="dialog" className="modal-backdrop">
+        <button>close</button>
+      </form>
+    </dialog>
   );
 };

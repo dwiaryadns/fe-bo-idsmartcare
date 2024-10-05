@@ -10,43 +10,72 @@ import axios from "axios";
 import { useNavigate } from "react-router";
 import { Link } from "react-router-dom";
 import { ToastAlert } from "../Alert";
+import ModalPayment from "./utils/ModalPayment";
 
 export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
+  console.log("payment");
+  console.log(payment);
   const [diskon, setDiskon] = useState(0);
   const [total, setTotal] = useState(0);
-  useEffect(() => {
-    let calculatedDiskon = 0;
-    let calculatedTotal = 0;
-
-    if (payment.duration === "Annually") {
-      if (payment.package === "Plus") {
-        calculatedDiskon = payment.price.plus - payment.price.plusAnnually;
-        calculatedTotal = payment.price.plusAnnually;
-      } else if (payment.package === "Advanced") {
-        calculatedDiskon =
-          payment.price.advanced - payment.price.advancedAnnually;
-        calculatedTotal = payment.price.advancedAnnually;
-      }
-    } else {
-      if (payment.package === "Plus") {
-        calculatedTotal = payment.price.plus;
-      } else if (payment.package === "Advanced") {
-        calculatedTotal = payment.price.advanced;
-      } else if (payment.package === "FREE") {
-        calculatedTotal = payment.price.free;
-      }
-    }
-
-    setDiskon(calculatedDiskon);
-    setTotal(calculatedTotal);
-  }, [payment]);
-
-  const navigate = useNavigate();
-
+  const [subtotal, setSubtotal] = useState(0);
   const [snapToken, setSnapToken] = useState();
+  const [tax, setTax] = useState(0);
+  const [dataPayment, setDataPayment] = useState(payment);
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
+  };
+  useEffect(() => {
+    let calculatedDiskon = 0;
+    let calculatedSubtotal = 0;
+
+    const convertToNumber = (value) => {
+      const numValue = parseInt(value.toString().replace(/\D/g, ""), 10);
+      return isNaN(numValue) ? 0 : numValue;
+    };
+    console.log(
+      convertToNumber(payment.price.plus) -
+        convertToNumber(payment.price.plusAnnually)
+    );
+    if (payment.duration === "Annually") {
+      if (payment.package === "Plus") {
+        calculatedDiskon =
+          convertToNumber(payment.price.plus) -
+          convertToNumber(payment.price.plusAnnually);
+        calculatedSubtotal = convertToNumber(payment.price.plusAnnually);
+      } else if (payment.package === "Advanced") {
+        calculatedDiskon =
+          convertToNumber(payment.price.advanced) -
+          convertToNumber(payment.price.advancedAnnually);
+        calculatedSubtotal = convertToNumber(payment.price.advancedAnnually);
+      }
+    } else {
+      if (payment.package === "Plus") {
+        calculatedSubtotal = convertToNumber(payment.price.plus);
+      } else if (payment.package === "Advanced") {
+        calculatedSubtotal = convertToNumber(payment.price.advanced);
+      } else if (payment.package === "FREE") {
+        calculatedSubtotal = convertToNumber(payment.price.free);
+      }
+    }
+    setDiskon(calculatedDiskon);
+    setSubtotal(calculatedSubtotal);
+    const calculatedTax = Math.round(calculatedSubtotal * (11 / 100));
+    setTax(calculatedTax);
+    const calculatedTotal = calculatedSubtotal + calculatedTax;
+    setTotal(calculatedTotal);
+    setDataPayment({
+      ...dataPayment,
+      total: calculatedTotal,
+      subtotal: calculatedSubtotal,
+      tax: calculatedTax,
+      diskon: calculatedDiskon,
+    });
+  }, []);
+
+  const formatRupiah = (amount) => {
+    return new Intl.NumberFormat("id-ID").format(amount);
   };
   const handlePayment = async () => {
     const payload = {
@@ -55,6 +84,7 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
       type: payment.type,
       name: payment.fasyankes.name,
       email: payment.fasyankes.email,
+      tax: tax,
       pic_number: payment.fasyankes.pic_number,
       subscription_plan_id: payment.subscription_id,
     };
@@ -64,6 +94,10 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
       headers
     );
     setSnapToken(response.data.snap_token);
+  };
+
+  const handleCheckInvoice = () => {
+    document.getElementById("payment-modal").showModal();
   };
 
   useEffect(() => {
@@ -99,6 +133,7 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
 
   return (
     <div>
+      <ModalPayment data={dataPayment} />
       <div className="font-bold text-xl">Pembayaran</div>
       <hr />
       <div className="flex justify-between items-center my-4">
@@ -111,19 +146,38 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
           {payment.package === "FREE" ? payment.price.free : ""}
         </span>
       </div>
+
       {payment.duration === "Annually" && (
-        <div className="flex justify-between items-center my-4">
-          <h5 className="text-lg">Disc 20% (Annually)</h5>
-          <span className="font-bold">Rp {diskon}.000</span>
-        </div>
+        <>
+          <hr className="mb-3" />
+          <div className="flex justify-between items-center my-4">
+            <h5 className="text-lg">Disc 20% (Annually)</h5>
+            <span className="font-bold">Rp {formatRupiah(diskon)}</span>
+          </div>
+        </>
       )}
       <hr className="mb-3" />
       <div className="flex justify-end items-center my-4 gap-6">
+        <span className="font-bold ">PPN (11%)</span>
+        <span className="font-bold">Rp {formatRupiah(tax)}</span>
+      </div>
+
+      <hr className="mb-3" />
+      <div className="flex justify-end items-center my-4 gap-6">
         <span className="font-bold italic">Total</span>
-        <span className="font-bold">Rp {total}</span>
+        <span className="font-bold">Rp {formatRupiah(total)}</span>
       </div>
       <hr />
-
+      {/* <div className="font-bold text-xl my-3">Voucher</div>
+      <div className="flex md:flex-row flex-col ">
+        <input
+          placeholder="Masukkan Kode Voucher"
+          className="input input-md w-full  input-primary rounded-md"
+        />
+        <button className="btn btn-md bg-primary hover:bg-primary text-white rounded-md">
+          Verifikasi
+        </button>
+      </div> */}
       {snapToken && <div id="snap-checkout" />}
       <div className="flex gap-3 items-center mt-3">
         <input
@@ -145,13 +199,12 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
           di idSmartCare.
         </p>
       </div>
-      <Link
-        to={"/fasyankes/invoice"}
-        target="_blank"
+      <button
+        onClick={handleCheckInvoice}
         className="btn btn-block btn-primary hover:btn-primary text-white rounded-md my-4"
       >
         <FontAwesomeIcon icon={faFileInvoice} /> Lihat Invoice
-      </Link>
+      </button>
       <button
         onClick={handlePayment}
         disabled={!checkbox}

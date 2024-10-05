@@ -87,21 +87,29 @@ export const FormCreateFasyankes = () => {
     const newStep = location.state?.step;
     const newType = location.state?.type;
     const newPayments = location.state?.payments;
-    if (newStep == 2) {
+    if (newPayments) {
       setFasyankesId(newPayments.fasyankes.fasyankesId);
+      setPayment((prevPayment) => {
+        const newPaymentState = {
+          ...newPayments,
+          type: newType,
+          price: packagePrices[newType],
+        };
+        console.log("Previous payment state:", prevPayment);
+        console.log("New payment state:", newPaymentState);
+        return newPaymentState;
+      });
+    }
+    if (newStep == 2) {
+      setLoading(false);
       setStep(newStep);
       setType(newType);
       setNewState(true);
     } else if (newStep == 3) {
       setStep(newStep);
       setNewState(true);
-      setPayment({
-        ...newPayments,
-        type: newType,
-        price: packagePrices[newType],
-      });
     }
-  }, []);
+  }, [location.state]);
 
   const handleType = (e) => {
     setType(e);
@@ -262,7 +270,7 @@ export const FormCreateFasyankes = () => {
           },
         })
         .then((response) => {
-          if (response.status === 200) {
+          if (response.data.status === true) {
             setLoading(false);
             ToastAlert("success", "Berhasil Upload Dokument Legal");
             if (choosePlan.paket === "FREE") {
@@ -270,9 +278,13 @@ export const FormCreateFasyankes = () => {
             } else {
               setStep(step + 1);
             }
+          } else {
+            setLoading(false);
+            ToastAlert("error", response.data.message);
           }
         })
         .catch((error) => {
+          console.log(error);
           setLoading(false);
           const errApi = error.response.data.errors;
           setErrors(errApi);
@@ -731,89 +743,89 @@ export const FormCreateFasyankes = () => {
             errors={errors}
           />
 
-          {/* {isSuccess ? ( */}
-          <div>
-            <div className="my-4">
-              <Header title="Credential Data" icon={faUser} />
-            </div>
+          {isSuccess ? (
+            <div>
+              <div className="my-4">
+                <Header title="Credential Data" icon={faUser} />
+              </div>
 
-            <Input
-              type="text"
-              label="Username"
-              placeholder="Username"
-              name="username"
-              onChange={handleInputChange}
-              value={formData.username}
-              error={errors.username}
-              tooltip="Username untuk login masuk ke halaman admin"
-            />
-            <Input
-              type="password"
-              label="Password"
-              placeholder="Password"
-              name="password"
-              onChange={handleInputChange}
-              value={formData.password}
-              error={errors.password}
-              tooltip="Password untuk login masuk ke halaman admin"
-            />
-            <Input
-              type="password"
-              label="Confirm Password"
-              placeholder="Confirm Password"
-              name="password_confirmation"
-              onChange={handleInputChange}
-              value={formData.password_confirmation}
-              error={errors.password_confirmation}
-              tooltip="Confirm password untuk memastikan password yang sudah di buat"
-            />
-            <div className="form-control mt-10">
-              <label className="flex items-center gap-5">
-                <input
-                  type="checkbox"
-                  onClick={handleCheckbox}
-                  className="checkbox checkbox-primary rounded-md"
-                />
-                <span className="label-text">
-                  Dengan membuat akun, Anda setuju dengan{" "}
-                  <a
-                    href="/syarat-dan-ketentuan"
-                    target="_blank"
-                    className="font-bold italic text-primary"
-                  >
-                    Syarat dan Ketentuan
-                  </a>{" "}
-                  serta{" "}
-                  <a
-                    href="/kebijakan-privasi"
-                    target="_blank"
-                    className="font-bold italic text-primary"
-                  >
-                    Kebijakan Privasi{" "}
-                  </a>
-                  <span className="font-bold"> idSmartCare.</span>
-                </span>
-              </label>
+              <Input
+                type="text"
+                label="Username"
+                placeholder="Username"
+                name="username"
+                onChange={handleInputChange}
+                value={formData.username}
+                error={errors.username}
+                tooltip="Username untuk login masuk ke halaman admin"
+              />
+              <Input
+                type="password"
+                label="Password"
+                placeholder="Password"
+                name="password"
+                onChange={handleInputChange}
+                value={formData.password}
+                error={errors.password}
+                tooltip="Password untuk login masuk ke halaman admin"
+              />
+              <Input
+                type="password"
+                label="Confirm Password"
+                placeholder="Confirm Password"
+                name="password_confirmation"
+                onChange={handleInputChange}
+                value={formData.password_confirmation}
+                error={errors.password_confirmation}
+                tooltip="Confirm password untuk memastikan password yang sudah di buat"
+              />
+              <div className="form-control mt-10">
+                <label className="flex items-center gap-5">
+                  <input
+                    type="checkbox"
+                    onClick={handleCheckbox}
+                    className="checkbox checkbox-primary rounded-md"
+                  />
+                  <span className="label-text">
+                    Dengan membuat akun, Anda setuju dengan{" "}
+                    <a
+                      href="/syarat-dan-ketentuan"
+                      target="_blank"
+                      className="font-bold italic text-primary"
+                    >
+                      Syarat dan Ketentuan
+                    </a>{" "}
+                    serta{" "}
+                    <a
+                      href="/kebijakan-privasi"
+                      target="_blank"
+                      className="font-bold italic text-primary"
+                    >
+                      Kebijakan Privasi{" "}
+                    </a>
+                    <span className="font-bold"> idSmartCare.</span>
+                  </span>
+                </label>
+              </div>
+              <div className="flex justify-end mt-5">
+                <button
+                  onClick={handleNext}
+                  disabled={!checkbox || loadingNext}
+                  className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+                >
+                  {loadingNext ? (
+                    <Loading type={"spinner"} size={"sm"} />
+                  ) : (
+                    <div>
+                      Next <FontAwesomeIcon icon={faAngleRight} />
+                    </div>
+                  )}
+                </button>
+              </div>
             </div>
-            <div className="flex justify-end mt-5">
-              <button
-                onClick={handleNext}
-                disabled={!checkbox || loadingNext}
-                className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
-              >
-                {loadingNext ? (
-                  <Loading type={"spinner"} size={"sm"} />
-                ) : (
-                  <div>
-                    Next <FontAwesomeIcon icon={faAngleRight} />
-                  </div>
-                )}
-              </button>
-            </div>
-          </div>
-          {/* ) : (
+          ) : (
             ""
-          )} */}
+          )}
         </div>
       ) : step === 2 ? (
         <FormDocument

@@ -1,6 +1,17 @@
 import { TopBar } from "../components/TopBar";
+import { useEffect, useState } from "react";
 
 export default function InvoicePage() {
+  const [payments, setPayments] = useState(null);
+
+  useEffect(() => {
+    const storedPayments = sessionStorage.getItem("payments");
+    if (storedPayments) {
+      setPayments(JSON.parse(storedPayments));
+    }
+  }, []);
+
+  console.log(payments);
   const InfoBill = (info, instansi, alamat, email) => {
     return (
       <div>

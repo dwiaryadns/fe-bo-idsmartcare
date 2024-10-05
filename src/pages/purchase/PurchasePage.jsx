@@ -1,20 +1,21 @@
 import {
   faCheck,
   faClone,
+  faFilePdf,
   faPlus,
   faTag,
 } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Link } from "react-router-dom";
-import { ModalDetailPurchase } from "../../components/Modal";
+import { Modal } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 import Button from "../../components/Button";
+import Layout from "../../components/Layout";
+import { ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export const PurchasePage = () => {
   const [loading, setLoading] = useState(true);
@@ -27,6 +28,101 @@ export const PurchasePage = () => {
         setCopiedField(null);
       }, 3000);
     });
+  };
+
+  const ChildrenModal = (data) => {
+    const formatRupiah = (number) => {
+      return new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(number);
+    };
+
+    const [loading, setLoading] = useState(false);
+
+    const token = localStorage.getItem("token");
+    const headers = {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      responseType: "arraybuffer",
+    };
+
+    const downloadPdf = async () => {
+      setLoading(true);
+      try {
+        const response = await axios.post(
+          `${API_BASE_URL}/purchase/download`,
+          { po_id: data.po_id },
+          headers
+        );
+        const blob = new Blob([response.data], { type: "application/pdf" });
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+        link.href = url;
+        link.setAttribute("download", `purchase_order_${data.po_id}.pdf`);
+        document.body.appendChild(link);
+        link.click();
+
+        window.URL.revokeObjectURL(url);
+        link.remove();
+        ToastAlert("success", "Berhasil Download PDF");
+        setLoading(false);
+      } catch (error) {
+        setLoading(false);
+        ToastAlert("error", "Gagal Download PDF");
+      }
+    };
+    return (
+      <div>
+        <button
+          onClick={downloadPdf}
+          disabled={loading}
+          className="btn btn-error text-white btn-sm"
+        >
+          {loading ? (
+            <Loading type={"spinner"} size={"sm"} />
+          ) : (
+            <div>
+              <FontAwesomeIcon icon={faFilePdf} /> Download Invoice
+            </div>
+          )}
+        </button>
+        <div className="overflow-x-auto">
+          <table className="table">
+            <thead>
+              <tr>
+                <th>No</th>
+                <th>Nama Produk</th>
+                <th>Kuantitas</th>
+                <th>Catatan</th>
+                <th>Harga</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {data.detail &&
+                data.detail.map((detail, index) => (
+                  <tr key={index}>
+                    <td>{index + 1}</td>
+                    <td>{detail.barang.nama_barang}</td>
+                    <td>{detail.jumlah}</td>
+                    <td>{detail.notes}</td>
+                    <td>{formatRupiah(detail.harga_satuan)}</td>
+                    <td>{formatRupiah(detail.total_harga)}</td>
+                  </tr>
+                ))}
+              <tr>
+                <td colSpan={5} className="text-right italic font-bold">
+                  Total
+                </td>
+                <td>{formatRupiah(data.total)}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    );
   };
 
   const renderCopyIcon = (field, value) => (
@@ -103,11 +199,9 @@ export const PurchasePage = () => {
         accessor: "action",
         Cell: ({ row }) => (
           <div>
-            <ModalDetailPurchase
-              total={row.original.total}
-              poId={row.original.po_id}
-              data={row.original.detail}
-            />
+            <Modal id={row.original.po_id} style={"w-11/12 max-w-5xl"}>
+              {ChildrenModal(row.original)}
+            </Modal>
             <button
               onClick={() =>
                 document.getElementById(row.original.po_id).showModal()
@@ -142,36 +236,23 @@ export const PurchasePage = () => {
     fetchPurchase();
   }, []);
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full ">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Pemesanan Barang" icon={faTag} />
-            <div className="card shadow-md ">
-              <div className="card-body">
-                <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="text-lg ">List Pemesanan</p>
-                  <Link to={"/purchase/create"}>
-                    <Button icon={faPlus} showIcon={true}>
-                      Tambah Pesanan
-                    </Button>
-                  </Link>
-                </div>
-                <hr></hr>
-                <div>
-                  <Datatable
-                    columns={columns}
-                    data={goodReceipt}
-                    loading={loading}
-                  />
-                </div>
-              </div>
-            </div>
+    <Layout title="Pemesanan Barang" icon={faTag}>
+      <div className="card shadow-md ">
+        <div className="card-body">
+          <div className="card-title flex md:flex-row flex-col justify-between">
+            <p className="text-lg ">List Pemesanan</p>
+            <Link to={"/purchase/create"}>
+              <Button icon={faPlus} showIcon={true}>
+                Tambah Pesanan
+              </Button>
+            </Link>
+          </div>
+          <hr></hr>
+          <div>
+            <Datatable columns={columns} data={goodReceipt} loading={loading} />
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };

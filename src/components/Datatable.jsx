@@ -62,7 +62,7 @@ export const Datatable = ({ columns, data, loading }) => {
       </div>
       <div className="table-pin-rows overflow-x-auto scrollbar scrollbar-thin scrollbar-thumb-rounded">
         <table
-          className="table  whitespace-nowrap table-zebra-zebra"
+          className="table  whitespace-pre-wrap table-zebra-zebra"
           {...getTableProps()}
           style={{ width: "100%" }}
         >

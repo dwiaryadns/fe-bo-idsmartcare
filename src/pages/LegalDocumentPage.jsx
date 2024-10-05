@@ -1,4 +1,5 @@
 import {
+  faExclamationTriangle,
   faEye,
   faEyeSlash,
   faHourglass,
@@ -23,18 +24,17 @@ const LegalDocumentPage = () => {
   const [loading, setLoading] = useState(true);
   const [isBoInfo, setIsBoInfo] = useState(false);
   const [files, setFiles] = useState({});
-
+  const [password, setPassword] = useState("");
   const [dataLegal, setDataLegal] = useState();
-
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
+  const [showPassword, setShowPassword] = useState(false);
 
   const token = localStorage.getItem("token");
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };
 
-  const [showPassword, setShowPassword] = useState(false);
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -47,9 +47,7 @@ const LegalDocumentPage = () => {
           const businessType = response.data.data.businessType;
           setType(businessType);
           setIsBoInfo(true);
-          if (legalDoc.status === "approved") {
-            setDataLegal(JSON.stringify(legalDoc));
-          }
+          setDataLegal(legalDoc);
         }
         setLoading(false);
       } catch (error) {
@@ -67,8 +65,6 @@ const LegalDocumentPage = () => {
     setErrors((prevErrors) => ({ ...prevErrors, [label]: "" }));
   };
 
-  const [password, setPassword] = useState("");
-
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
   };
@@ -81,6 +77,9 @@ const LegalDocumentPage = () => {
     });
     formData.append("password", password);
     formData.append("type", type);
+    if (status === "pending") {
+      formData.append("id", dataLegal.id);
+    }
 
     try {
       const response = await axios.post(
@@ -289,18 +288,50 @@ const LegalDocumentPage = () => {
           message={"On Review"}
         />
       );
+    } else if (status === "rejected") {
+      return (
+        <>
+          <StatusLegal
+            icon={faExclamationTriangle}
+            message="Data has been Rejected"
+            status="rejected"
+            desc={"Data-data anda ditolak karena " + dataLegal.reason}
+          />
+        </>
+      );
+    } else if (status === "pending") {
+      return (
+        <>
+          <div role="alert" className="alert alert-warning mt-3">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="stroke-current shrink-0 h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth="2"
+                d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
+              />
+            </svg>
+            <span>{dataLegal.reason}</span>
+          </div>
+          {renderInput()};
+        </>
+      );
     } else if (status === "approved") {
-      const dataFix = JSON.parse(dataLegal);
       return (
         <div>
           {type === "Perorangan" ? (
             <div>
-              <InputApprovedLegal label={"KTP"} link={dataFix.ktp} />
-              <InputApprovedLegal label={"NPWP"} link={dataFix.npwp} />
-              {dataFix.iso != null ? (
+              <InputApprovedLegal label={"KTP"} link={dataLegal.ktp} />
+              <InputApprovedLegal label={"NPWP"} link={dataLegal.npwp} />
+              {dataLegal.iso != null ? (
                 <InputApprovedLegal
                   label={"Sertifikasi ISO"}
-                  link={dataFix.iso}
+                  link={dataLegal.iso}
                 />
               ) : (
                 ""
@@ -310,25 +341,28 @@ const LegalDocumentPage = () => {
             <div>
               <InputApprovedLegal
                 label="KTP Direktur Berdasarkan Akta"
-                link={dataFix.ktp}
+                link={dataLegal.ktp}
               />
               <InputApprovedLegal
                 label="Akta Perusahaan (Perubahan/Terbaru)"
-                link={dataFix.akta}
+                link={dataLegal.akta}
               />
               <InputApprovedLegal
                 label="SK Kemenkumham Akta (Perubahan/Terbaru)"
-                link={dataFix.sk_kemenkumham}
+                link={dataLegal.sk_kemenkumham}
               />
-              <InputApprovedLegal label="NPWP Perusahaan" link={dataFix.npwp} />
+              <InputApprovedLegal
+                label="NPWP Perusahaan"
+                link={dataLegal.npwp}
+              />
               <InputApprovedLegal
                 label="Nomor Induk Berusaha (NIB)"
-                link={dataFix.nib}
+                link={dataLegal.nib}
               />
-              {dataFix.iso != null ? (
+              {dataLegal.iso != null ? (
                 <InputApprovedLegal
                   label={"Sertifikasi ISO"}
-                  link={dataFix.iso}
+                  link={dataLegal.iso}
                 />
               ) : (
                 ""

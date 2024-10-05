@@ -7,6 +7,8 @@ import Sidebar from "../components/Sidebar";
 import { API_BASE_URL } from "../dummy/const"; // Adjust the path if needed
 import { ModalPayNow } from "../components/Modal";
 import { Datatable } from "../components/Datatable";
+import Layout from "../components/Layout";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SubscriptionPage = () => {
   const [loading, setLoading] = useState(true);
@@ -76,11 +78,12 @@ const SubscriptionPage = () => {
         ),
       },
       {
-        Header: "",
+        Header: "Bayar",
         accessor: "pay_now",
         Cell: ({ row }) => (
           <div>
             <ModalPayNow
+              data={row.original}
               id={row.original.transaction_id}
               qr={row.original.qr_code}
               type={row.original.payment_type}
@@ -94,7 +97,7 @@ const SubscriptionPage = () => {
               }
               className="btn bg-primary text-white hover:bg-primary rounded-md btn-sm"
             >
-              Pay Now
+              <FontAwesomeIcon icon={faMoneyBill}/>
             </button>
           </div>
         ),
@@ -151,43 +154,35 @@ const SubscriptionPage = () => {
   );
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Layanan Berlangganan" icon={faMoneyBill} />
+    <Layout title={"Layanan Berlangganan"} icon={faMoneyBill}>
+      <div className="card shadow-md">
+        <div className="card-body">
+          <div className="">
+            <h3 className="font-bold text-lg mt-5 text-primary">Belum Bayar</h3>
             <div>
-              <div className="shadow-md rounded-md p-5">
-                <h3 className="font-bold text-lg mt-5 text-primary">
-                  Belum Bayar
-                </h3>
-                <div>
-                  <Datatable
-                    columns={needPayColumns}
-                    data={needPayData}
-                    loading={loading}
-                  />
-                </div>
-              </div>
-              <div className="shadow-md rounded-md p-5 mt-5 mb-10">
-                <h3 className="font-bold text-lg text-primary">
-                  Histori Langganan
-                </h3>
-                <div>
-                  <Datatable
-                    columns={historyColumns}
-                    data={historyData}
-                    loading={loading}
-                  />
-                </div>
-              </div>
+              <Datatable
+                columns={needPayColumns}
+                data={needPayData}
+                loading={loading}
+              />
             </div>
           </div>
         </div>
       </div>
-    </div>
+
+      <div className="card shadow-md">
+        <div className="card-body shadow-md rounded-md p-5 mt-5 mb-10">
+          <h3 className="font-bold text-lg text-primary">Histori Langganan</h3>
+          <div>
+            <Datatable
+              columns={historyColumns}
+              data={historyData}
+              loading={loading}
+            />
+          </div>
+        </div>
+      </div>
+    </Layout>
   );
 };
 

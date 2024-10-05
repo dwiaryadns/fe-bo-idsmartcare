@@ -18,16 +18,17 @@ export default function Button({
     setData(fetchedData);
   }, []);
 
-  // If data is not loaded yet, or role is "pentest", do not render the button
   if (!data || data.role === "pentest") {
-    return null; // Return null to hide the button when conditions are not met
+    return null; 
   }
 
   return (
     <button
       className={`btn ${bg ? `bg-${bg}` : "bg-primary"} ${
         w ? `w-${w}` : "w-full"
-      } md:btn-md btn-sm hover:bg-primary text-white rounded-md`}
+      } md:btn-md btn-sm  hover:${
+        bg ? `bg-${bg}` : "bg-primary"
+      } text-white rounded-md`}
       onClick={onClick}
       onChange={onChange}
     >
