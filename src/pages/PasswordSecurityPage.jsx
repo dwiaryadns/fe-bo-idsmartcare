@@ -1,7 +1,4 @@
 import { faEye, faEyeSlash, faLock } from "@fortawesome/free-solid-svg-icons";
-import Header from "../components/Header";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
 import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
@@ -9,6 +6,7 @@ import { ACCESS_HEADER, API_BASE_URL } from "../dummy/const";
 import { CenterAlert, ToastAlert } from "../components/Alert";
 import Loading from "../components/Loading";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import Layout from "../components/Layout";
 
 const PasswordSecurityPage = () => {
   const [email, setEmail] = useState();
@@ -314,20 +312,11 @@ const PasswordSecurityPage = () => {
     }
   };
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Keamanan Akun" icon={faLock} />
-            <div className="flex flex-col justify-center text-center mt-5 md:mx-64">
-              {stepPage()}
-            </div>
-          </div>
-        </div>
+    <Layout title="Keamanan Akun" icon={faLock}>
+      <div className="flex flex-col justify-center text-center mt-5 md:mx-64">
+        {stepPage()}
       </div>
-    </div>
+    </Layout>
   );
 };
 

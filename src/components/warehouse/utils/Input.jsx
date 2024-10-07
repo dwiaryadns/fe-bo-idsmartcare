@@ -1,6 +1,6 @@
 const Input = ({ label, placeholder, name, value, onChange, errors }) => {
   return (
-    <div className="pb-3">
+    <div className="mb-2">
       <label className="form-control w-full">
         <div className="label">
           <span className="label-text font-bold text-base">

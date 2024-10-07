@@ -1,14 +1,18 @@
 import { faEye, faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axiosInstance from "../../dummy/axiosInstance";
 import { Modal } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 import Button from "../../components/Button";
 import Layout from "../../components/Layout";
+import { CreateWarehousePage } from "./CreateWarehousePage";
 
 const WarehousePage = () => {
+  const [warehouse, setWarehouse] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [step, setStep] = useState(0);
+  
   const ChildrenModal = (data) => {
     return (
       <>
@@ -85,9 +89,6 @@ const WarehousePage = () => {
     []
   );
 
-  const [warehouse, setWarehouse] = useState([]);
-  const [loading, setLoading] = useState(true);
-
   useEffect(() => {
     const fetchWarehouse = async () => {
       try {
@@ -102,26 +103,46 @@ const WarehousePage = () => {
     };
 
     fetchWarehouse();
-  }, []);
+  }, [step]);
+  const handleStep = () => {
+    setStep(1);
+  };
+  const handlePrevious = () => {
+    setStep(0);
+  };
   return (
-    <Layout title={"Informasi Gudang"} icon={faWarehouse}>
-      <div className="card shadow-md ">
-        <div className="card-body">
-          <div className="card-title flex md:flex-row flex-col justify-between">
-            <p className="text-lg ">List Gudang</p>
-            <Link to={"/warehouse/create"}>
-              <Button showIcon={true} icon={faPlus}>
-                Tambah Gudang
-              </Button>
-            </Link>
+    <>
+      <Layout title={"Gudang"} icon={faWarehouse}>
+        {step === 0 ? (
+          <div className="card shadow-md ">
+            <div className="card-body">
+              <div className="card-title flex md:flex-row flex-col justify-between">
+                <p className="text-lg ">List Gudang</p>
+                <div>
+                  <Button showIcon={true} icon={faPlus} onClick={handleStep}>
+                    Tambah Gudang
+                  </Button>
+                </div>
+              </div>
+              <hr></hr>
+              <div>
+                <Datatable
+                  columns={columns}
+                  data={warehouse}
+                  loading={loading}
+                />
+              </div>
+            </div>
           </div>
-          <hr></hr>
-          <div>
-            <Datatable columns={columns} data={warehouse} loading={loading} />
-          </div>
-        </div>
-      </div>
-    </Layout>
+        ) : (
+          <CreateWarehousePage
+            setStep={setStep}
+            setLoading={setLoading}
+            handlePrevious={handlePrevious}
+          />
+        )}
+      </Layout>
+    </>
   );
 };
 

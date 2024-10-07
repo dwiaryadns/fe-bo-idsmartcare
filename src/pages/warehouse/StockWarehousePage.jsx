@@ -1,17 +1,14 @@
 import { faPlus, faWarehouse } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
-import { API_BASE_URL } from "../../dummy/const"; // Remove headers import here
+import { API_BASE_URL } from "../../dummy/const";
 import { Link } from "react-router-dom";
 import axiosInstance from "../../dummy/axiosInstance";
-
 import { DatatableWithPaginate } from "../../components/Datatable";
 import { CenterAlert } from "../../components/Alert";
 import Loading from "../../components/Loading";
 import Button from "../../components/Button";
+import Layout from "../../components/Layout";
 
 export const StockWarehousePage = () => {
   const [warehouses, setWarehouses] = useState([]);
@@ -203,28 +200,19 @@ export const StockWarehousePage = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full ">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Stok Gudang" icon={faWarehouse} />
-            <div className="card shadow-md ">
-              <div className="card-body">
-                {loading ? (
-                  <div className="flex flex-col justify-center items-center text-primary text-center">
-                    <Loading type={"spinner"} size={"lg"} />
-                    <span className="text-xs text-primary mt-2">Tunggu...</span>
-                  </div>
-                ) : (
-                  WarehouseLengthCondition()
-                )}
-              </div>
+    <Layout title="Stok Gudang" icon={faWarehouse}>
+      <div className="card shadow-md ">
+        <div className="card-body">
+          {loading ? (
+            <div className="flex flex-col justify-center items-center text-primary text-center">
+              <Loading type={"spinner"} size={"lg"} />
+              <span className="text-xs text-primary mt-2">Tunggu...</span>
             </div>
-          </div>
+          ) : (
+            WarehouseLengthCondition()
+          )}
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };

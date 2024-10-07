@@ -1,7 +1,4 @@
 import { faPlus, faReceipt } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { Link } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
@@ -9,12 +6,11 @@ import { API_BASE_URL } from "../../dummy/const";
 import { ModalUpdateStock } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 import Button from "../../components/Button";
+import Layout from "../../components/Layout";
 
 export const ReceiptionPage = () => {
   const [loading, setLoading] = useState(true);
-  const viewPdf = (url) => {
-    window.location.href = url;
-  };
+
   const columns = useMemo(
     () => [
       {
@@ -97,36 +93,23 @@ export const ReceiptionPage = () => {
   }, []);
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full ">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Penerimaan Barang" icon={faReceipt} />
-            <div className="card shadow-md ">
-              <div className="card-body">
-                <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="text-lg">List Penerimaan</p>
-                  <Link to={"/good-receipt/create"}>
-                    <Button showIcon={true} icon={faPlus}>
-                      Tambah Penerimaan
-                    </Button>
-                  </Link>
-                </div>
-                <hr></hr>
-                <div>
-                  <Datatable
-                    columns={columns}
-                    data={goodReceipt}
-                    loading={loading}
-                  />
-                </div>
-              </div>
-            </div>
+    <Layout title="Penerimaan Barang" icon={faReceipt}>
+      <div className="card shadow-md ">
+        <div className="card-body">
+          <div className="card-title flex md:flex-row flex-col justify-between">
+            <p className="text-lg">List Penerimaan</p>
+            <Link to={"/good-receipt/create"}>
+              <Button showIcon={true} icon={faPlus}>
+                Tambah Penerimaan
+              </Button>
+            </Link>
+          </div>
+          <hr></hr>
+          <div>
+            <Datatable columns={columns} data={goodReceipt} loading={loading} />
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };

@@ -1,14 +1,12 @@
-import React, { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { faBagShopping, faSave } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { DatatableWithPaginate } from "../../components/Datatable";
 import axiosInstance from "../../dummy/axiosInstance";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useNavigate } from "react-router";
 import { ToastAlert } from "../../components/Alert";
 import Loading from "../../components/Loading";
+import Layout from "../../components/Layout";
 
 export const CreateDistribusiPage = () => {
   const [quantities, setQuantities] = useState({});
@@ -193,82 +191,73 @@ export const CreateDistribusiPage = () => {
   );
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full ">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Create Distribusi" icon={faBagShopping} />
-            <div className="card shadow-md ">
-              <div className="card-body">
-                <div className="grid md:grid-cols-2 gap-3 grid-cols-1">
-                  <div>
-                    <label className="font-bold">Dari Gudang</label>
-                    <select
-                      onChange={handleSelectWarehouse}
-                      className="select select-bordered w-full rounded-md select-primary"
-                    >
-                      <option selected hidden>
-                        Pilih Gudang
-                      </option>
-                      {warehouse.map((wh, index) => (
-                        <option key={index} value={wh.id}>
-                          {wh.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                  <div>
-                    <label className="font-bold">Ke Fasyankes</label>
-                    <select
-                      onChange={handleSelectFasyankes}
-                      className="select select-bordered w-full rounded-md select-primary"
-                    >
-                      <option selected hidden>
-                        Pilih Fasyankes
-                      </option>
-                      {fasyankes.map((fasy, index) => (
-                        <option key={index} value={fasy.fasyankesId}>
-                          {fasy.name}
-                        </option>
-                      ))}
-                    </select>
-                  </div>
-                </div>
+    <Layout title="Create Distribusi" icon={faBagShopping}>
+      <div className="card shadow-md ">
+        <div className="card-body">
+          <div className="grid md:grid-cols-2 gap-3 grid-cols-1">
+            <div>
+              <label className="font-bold">Dari Gudang</label>
+              <select
+                onChange={handleSelectWarehouse}
+                className="select select-bordered w-full rounded-md select-primary"
+              >
+                <option selected hidden>
+                  Pilih Gudang
+                </option>
+                {warehouse.map((wh, index) => (
+                  <option key={index} value={wh.id}>
+                    {wh.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="font-bold">Ke Fasyankes</label>
+              <select
+                onChange={handleSelectFasyankes}
+                className="select select-bordered w-full rounded-md select-primary"
+              >
+                <option selected hidden>
+                  Pilih Fasyankes
+                </option>
+                {fasyankes.map((fasy, index) => (
+                  <option key={index} value={fasy.fasyankesId}>
+                    {fasy.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+          </div>
 
-                <hr className="my-2" />
-                <div>
-                  {selectedWarehouse && (
-                    <div>
-                      <DatatableWithPaginate
-                        columns={columns}
-                        endpoint="/distribusi/get-barang"
-                        params={params}
-                      />
-                      <div className="flex justify-end mt-4">
-                        <button
-                          disabled={loading}
-                          onClick={handleSave}
-                          className="btn bg-primary hover:bg-primary text-white rounded-md"
-                        >
-                          {loading ? (
-                            <Loading type={"bars"} size={"md"} />
-                          ) : (
-                            <span>
-                              <FontAwesomeIcon icon={faSave} /> Simpan
-                            </span>
-                          )}
-                        </button>
-                      </div>
-                    </div>
-                  )}
+          <hr className="my-2" />
+          <div>
+            {selectedWarehouse && (
+              <div>
+                <DatatableWithPaginate
+                  columns={columns}
+                  endpoint="/distribusi/get-barang"
+                  params={params}
+                />
+                <div className="flex justify-end mt-4">
+                  <button
+                    disabled={loading}
+                    onClick={handleSave}
+                    className="btn bg-primary hover:bg-primary text-white rounded-md"
+                  >
+                    {loading ? (
+                      <Loading type={"bars"} size={"md"} />
+                    ) : (
+                      <span>
+                        <FontAwesomeIcon icon={faSave} /> Simpan
+                      </span>
+                    )}
+                  </button>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };

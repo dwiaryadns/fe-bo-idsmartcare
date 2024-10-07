@@ -101,13 +101,7 @@ export const Datatable = ({ columns, data, loading }) => {
                 return (
                   <tr key={index} {...row.getRowProps()}>
                     {row.cells.map((cell, index) => (
-                      <td
-                        key={index}
-                        {...cell.getCellProps()}
-                        // style={{
-                        //   whiteSpace: "nowrap",
-                        // }}
-                      >
+                      <td key={index} {...cell.getCellProps()}>
                         {cell.render("Cell")}
                       </td>
                     ))}
@@ -279,13 +273,7 @@ export const DatatableWithPaginate = ({ columns, endpoint, params }) => {
                 return (
                   <tr key={index} {...row.getRowProps()}>
                     {row.cells.map((cell, index) => (
-                      <td
-                        key={index}
-                        {...cell.getCellProps()}
-                        // style={{
-                        //   whiteSpace: "nowrap",
-                        // }}
-                      >
+                      <td key={index} {...cell.getCellProps()}>
                         {cell.render("Cell")}
                       </td>
                     ))}

@@ -1,13 +1,11 @@
 import { faTag } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
 import { RincianPembelianPage } from "./RincianPembelianPage";
 import { DatatableWithPaginate } from "../../components/Datatable";
 import { CenterAlert } from "../../components/Alert";
 import axiosInstance from "../../dummy/axiosInstance";
+import Layout from "../../components/Layout";
 
 export const CreatePurchasePage = () => {
   const [tanggalPemesanan, setTanggalPemesanan] = useState(
@@ -194,97 +192,81 @@ export const CreatePurchasePage = () => {
   );
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Pemesanan Barang" icon={faTag} />
-            <div className="bg-blue-100 rounded-md mb-5 ">
-              <div className="grid gap-5 md:grid-cols-3 grid-cols-1 rounded-b-md px-10 py-5">
-                <div className="flex flex-col">
-                  <label className="font-bold mb-2">Supplier</label>
-                  <input
-                    className="input input-bordered rounded-md input-primary"
-                    placeholder="Supplier"
-                    value={selectedSupplier}
-                    readOnly
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="font-bold mb-2">Tanggal Pemesanan</label>
-                  <input
-                    type="date"
-                    readOnly
-                    value={tanggalPemesanan}
-                    className="input input-bordered rounded-md input-primary"
-                    placeholder="Tanggal Pemesanan"
-                  />
-                </div>
-                <div className="flex flex-col">
-                  <label className="font-bold mb-2">Warehouse</label>
-                  <select
-                    onChange={handleSelectWarehouse}
-                    className={`select select-bordered w-full rounded-md ${
-                      errors.warehouse ? "select-error" : "select-primary"
-                    }`}
-                  >
-                    <option disabled selected>
-                      Pilih Warehouse
-                    </option>
-                    {warehouses.map((warehouse) => (
-                      <option key={warehouse.id} value={warehouse.id}>
-                        {warehouse.name}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.warehouse && (
-                    <span className="text-red-500 text-xs">
-                      {errors.warehouse}
-                    </span>
-                  )}
-                </div>
-              </div>
-              {step === 2 ? (
-                <div className="flex px-10 pb-5 flex-col">
-                  <label className="font-bold mb-2">PO Name</label>
-                  <input
-                    onChange={(e) => handleChangePoName(e)}
-                    className={`w-full input input-bordered input-primary rounded-md ${
-                      errors.po_name ? "input-error" : ""
-                    }`}
-                  />
-                  {errors.po_name && (
-                    <span className="text-red-500 text-xs">
-                      {errors.po_name}
-                    </span>
-                  )}
-                </div>
-              ) : (
-                ""
-              )}
-              <div
-                className={`flex w-full justify-end px-5 pb-5 ${
-                  step === 2 ? "hidden" : ""
-                }`}
-              >
-                <button
-                  onClick={handlePesan}
-                  className="bg-primary btn hover:bg-primary text-white"
-                >
-                  <p className="font-bold text-lg">Pesan</p>
-                  <div className="badge badge-info text-white text-lg">
-                    {" "}
-                    {count}{" "}
-                  </div>
-                </button>
-              </div>
-            </div>
-            {handleStepPage()}
+    <Layout title="Pemesanan Barang" icon={faTag}>
+      <div className="bg-blue-100 rounded-md mb-5 ">
+        <div className="grid gap-5 md:grid-cols-3 grid-cols-1 rounded-b-md px-10 py-5">
+          <div className="flex flex-col">
+            <label className="font-bold mb-2">Supplier</label>
+            <input
+              className="input input-bordered rounded-md input-primary"
+              placeholder="Supplier"
+              value={selectedSupplier}
+              readOnly
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="font-bold mb-2">Tanggal Pemesanan</label>
+            <input
+              type="date"
+              readOnly
+              value={tanggalPemesanan}
+              className="input input-bordered rounded-md input-primary"
+              placeholder="Tanggal Pemesanan"
+            />
+          </div>
+          <div className="flex flex-col">
+            <label className="font-bold mb-2">Warehouse</label>
+            <select
+              onChange={handleSelectWarehouse}
+              className={`select select-bordered w-full rounded-md ${
+                errors.warehouse ? "select-error" : "select-primary"
+              }`}
+            >
+              <option disabled selected>
+                Pilih Warehouse
+              </option>
+              {warehouses.map((warehouse) => (
+                <option key={warehouse.id} value={warehouse.id}>
+                  {warehouse.name}
+                </option>
+              ))}
+            </select>
+            {errors.warehouse && (
+              <span className="text-red-500 text-xs">{errors.warehouse}</span>
+            )}
           </div>
         </div>
+        {step === 2 ? (
+          <div className="flex px-10 pb-5 flex-col">
+            <label className="font-bold mb-2">PO Name</label>
+            <input
+              onChange={(e) => handleChangePoName(e)}
+              className={`w-full input input-bordered input-primary rounded-md ${
+                errors.po_name ? "input-error" : ""
+              }`}
+            />
+            {errors.po_name && (
+              <span className="text-red-500 text-xs">{errors.po_name}</span>
+            )}
+          </div>
+        ) : (
+          ""
+        )}
+        <div
+          className={`flex w-full justify-end px-5 pb-5 ${
+            step === 2 ? "hidden" : ""
+          }`}
+        >
+          <button
+            onClick={handlePesan}
+            className="bg-primary btn hover:bg-primary text-white"
+          >
+            <p className="font-bold text-lg">Pesan</p>
+            <div className="badge badge-info text-white text-lg"> {count} </div>
+          </button>
+        </div>
       </div>
-    </div>
+      {handleStepPage()}
+    </Layout>
   );
 };

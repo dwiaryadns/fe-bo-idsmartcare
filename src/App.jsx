@@ -13,7 +13,6 @@ import ForgotPasswordPage from "./pages/auth/ForgotPasswordPage";
 import FasyankesPage from "./pages/fasyankes/FasyankesPage";
 import CreateFasyankesPage from "./pages/fasyankes/CreateFasyankesPage";
 import WarehousePage from "./pages/warehouse/WarehousePage";
-import { CreateWarehousePage } from "./pages/warehouse/CreateWarehousePage";
 import { ProfilePage } from "./pages/ProfilePage";
 import { PrivateRoute } from "./route/PrivateRoute";
 import { PublicRoute } from "./route/PublicRoute";
@@ -27,7 +26,6 @@ import { InventoryPage } from "./pages/inventory/InventoryPage";
 import { CreateReceiptPage } from "./pages/receiption/CreateReceiptPage";
 import { CreatePurchasePage } from "./pages/purchase/CreatePurchasePage";
 import { SupplierPage } from "./pages/supplier/SupplierPage";
-import { CreateSupplierPage } from "./pages/supplier/CreateSupplierPage";
 import { CreateBarangPage } from "./pages/inventory/CreateBarangPage";
 import NotFound from "./pages/404Page";
 import { StockWarehousePage } from "./pages/warehouse/StockWarehousePage";
@@ -40,7 +38,6 @@ import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
 import NoAccessPage from "./pages/403Page";
 import CreateAccessPage from "./pages/access/CreateAccessPage";
 import SyaratPemblianPage from "./pages/SyaratPemblianPage";
-import InvoicePage from "./pages/InvoicePage";
 
 function App() {
   return (
@@ -160,14 +157,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/warehouse/create"
-            element={
-              <PrivateRoute>
-                <CreateWarehousePage />
-              </PrivateRoute>
-            }
-          />
+
           <Route
             path="/warehouse/stok"
             element={
@@ -217,14 +207,7 @@ function App() {
               </PrivateRoute>
             }
           />
-          <Route
-            path="/supplier/create"
-            element={
-              <PrivateRoute>
-                <CreateSupplierPage />
-              </PrivateRoute>
-            }
-          />
+
           <Route
             path="/good-receipt"
             element={
@@ -326,14 +309,6 @@ function App() {
             element={
               <PrivateRoute>
                 <SyaratPemblianPage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/fasyankes/invoice"
-            element={
-              <PrivateRoute>
-                <InvoicePage />
               </PrivateRoute>
             }
           />

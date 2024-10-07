@@ -23,6 +23,7 @@ export const FormPembayaranFasyankes = ({ handlePrevious, payment }) => {
   const [dataPayment, setDataPayment] = useState(payment);
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  console.log(snapToken);
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };

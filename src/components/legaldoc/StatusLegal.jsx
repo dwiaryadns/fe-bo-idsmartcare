@@ -1,6 +1,6 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
-const StatusLegal = ({ icon, desc, message, status }) => {
+const StatusLegal = ({ icon, desc, message }) => {
   return (
     <div className="mt-3">
       <div className="bg-[#DFEBFD] flex flex-col justify-center py-14 rounded-md">

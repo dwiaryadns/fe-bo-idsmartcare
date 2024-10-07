@@ -1,11 +1,9 @@
-import { faBox, faEye } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faBox } from "@fortawesome/free-solid-svg-icons";
+
 import { useEffect, useMemo, useState } from "react";
 import { DatatableWithPaginate } from "../../components/Datatable";
 import axiosInstance from "../../dummy/axiosInstance";
+import Layout from "../../components/Layout";
 export const StockFasyankesPage = () => {
   const formatRupiah = (number) => {
     return new Intl.NumberFormat("id-ID", {
@@ -82,44 +80,35 @@ export const StockFasyankesPage = () => {
   const params = useMemo(() => ({ fasyankesId: fasyankesId }), [fasyankesId]);
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Stok Fasyankes" icon={faBox} />
-            <div className="card shadow-md ">
-              <div className="card-body">
-                <div>
-                  <div>Filter Fasyankes</div>
-                  <select
-                    onChange={handleSelectChange}
-                    className="select select-bordered w-full rounded-md"
-                  >
-                    <option selected hidden>
-                      Pilih Fasyankes
-                    </option>
-                    {fasyankes.map((fas, index) => (
-                      <option key={index} value={fas.fasyankesId}>
-                        {fas.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <hr className="my-3" />
-                <div>
-                  <DatatableWithPaginate
-                    columns={columns}
-                    endpoint="/inventory/get-stock-barang"
-                    params={params}
-                  />
-                </div>
-              </div>
-            </div>
+    <Layout title="Stok Fasyankes" icon={faBox}>
+      <div className="card shadow-md ">
+        <div className="card-body">
+          <div>
+            <div>Filter Fasyankes</div>
+            <select
+              onChange={handleSelectChange}
+              className="select select-bordered w-full rounded-md"
+            >
+              <option selected hidden>
+                Pilih Fasyankes
+              </option>
+              {fasyankes.map((fas, index) => (
+                <option key={index} value={fas.fasyankesId}>
+                  {fas.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <hr className="my-3" />
+          <div>
+            <DatatableWithPaginate
+              columns={columns}
+              endpoint="/inventory/get-stock-barang"
+              params={params}
+            />
           </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };

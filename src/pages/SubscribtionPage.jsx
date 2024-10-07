@@ -1,10 +1,7 @@
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
 import { faMoneyBill } from "@fortawesome/free-solid-svg-icons";
-import Header from "../components/Header";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
-import { API_BASE_URL } from "../dummy/const"; // Adjust the path if needed
+import { API_BASE_URL } from "../dummy/const";
 import { ModalPayNow } from "../components/Modal";
 import { Datatable } from "../components/Datatable";
 import Layout from "../components/Layout";

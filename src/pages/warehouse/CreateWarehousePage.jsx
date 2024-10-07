@@ -1,23 +1,94 @@
-import { faWarehouse } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
-import { FormCreateWarehouse } from "../../components/warehouse/FormCreateWarehouse";
+import { ToastAlert } from "../../components/Alert";
+import axiosInstance from "../../dummy/axiosInstance";
+import { useState } from "react";
+import { faChevronLeft, faSave } from "@fortawesome/free-solid-svg-icons";
+import Button from "../../components/Button";
+import Input from "../../components/warehouse/utils/Input";
 
-export const CreateWarehousePage = () => {
+export const CreateWarehousePage = ({
+  handlePrevious,
+  setStep,
+  setLoading,
+}) => {
+  const [formValues, setFormValues] = useState({});
+  const [errors, setErrors] = useState({});
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormValues({ ...formValues, [name]: value });
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+  };
+
+  const handleSubmit = async () => {
+    setLoading(true);
+    const payload = formValues;
+    await axiosInstance
+      .post("/warehouses/store", payload)
+      .then(function (response) {
+        if (response.data.status === true) {
+          ToastAlert("success", response.data.message);
+          setStep(0);
+          setLoading(false);
+        } else {
+          const apiErrors = response.data.errors;
+          setErrors(apiErrors);
+          setLoading(false);
+        }
+      })
+      .catch(function (error) {
+        const apiErrors = error.response.data.errors;
+        setErrors(apiErrors);
+        setLoading(false);
+      });
+  };
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10 ">
-            <Header title="Tambah Gudang" icon={faWarehouse} />
-            <div className=" bg-white p-3 rounded-md shadow-lg">
-              <FormCreateWarehouse />
-            </div>
-          </div>
-        </div>
+    <div className=" bg-white p-3 rounded-md shadow-lg">
+      <Button
+        w={"xs"}
+        bg={"info"}
+        icon={faChevronLeft}
+        showIcon={true}
+        onClick={handlePrevious}
+      >
+        Kembali
+      </Button>
+      <Input
+        label="Warehouse Name"
+        placeholder="Warehouse Name"
+        name="name"
+        value={formValues.name}
+        onChange={handleChange}
+        errors={errors.name}
+      />
+      <Input
+        label="Warehouse Address"
+        placeholder="Warehouse Address"
+        name="address"
+        value={formValues.address}
+        onChange={handleChange}
+        errors={errors.address}
+      />
+      <Input
+        label="PIC Name"
+        placeholder="PIC Name"
+        name="pic"
+        value={formValues.pic}
+        onChange={handleChange}
+        errors={errors.pic}
+      />
+      <Input
+        label="PIC Phone Number"
+        placeholder="PIC Phone Number"
+        name="contact"
+        value={formValues.contact}
+        onChange={handleChange}
+        errors={errors.contact}
+      />
+
+      <div className="">
+        <Button onClick={handleSubmit} showIcon={true} icon={faSave}>
+          Submit
+        </Button>
       </div>
     </div>
   );

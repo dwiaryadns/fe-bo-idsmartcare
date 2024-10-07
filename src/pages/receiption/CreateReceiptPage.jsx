@@ -3,15 +3,13 @@ import {
   faReceipt,
   faSearch,
 } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { useState } from "react";
 import axios from "axios";
 import { API_BASE_URL } from "../../dummy/const";
 import { useNavigate } from "react-router";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
+import Layout from "../../components/Layout";
 
 export const CreateReceiptPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -67,7 +65,6 @@ export const CreateReceiptPage = () => {
     }
   };
 
-  
   const handleBarangDatangChange = (index, value) => {
     setData((prevData) => {
       const newData = { ...prevData };
@@ -99,7 +96,6 @@ export const CreateReceiptPage = () => {
       return newConditions;
     });
   };
-
 
   const handleChangeNote = (e) => {
     setNote(e.target.value);
@@ -479,44 +475,35 @@ export const CreateReceiptPage = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-row w-full ">
-        <Sidebar />
-        <div className="w-full ">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Penerimaan Barang" icon={faReceipt} />
-            <div className="pb-44">
-              <div className="flex items-center justify-center my-5">
-                <label className="relative block md:w-5/12">
-                  <input
-                    type="text"
-                    onChange={handleSearchChange}
-                    onKeyDown={handleEnter}
-                    className="input input-bordered rounded-md input-primary w-full pr-10"
-                    placeholder="Cari PO ID"
-                  />
-                  <FontAwesomeIcon
-                    onClick={handleClickSearch}
-                    className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
-                    icon={faSearch}
-                  />
-                </label>
-              </div>
-              {step == 2 ? (
-                <div>
-                  {detailPembelian()}
-                  {detailPenerimaan()}
-                  <hr className="my-10"></hr>
-                  {detailBarang()}
-                </div>
-              ) : (
-                ""
-              )}
-            </div>
-          </div>
+    <Layout title="Penerimaan Barang" icon={faReceipt}>
+      <div className="pb-44">
+        <div className="flex items-center justify-center my-5">
+          <label className="relative block md:w-5/12">
+            <input
+              type="text"
+              onChange={handleSearchChange}
+              onKeyDown={handleEnter}
+              className="input input-bordered rounded-md input-primary w-full pr-10"
+              placeholder="Cari PO ID"
+            />
+            <FontAwesomeIcon
+              onClick={handleClickSearch}
+              className="absolute right-2 top-1/2 transform -translate-y-1/2 hover:cursor-pointer"
+              icon={faSearch}
+            />
+          </label>
         </div>
+        {step == 2 ? (
+          <div>
+            {detailPembelian()}
+            {detailPenerimaan()}
+            <hr className="my-10"></hr>
+            {detailBarang()}
+          </div>
+        ) : (
+          ""
+        )}
       </div>
-    </div>
+    </Layout>
   );
 };

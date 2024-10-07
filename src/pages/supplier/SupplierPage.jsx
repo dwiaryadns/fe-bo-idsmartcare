@@ -5,24 +5,23 @@ import {
   faPlus,
   faTrash,
 } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { useEffect, useMemo, useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { Link } from "react-router-dom";
 import Swal from "sweetalert2";
 import { ModalSupplier } from "../../components/Modal";
 import { Datatable } from "../../components/Datatable";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Button from "../../components/Button";
+import Layout from "../../components/Layout";
+import { CreateSupplierPage } from "./CreateSupplierPage";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState(null);
   const [currentSupplierId, setCurrentSupplierId] = useState(null);
+  const [step, setStep] = useState(0);
 
   const columns = useMemo(
     () => [
@@ -109,10 +108,12 @@ export const SupplierPage = () => {
         setLoading(false);
       } catch (error) {
         console.log(error);
+      } finally {
+        setLoading(false);
       }
     };
     fetchSupplier();
-  }, []);
+  }, [step]);
   const handleDelete = async (supplierId) => {
     const result = await Swal.fire({
       title: "Yakin?",
@@ -142,37 +143,34 @@ export const SupplierPage = () => {
       }
     }
   };
+  const handleStep = () => {
+    setStep(1);
+  };
+  const handlePrevious = () => {
+    setStep(0);
+  };
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full ">
-          <Navbar />
-          <div className="mx-10">
-            <Header title="Supplier" icon={faIndustry} />
-            <div className="card shadow-md">
-              <div className="card-body">
-                <div className="card-title flex md:flex-row flex-col justify-between">
-                  <p className="text-lg">List Supplier</p>
-                  <Link to={"/supplier/create"}>
-                    <Button icon={faPlus} showIcon={true}>
-                      Tambah Supplier
-                    </Button>
-                  </Link>
-                </div>
-                <hr></hr>
-                <div>
-                  <Datatable
-                    columns={columns}
-                    data={supplier}
-                    loading={loading}
-                  />
-                </div>
+    <Layout title="Supplier" icon={faIndustry}>
+      {step === 0 ? (
+        <div className="card shadow-md">
+          <div className="card-body">
+            <div className="card-title flex md:flex-row flex-col justify-between">
+              <p className="text-lg">List Supplier</p>
+              <div>
+                <Button onClick={handleStep} icon={faPlus} showIcon={true}>
+                  Tambah Supplier
+                </Button>
               </div>
+            </div>
+            <hr></hr>
+            <div>
+              <Datatable columns={columns} data={supplier} loading={loading} />
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      ) : (
+        <CreateSupplierPage handlePrevious={handlePrevious} setStep={setStep} />
+      )}
+    </Layout>
   );
 };

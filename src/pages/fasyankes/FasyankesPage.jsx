@@ -1,7 +1,4 @@
 import { faHospital, faPlus } from "@fortawesome/free-solid-svg-icons";
-import Header from "../../components/Header";
-import Navbar from "../../components/Navbar";
-import Sidebar from "../../components/Sidebar";
 import { Link, useNavigate } from "react-router-dom";
 import { useEffect, useMemo, useState } from "react";
 import axios from "axios";
@@ -9,6 +6,7 @@ import { API_BASE_URL } from "../../dummy/const";
 import { Datatable } from "../../components/Datatable";
 import DetailFasyankesPage from "./DetailFasyankesPage";
 import Button from "../../components/Button";
+import Layout from "../../components/Layout";
 
 const FasyankesPage = () => {
   const [loading, setLoading] = useState(true);
@@ -112,35 +110,28 @@ const FasyankesPage = () => {
   return (
     <div>
       {step === 0 ? (
-        <div className="flex flex-row w-full">
-          <Sidebar />
-          <div className="w-full">
-            <Navbar />
-            <div className="mx-10">
-              <Header title="Fasyankes" icon={faHospital} />
-              <div className="card shadow-md ">
-                <div className="card-body">
-                  <div className="card-title flex md:flex-row flex-col justify-between">
-                    <p className="text-lg ">List Fasyankes</p>
-                    <Link to={"/fasyankes/create"}>
-                      <Button showIcon={true} icon={faPlus}>
-                        Tambah Fasyankes
-                      </Button>
-                    </Link>
-                  </div>
-                  <hr></hr>
-                  <div>
-                    <Datatable
-                      columns={columns}
-                      data={fasyankes}
-                      loading={loading}
-                    />
-                  </div>
-                </div>
+        <Layout title="Fasyankes" icon={faHospital}>
+          <div className="card shadow-md ">
+            <div className="card-body">
+              <div className="card-title flex md:flex-row flex-col justify-between">
+                <p className="text-lg ">List Fasyankes</p>
+                <Link to={"/fasyankes/create"}>
+                  <Button showIcon={true} icon={faPlus}>
+                    Tambah Fasyankes
+                  </Button>
+                </Link>
+              </div>
+              <hr></hr>
+              <div>
+                <Datatable
+                  columns={columns}
+                  data={fasyankes}
+                  loading={loading}
+                />
               </div>
             </div>
           </div>
-        </div>
+        </Layout>
       ) : (
         <DetailFasyankesPage data={data} handleBack={handleBack} />
       )}

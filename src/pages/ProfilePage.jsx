@@ -1,7 +1,4 @@
 import { faEye, faEyeSlash, faUser } from "@fortawesome/free-solid-svg-icons";
-import Header from "../components/Header";
-import Navbar from "../components/Navbar";
-import Sidebar from "../components/Sidebar";
 import { useState, useEffect } from "react";
 import { CenterAlert, ToastAlert } from "../components/Alert";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -10,12 +7,13 @@ import axiosInstance from "../dummy/axiosInstance";
 import axios from "axios";
 import { ACCESS_HEADER, API_BASE_URL } from "../dummy/const";
 import Button from "../components/Button";
+import Layout from "../components/Layout";
 
 export const ProfilePage = () => {
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
-  const [type, setType] = useState("otp");
+  const [type, setType] = useState(null);
   const [otp, setOtp] = useState("");
   const [otpId, setOtpId] = useState("");
   const [step, setStep] = useState(1);
@@ -32,7 +30,6 @@ export const ProfilePage = () => {
   const [role, setRole] = useState("");
 
   const getDataBo = localStorage.getItem("dataBo");
-  console.log(getDataBo);
   const dataBoObj = JSON.parse(getDataBo);
 
   useEffect(() => {
@@ -47,7 +44,7 @@ export const ProfilePage = () => {
     } else {
       setCheck(0);
     }
-  }, []);
+  }, [dataBoObj]);
 
   const handleOtp = (e) => {
     setOtp(e.target.value);
@@ -76,15 +73,17 @@ export const ProfilePage = () => {
   };
 
   const handleSend = async () => {
+    if (type === null || type === undefined) {
+      ToastAlert("error", "Pilih Tipe Ganti Password ");
+      setLoading(false);
+      return;
+    }
     setLoading(true);
     if (type === "otp") {
       try {
         const response = await axiosInstance.post("/security/send-otp", {
           email: email,
         });
-
-        console.log(response);
-
         if (response.data.status == true) {
           console.log("berhasil 2 " + response);
           setOtpId(response.data.otp_id);
@@ -334,106 +333,80 @@ export const ProfilePage = () => {
   };
 
   return (
-    <div>
-      <div className="flex flex-row w-full">
-        <Sidebar />
-        <div className="w-full">
-          <Navbar />
-          <div className="mx-10 pb-10">
-            <Header title="My Profile" icon={faUser} />
-            <div className="rounded-md bg-slate-200 p-6">
-              <div className="grid grid-cols-12 gap-5 pb-5">
-                <div className="col-span-full md:col-span-4 flex flex-col md:items-center">
-                  <div className="px-5">
-                    <img
-                      src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
-                      className="rounded-full md:w-48 md:h-48 p-2"
-                    />
+    <Layout title="Profil Saya" icon={faUser}>
+      <div className="rounded-md bg-slate-200 p-6">
+        <div className="grid grid-cols-12 gap-5 pb-5">
+          <div className="col-span-full md:col-span-4 flex flex-col md:items-center">
+            <div className="px-5">
+              <img
+                src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp"
+                className="rounded-full md:w-48 md:h-48 p-2"
+              />
 
-                    <p className="text-gray-500 mt-5">
-                      Referal Code : B000000{dataBoObj?.id}
-                    </p>
-                    <div className="flex items-center mt-5">
-                      <div className="form-control ">
-                        <label className="label cursor-pointer flex gap-3">
-                          {load2FA ? (
-                            <Loading
-                              type={"bars"}
-                              size={"xs"}
-                              w={"w-5"}
-                              h={"h-5"}
-                            />
-                          ) : (
-                            <input
-                              type="checkbox"
-                              checked={check}
-                              onChange={() => handle2FA()}
-                              disabled={role === "pentest"}
-                              className="checkbox checkbox-primary rounded-md checkbox-sm"
-                            />
-                          )}
-                          <span className="label-text">Enable 2FA</span>
-                        </label>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="col-span-full md:col-span-8 md:border-l border-black">
-                  <div className="px-5 flex flex-col gap-3 md:gap-6">
-                    <h1 className="font-bold text-[20px]">Information</h1>
-                    <input
-                      type="text"
-                      disabled
-                      value={name}
-                      className="input input-bordered input-info w-full rounded-md"
-                      placeholder="Name"
-                    />
-                    <input
-                      type="text"
-                      value={email}
-                      disabled
-                      className="input input-bordered input-info w-full rounded-md"
-                      placeholder="Email"
-                    />
-                    <input
-                      type="text"
-                      disabled
-                      value={phone}
-                      className="input input-bordered input-info w-full rounded-md"
-                      placeholder="Phone Number"
-                    />
-                    <button
-                      disabled
-                      className="w-[100px] btn bg-primary hover:bg-primary text-white rounded-md btn-sm"
-                    >
-                      Update
-                    </button>
-                  </div>
-                </div>
-              </div>
-              <div className="grid grid-cols-12 border-t border-black pt-5">
-                <div className="col-span-full  flex flex-col gap-5">
-                  <h1 className="font-bold text-[20px]">Change Password</h1>
-
-                  {/* <select className="select select-primary rounded-md">
-                    <option selected hidden>
-                      -Select TYPE CHANGE-
-                    </option>
-                    <option value={"otp"}> Send OTP </option>
-                    <option value={"link"}> Send Link </option>
-                  </select>
-
-                  <button className="w-[100px] btn bg-primary hover:bg-primary text-white rounded-md btn-sm">
-                    Send
-                  </button> */}
-                  {stepPage()}
+              <p className="text-gray-500 mt-5">
+                Referal Code : B000000{dataBoObj?.id}
+              </p>
+              <div className="flex items-center mt-5">
+                <div className="form-control ">
+                  <label className="label cursor-pointer flex gap-3">
+                    {load2FA ? (
+                      <Loading type={"bars"} size={"xs"} w={"w-5"} h={"h-5"} />
+                    ) : (
+                      <input
+                        type="checkbox"
+                        checked={check}
+                        onChange={() => handle2FA()}
+                        disabled={role === "pentest"}
+                        className="checkbox checkbox-primary rounded-md checkbox-sm"
+                      />
+                    )}
+                    <span className="label-text">Enable 2FA</span>
+                  </label>
                 </div>
               </div>
             </div>
           </div>
+
+          <div className="col-span-full md:col-span-8 md:border-l border-black">
+            <div className="px-5 flex flex-col gap-3 md:gap-6">
+              <h1 className="font-bold text-[20px]">Information</h1>
+              <input
+                type="text"
+                disabled
+                value={name}
+                className="input input-bordered input-info w-full rounded-md"
+                placeholder="Name"
+              />
+              <input
+                type="text"
+                value={email}
+                disabled
+                className="input input-bordered input-info w-full rounded-md"
+                placeholder="Email"
+              />
+              <input
+                type="text"
+                disabled
+                value={phone}
+                className="input input-bordered input-info w-full rounded-md"
+                placeholder="Phone Number"
+              />
+              <button
+                disabled
+                className="w-[100px] btn bg-primary hover:bg-primary text-white rounded-md btn-sm"
+              >
+                Update
+              </button>
+            </div>
+          </div>
+        </div>
+        <div className="grid grid-cols-12 border-t border-black pt-5">
+          <div className="col-span-full  flex flex-col gap-5">
+            <h1 className="font-bold text-[20px]">Change Password</h1>
+            {stepPage()}
+          </div>
         </div>
       </div>
-    </div>
+    </Layout>
   );
 };
