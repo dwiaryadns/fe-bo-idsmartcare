@@ -1,6 +1,6 @@
 export const plan = {
   free: [
-    "npm run dev 2 users",
+    "Maximum 2 users",
     "3 days history data",
     "Limited Data",
     "Limited Features",
