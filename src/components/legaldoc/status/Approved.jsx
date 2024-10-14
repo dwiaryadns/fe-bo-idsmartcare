@@ -11,9 +11,9 @@ export default function Approved({ type, dataLegal }) {
         <div className="flex">
           <input
             onClick={redirectLink}
-            value={"Click Here"}
+            value={link}
             readOnly
-            className="w-full items-center text-center cursor-pointer hover:bg-blue-100 duration-300 rounded-r-none rounded-l-md input input-bordered"
+            className="w-full text-sm items-center text-center cursor-pointer hover:bg-blue-100 duration-300 rounded-r-none rounded-l-md input input-bordered"
           />
           <button className="btn bg-primary hover:bg-primary rounded-l-none rounded-r-md text-white font-bold">
             Change File

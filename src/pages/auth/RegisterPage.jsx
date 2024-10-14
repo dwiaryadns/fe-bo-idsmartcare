@@ -6,6 +6,7 @@ import {
   faEye,
   faEyeSlash,
   faPhone,
+  faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import bgLogin from "../../assets/bg-login.png";
 import imgLogin from "../../assets/img-login.png";
@@ -170,7 +171,7 @@ const RegisterPage = () => {
                     onChange={handleFullname}
                   />
                   <FontAwesomeIcon
-                    icon={faEnvelope}
+                    icon={faUser}
                     className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500"
                   />
                 </div>

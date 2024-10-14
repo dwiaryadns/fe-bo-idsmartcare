@@ -15,6 +15,7 @@ import Status from "../components/Status";
 import Form from "../components/legaldoc/Form";
 import Approved from "../components/legaldoc/status/Approved";
 import Pending from "../components/legaldoc/status/Pending";
+import { syaratDanKetentuan } from "../components/legaldoc/tc";
 
 const LegalDocumentPage = () => {
   const [type, setType] = useState("");
@@ -105,16 +106,30 @@ const LegalDocumentPage = () => {
 
   const renderInput = () => {
     return (
-      <Form
-        errors={errors}
-        handleChangePassword={handleChangePassword}
-        handleFileChange={handleFileChange}
-        handleSubmit={handleSubmit}
-        setShowPassword={setShowPassword}
-        showPassword={showPassword}
-        password={password}
-        type={type}
-      />
+      <>
+        <div className="text-sm bg-[#DFEBFD] p-5 rounded-md">
+          <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
+          <ul className="italic  list-decimal">
+            {syaratDanKetentuan.map((tc, index) => {
+              return (
+                <div className="ml-4" key={index}>
+                  <li>{tc}</li>
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+        <Form
+          errors={errors}
+          handleChangePassword={handleChangePassword}
+          handleFileChange={handleFileChange}
+          handleSubmit={handleSubmit}
+          setShowPassword={setShowPassword}
+          showPassword={showPassword}
+          password={password}
+          type={type}
+        />
+      </>
     );
   };
   const renderPage = () => {

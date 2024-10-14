@@ -60,12 +60,12 @@ export const CardPackage = ({
             >
               Rp {price}
             </span>
-            <span className="text-xs text-black">/month</span>
+            <span className="text-xs text-black">/bulan</span>
           </div>
         ) : (
           <div>
             <span>Rp {price}</span>
-            {title != "FREE" ? <span className="text-xs">/month</span> : ""}
+            {title != "FREE" ? <span className="text-xs">/bulan</span> : ""}
           </div>
         )}
         {isAnually && (
@@ -75,7 +75,7 @@ export const CardPackage = ({
             }`}
           >
             Rp {disc}
-            <span className="text-xs">/month</span>
+            <span className="text-xs">/bulan</span>
           </div>
         )}
         <button

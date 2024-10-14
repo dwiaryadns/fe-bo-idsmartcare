@@ -17,6 +17,8 @@ export const sidebarItemsRev = [
     icon: faChartBar,
     link: "dasbor",
   },
+
+  // dua ini saja yang ditampilkan
   {
     title: "Informasi Bisnis",
     icon: faInfoCircle,

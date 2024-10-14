@@ -10,6 +10,7 @@ import { API_BASE_URL } from "../../dummy/const";
 import { useNavigate } from "react-router";
 import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Layout from "../../components/Layout";
+import Loading from "../../components/Loading";
 
 export const CreateReceiptPage = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +26,7 @@ export const CreateReceiptPage = () => {
   const [search, setSearch] = useState("");
   const [data, setData] = useState([]);
   const [conditions, setConditions] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
   const headers = {
@@ -136,6 +138,7 @@ export const CreateReceiptPage = () => {
   };
 
   const handleSave = async () => {
+    setLoading(true);
     const payload = {
       po_id: data.po_id,
       warehouse: data.warehouse,
@@ -165,12 +168,15 @@ export const CreateReceiptPage = () => {
 
       console.log(response);
       if (response.data.status === true) {
+        setLoading(false);
         navigate("/good-receipt");
         ToastAlert("success", response.data.message);
       } else {
+        setLoading(false);
         ToastAlert("error", response.data.message);
       }
     } catch (err) {
+      setLoading(false);
       if (err.response) {
         const errors = err.response.data.errors;
         setError(errors);
@@ -462,10 +468,11 @@ export const CreateReceiptPage = () => {
             </div>
             <div className=" justify-end flex mt-5">
               <button
+                disabled={loading}
                 onClick={handleSave}
                 className="btn self-end bg-primary hover:bg-primary text-white px-10 rounded-md"
               >
-                Simpan
+                {loading ? <Loading type={"spinner"} size={"sm"} /> : "Simpan"}
               </button>
             </div>
           </div>

@@ -1,19 +1,19 @@
 export const plan = {
   free: [
-    "Maximum 2 users",
-    "3 days history data",
-    "Limited Data",
-    "Limited Features",
+    "Maks. 2 pengguna",
+    "Akses histori data selama 3 hari",
+    "Data terbatas",
+    "Fitur terbatas",
   ],
   plus: [
-    "Maximum 4 users",
-    "Unlimited history data",
-    "Unlimited data row in 5 years",
+    "Maks. 4 pengguna",
+    "Akses histori tanpa batas",
+    "Akses data tanpa batas selama 5 tahun",
   ],
   advanced: [
-    "Unlimited users",
-    "Unlimited history data",
-    "Unlimited data row & storage",
+    "Pengguna tak terbatas",
+    "Akses histori tanpa batas",
+    "Akses penyimpanan data tanpa batas",
   ],
 };
 

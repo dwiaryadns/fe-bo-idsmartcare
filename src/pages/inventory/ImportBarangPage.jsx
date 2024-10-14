@@ -134,6 +134,7 @@ export const ImportBarangPage = () => {
                 onChange={handleFileChange}
               />
               <button
+                disabled={loading}
                 className="btn bg-primary hover:bg-primary text-white rounded-md"
                 type="submit"
               >

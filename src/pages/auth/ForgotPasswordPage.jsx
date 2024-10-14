@@ -13,7 +13,6 @@ import Loading from "../../components/Loading";
 const ForgotPasswordPage = () => {
   const [email, setEmail] = useState("");
   const [errors, setErrors] = useState({ email: "" });
-  const [message, setMessage] = useState();
 
   const [loading, setLoading] = useState(false);
   const handleEmail = (e) => {
@@ -44,10 +43,9 @@ const ForgotPasswordPage = () => {
     }
 
     try {
-      const response = await axios.post(API_BASE_URL + "/password/email", {
+      await axios.post(API_BASE_URL + "/password/email", {
         email,
       });
-      setMessage(response.data.message);
       CenterAlert(
         "success",
         "Berhasil Terkirim",
@@ -56,11 +54,11 @@ const ForgotPasswordPage = () => {
       setEmail("");
       setLoading(false);
     } catch (error) {
+      setLoading(false);
       setErrors({
-        email: "Failed to send reset email. Please check your email address.",
+        email: "Gagal Mengirim Email",
       });
       CenterAlert("error", "Oops...", error.response.data.message);
-      setLoading(false);
     }
   };
 

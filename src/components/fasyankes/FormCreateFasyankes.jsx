@@ -195,7 +195,6 @@ export const FormCreateFasyankes = () => {
   const handleChangePassword = (e) => {
     setPassword(e.target.value);
   };
-
   const handleNext = () => {
     setLoadingNext(true);
     if (step === 1) {
@@ -261,6 +260,10 @@ export const FormCreateFasyankes = () => {
       formData.append("type", type);
       formData.append("password", password);
       formData.append("fasyankes_id", fasyankesId);
+      formData.append(
+        "package_plan",
+        newState ? payment.package : choosePlan.paket
+      );
 
       axios
         .post(API_BASE_URL + "/legal-document-fasyankes/upload", formData, {
@@ -273,7 +276,9 @@ export const FormCreateFasyankes = () => {
           if (response.data.status === true) {
             setLoading(false);
             ToastAlert("success", "Berhasil Upload Dokument Legal");
-            if (choosePlan.paket === "FREE") {
+            const isFree =
+              newState && payment.package === "FREE" ? true : false;
+            if (choosePlan.paket === "FREE" || isFree) {
               navigate("/fasyankes");
             } else {
               setStep(step + 1);
@@ -436,7 +441,7 @@ export const FormCreateFasyankes = () => {
                   duration === "Monthly" ? "bg-secondary text-white" : ""
                 } p-2 rounded-full hover:cursor-pointer duration-300 transition ease-in-out`}
               >
-                Monthly
+                Bulanan
               </div>
               <div
                 onClick={() => handleChangeDuration("Annually")}
@@ -444,7 +449,7 @@ export const FormCreateFasyankes = () => {
                   duration === "Annually" ? "bg-secondary text-white" : ""
                 } p-2 rounded-full hover:cursor-pointer duration-300 transition ease-in-out`}
               >
-                Annually (20% Off)
+                Tahunan (Diskon 20%)
               </div>
             </div>
 
@@ -743,89 +748,89 @@ export const FormCreateFasyankes = () => {
             errors={errors}
           />
 
-          {isSuccess ? (
-            <div>
-              <div className="my-4">
-                <Header title="Credential Data" icon={faUser} />
-              </div>
-
-              <Input
-                type="text"
-                label="Username"
-                placeholder="Username"
-                name="username"
-                onChange={handleInputChange}
-                value={formData.username}
-                error={errors.username}
-                tooltip="Username untuk login masuk ke halaman admin"
-              />
-              <Input
-                type="password"
-                label="Password"
-                placeholder="Password"
-                name="password"
-                onChange={handleInputChange}
-                value={formData.password}
-                error={errors.password}
-                tooltip="Password untuk login masuk ke halaman admin"
-              />
-              <Input
-                type="password"
-                label="Confirm Password"
-                placeholder="Confirm Password"
-                name="password_confirmation"
-                onChange={handleInputChange}
-                value={formData.password_confirmation}
-                error={errors.password_confirmation}
-                tooltip="Confirm password untuk memastikan password yang sudah di buat"
-              />
-              <div className="form-control mt-10">
-                <label className="flex items-center gap-5">
-                  <input
-                    type="checkbox"
-                    onClick={handleCheckbox}
-                    className="checkbox checkbox-primary rounded-md"
-                  />
-                  <span className="label-text">
-                    Dengan membuat akun, Anda setuju dengan{" "}
-                    <a
-                      href="/syarat-dan-ketentuan"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Syarat dan Ketentuan
-                    </a>{" "}
-                    serta{" "}
-                    <a
-                      href="/kebijakan-privasi"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Kebijakan Privasi{" "}
-                    </a>
-                    <span className="font-bold"> idSmartCare.</span>
-                  </span>
-                </label>
-              </div>
-              <div className="flex justify-end mt-5">
-                <button
-                  onClick={handleNext}
-                  disabled={!checkbox || loadingNext}
-                  className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
-                >
-                  {loadingNext ? (
-                    <Loading type={"spinner"} size={"sm"} />
-                  ) : (
-                    <div>
-                      Next <FontAwesomeIcon icon={faAngleRight} />
-                    </div>
-                  )}
-                </button>
-              </div>
+          {/* {isSuccess ? ( */}
+          <div>
+            <div className="my-4">
+              <Header title="Credential Data" icon={faUser} />
             </div>
-          ) : (
+
+            <Input
+              type="text"
+              label="Username"
+              placeholder="Username"
+              name="username"
+              onChange={handleInputChange}
+              value={formData.username}
+              error={errors.username}
+              tooltip="Username untuk login masuk ke halaman admin"
+            />
+            <Input
+              type="password"
+              label="Password"
+              placeholder="Password"
+              name="password"
+              onChange={handleInputChange}
+              value={formData.password}
+              error={errors.password}
+              tooltip="Password untuk login masuk ke halaman admin"
+            />
+            <Input
+              type="password"
+              label="Confirm Password"
+              placeholder="Confirm Password"
+              name="password_confirmation"
+              onChange={handleInputChange}
+              value={formData.password_confirmation}
+              error={errors.password_confirmation}
+              tooltip="Confirm password untuk memastikan password yang sudah di buat"
+            />
+            <div className="form-control mt-10">
+              <label className="flex items-center gap-5">
+                <input
+                  type="checkbox"
+                  onClick={handleCheckbox}
+                  className="checkbox checkbox-primary rounded-md"
+                />
+                <span className="label-text">
+                  Dengan membuat akun, Anda setuju dengan{" "}
+                  <a
+                    href="/syarat-dan-ketentuan"
+                    target="_blank"
+                    className="font-bold italic text-primary"
+                  >
+                    Syarat dan Ketentuan
+                  </a>{" "}
+                  serta{" "}
+                  <a
+                    href="/kebijakan-privasi"
+                    target="_blank"
+                    className="font-bold italic text-primary"
+                  >
+                    Kebijakan Privasi{" "}
+                  </a>
+                  <span className="font-bold"> idSmartCare.</span>
+                </span>
+              </label>
+            </div>
+            <div className="flex justify-end mt-5">
+              <button
+                onClick={handleNext}
+                disabled={!checkbox || loadingNext}
+                className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
+              >
+                {loadingNext ? (
+                  <Loading type={"spinner"} size={"sm"} />
+                ) : (
+                  <div>
+                    Next <FontAwesomeIcon icon={faAngleRight} />
+                  </div>
+                )}
+              </button>
+            </div>
+          </div>
+          {/* ) : (
             ""
-          )}
+          )} */}
         </div>
       ) : step === 2 ? (
         <FormDocument

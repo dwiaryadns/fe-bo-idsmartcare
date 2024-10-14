@@ -8,6 +8,7 @@ import { useState } from "react";
 import { API_BASE_URL } from "../../dummy/const";
 import { useNavigate } from "react-router";
 import { ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export const RincianPembelianPage = ({
   previous,
@@ -19,6 +20,7 @@ export const RincianPembelianPage = ({
   const navigate = useNavigate();
   const [quantities, setQuantities] = useState(data.map(() => 1));
   const [descriptions, setDescriptions] = useState(data.map(() => ""));
+  const [loading, setLoading] = useState(false);
 
   const handleIncrement = (index) => {
     const newQuantities = [...quantities];
@@ -77,6 +79,7 @@ export const RincianPembelianPage = ({
   };
 
   const handleSave = async () => {
+    setLoading(true);
     const payload = {
       barang: data.map((barang, index) => ({
         barang_id: barang.barang_id,
@@ -99,16 +102,19 @@ export const RincianPembelianPage = ({
         payload,
         headers
       );
-      console.log(response);
       if (response.status === 200) {
         ToastAlert("success", "Pembelian Berhasil");
         navigate(`/purchase`);
+        setLoading(false);
         localStorage.removeItem("selectedSupplier");
         localStorage.removeItem("selectedItems");
+        localStorage.removeItem("count");
       } else {
+        setLoading(false);
         ToastAlert("error", "Pembelian Gagal");
       }
     } catch (error) {
+      setLoading(false);
       ToastAlert("error", "Pembelian Gagal");
       setErrors({
         warehouse: error.response.data.errors.warehouse_id,
@@ -199,11 +205,18 @@ export const RincianPembelianPage = ({
           Previous
         </button>
         <button
+          disabled={loading}
           onClick={handleSave}
           className="bg-primary hover:bg-primary text-white btn px-10"
         >
-          Pesan
-          <FontAwesomeIcon icon={faPaperPlane} className="text-lg" />
+          {loading ? (
+            <Loading type={"spinner"} size={"sm"} />
+          ) : (
+            <>
+              Pesan
+              <FontAwesomeIcon icon={faPaperPlane} className="text-lg" />
+            </>
+          )}
         </button>
       </div>
     </div>
