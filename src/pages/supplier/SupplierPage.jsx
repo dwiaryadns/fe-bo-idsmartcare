@@ -16,12 +16,14 @@ import { CenterAlert, ToastAlert } from "../../components/Alert";
 import Button from "../../components/Button";
 import Layout from "../../components/Layout";
 import { CreateSupplierPage } from "./CreateSupplierPage";
+import { useLocation } from "react-router-dom";
 
 export const SupplierPage = () => {
   const [loading, setLoading] = useState(true);
   const [type, setType] = useState(null);
   const [currentSupplierId, setCurrentSupplierId] = useState(null);
   const [step, setStep] = useState(0);
+  const location = useLocation();
 
   const columns = useMemo(
     () => [
@@ -88,6 +90,13 @@ export const SupplierPage = () => {
     ],
     [type]
   );
+
+  useEffect(() => {
+    if (location.state?.step === 1) {
+      setStep(1);
+    }
+    console.log(location.state?.step);
+  }, [location]);
 
   useEffect(() => {
     if (type && currentSupplierId) {

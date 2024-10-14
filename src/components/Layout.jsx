@@ -7,7 +7,7 @@ const Layout = ({ title, icon, children }) => {
     <div>
       <div className="flex flex-row w-full">
         <Sidebar />
-        <div className="w-full">
+        <div className="w-full overflow-hidden">
           <Navbar />
           <div className="mx-10">
             <Header title={title} icon={icon} />

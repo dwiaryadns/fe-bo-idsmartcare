@@ -8,7 +8,7 @@ export default function Apply() {
       message="Data Anda telah Dikirim."
       status="apply"
       desc={
-        "Data-data akan dicocokan dengan Legal Doc yang diupload silahkan upload "
+        "Data-data akan dicocokan dengan Legal Doc yang diupload silahkan upload"
       }
     />
   );

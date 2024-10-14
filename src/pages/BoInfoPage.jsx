@@ -210,7 +210,7 @@ const BoInfoPage = () => {
   };
   return (
     <Layout title="Informasi Bisnis Owner" icon={faInfoCircle}>
-      <div className="mt-3 mb-10">{renderStateStatus()}</div>;
+      <div className="mt-3 mb-10">{renderStateStatus()}</div>
     </Layout>
   );
 };

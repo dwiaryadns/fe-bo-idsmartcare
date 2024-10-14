@@ -24,7 +24,7 @@ export const packagePrices = {
     // plusAnnually: "159.000", // 79.500
     // advanced: "259.000", // 129.500
     // advancedAnnually: "195.000", // 97.500
-    plus: "5.000",
+    plus: "99.500",
     plusAnnually: "79.500",
     advanced: "129.500",
     advancedAnnually: "97.500",

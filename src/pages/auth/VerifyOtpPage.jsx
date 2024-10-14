@@ -224,17 +224,17 @@ export const VerifyOtpPage = () => {
       />
       <div className="relative z-10 flex flex-col items-center justify-center min-h-screen p-6 space-y-4">
         <div className="card md:w-11/12 bg-gradient-to-b from-cyan-500 to-white shadow-xl">
-          <div className="flex justify-end mr-5">
+          <div className="flex md:justify-end justify-center mr-5">
             <img src={logoLogin} className="w-60 mt-5" alt="Logo" />
           </div>
           <div className="card-body">
             <div className="hero">
               <div className="hero-content flex-col lg:flex-row-reverse">
-                <img src={imgOtp} className="min-w-96" alt="OTP" />
+                <img src={imgOtp} className="md:min-w-96" alt="OTP" />
                 {step === 0 ? (
                   <div>
                     <div className="max-w-2xl mt-0">
-                      <h1 className="text-5xl font-bold text-primary">
+                      <h1 className="text-2xl mt-5 md:mt-0 md:text-5xl font-bold text-primary">
                         Verifikasi Email Anda
                       </h1>
 

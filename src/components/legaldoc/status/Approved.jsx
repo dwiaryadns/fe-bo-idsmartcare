@@ -8,7 +8,7 @@ export default function Approved({ type, dataLegal }) {
         <div className="label flex flex-col justify-start items-start">
           <span className="label-text font-bold text-base">{label}</span>
         </div>
-        <div className="flex">
+        <div className="flex">  
           <input
             onClick={redirectLink}
             value={link}

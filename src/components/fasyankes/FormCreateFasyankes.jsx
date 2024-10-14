@@ -234,6 +234,7 @@ export const FormCreateFasyankes = () => {
               duration: response.data.subscription.duration,
               type: data.type,
               price: packagePrices[data.type],
+              // price: "5000",
               fasyankes: data,
               subscription_id: response.data.subscription.id,
             });
@@ -395,27 +396,29 @@ export const FormCreateFasyankes = () => {
                 </div>
               </span>
             </div>
-            <div className="flex md:flex-row flex-col gap-5 justify-center  items-center">
-              <button
-                onClick={() => handleType("Apotek")}
-                className={`btn rounded-md btn-sm min-w-80 ${
-                  type === "Apotek"
-                    ? "bg-primary hover:bg-primary text-white"
-                    : "bg-grey hover:bg-grey"
-                }`}
-              >
-                Apotek
-              </button>
-              <button
-                onClick={() => handleType("Klinik")}
-                className={`btn rounded-md btn-sm min-w-80 ${
-                  type === "Klinik"
-                    ? "bg-primary hover:bg-primary text-white"
-                    : "bg-grey hover:bg-grey"
-                }`}
-              >
-                Klinik
-              </button>
+            <div className="flex justify-center">
+              <div className="flex md:flex-row flex-col gap-2 justify-center border border-gray-300 rounded-lg p-1 w-full items-center md:w-[750px]">
+                <button
+                  onClick={() => handleType("Apotek")}
+                  className={`btn rounded-md btn-sm w-full md:w-[340px] lg:w-80 ${
+                    type === "Apotek"
+                      ? "bg-primary hover:bg-primary text-white"
+                      : "bg-grey hover:bg-grey"
+                  }`}
+                >
+                  Apotek
+                </button>
+                <button
+                  onClick={() => handleType("Klinik")}
+                  className={`btn rounded-md btn-sm w-full md:w-[340px] lg:w-80 ${
+                    type === "Klinik"
+                      ? "bg-primary hover:bg-primary text-white"
+                      : "bg-grey hover:bg-grey"
+                  }`}
+                >
+                  Klinik
+                </button>
+              </div>
             </div>
             {errors.type && <span className="text-red-600">{errors.type}</span>}
           </div>
@@ -434,7 +437,31 @@ export const FormCreateFasyankes = () => {
                 </div>
               </span>
             </div>
-            <div className="flex flex-row shadow-md justify-center gap-5 bg-base-100 mb-3 mx-2 md:mx-48 rounded-full p-2">
+            <div className="flex w-full justify-center items-center">
+              <div className="flex flex-col md:flex-row gap-2 justify-center items-center border border-gray-300 rounded-lg p-1 w-full md:w-[750px]">
+                <button
+                  onClick={() => handleChangeDuration("Monthly")}
+                  className={`btn rounded-md btn-sm w-full md:w-[340px] lg:md:w-80 ${
+                    duration === "Monthly"
+                      ? "bg-secondary hover:bg-secondary text-white"
+                      : ""
+                  } p-2 rounded-full hover:cursor-pointer duration-300 transition ease-in-out`}
+                >
+                  Bulanan
+                </button>
+                <button
+                  onClick={() => handleChangeDuration("Annually")}
+                  className={`btn rounded-md btn-sm w-full md:w-[340px] lg:md:w-80 ${
+                    duration === "Annually"
+                      ? "bg-secondary hover:bg-secondary text-white"
+                      : ""
+                  } p-2 rounded-full hover:cursor-pointer duration-300 transition ease-in-out`}
+                >
+                  Tahunan (Disc. 20%)
+                </button>
+              </div>
+            </div>
+            {/* <div className="flex flex-row shadow-md justify-center gap-5 bg-base-100 mb-3 mx-2 md:mx-48 rounded-full p-2">
               <div
                 onClick={() => handleChangeDuration("Monthly")}
                 className={`${
@@ -451,10 +478,10 @@ export const FormCreateFasyankes = () => {
               >
                 Tahunan (Diskon 20%)
               </div>
-            </div>
+            </div> */}
 
             {type && (
-              <div className={`grid md:grid-cols-3 gap-5`}>
+              <div className={`grid md:grid-cols-3 gap-5 mt-3`}>
                 <CardPackage
                   icon={faTag}
                   fitur={plan.free}
@@ -506,7 +533,7 @@ export const FormCreateFasyankes = () => {
             )}
           </div>
           {type === "" ? (
-            <div className="flex justify-center">
+            <div className="flex justify-center mt-3">
               Select Type of Fasyankes first
             </div>
           ) : (
@@ -703,7 +730,7 @@ export const FormCreateFasyankes = () => {
               onClick={handleGetOtp}
               className={`btn ${
                 isSuccess ? "hidden" : ""
-              } mt-3 bg-primary hover:bg-primary text-white rounded-md`}
+              } mt-3 bg-primary hover:bg-primary text-white rounded-md ml-3`}
             >
               {loadingOTP ? (
                 <Loading type={"spinner"} size={"sm"} />

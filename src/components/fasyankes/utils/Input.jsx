@@ -33,7 +33,7 @@ const Input = ({
             </div>
           </span>
         </div>
-        <div className="w-full mr-3">
+        <div className="w-full">
           <div className="relative">
             <input
               type={`${type === "password" && showPassword ? "text" : type}`}
@@ -55,7 +55,9 @@ const Input = ({
             )}
             {name === "email" ? <div></div> : ""}
           </div>
-          {error && <span className="text-red-600 mt-1 text-sm block">{error}</span>}
+          {error && (
+            <span className="text-red-600 mt-1 text-sm block">{error}</span>
+          )}
         </div>
       </div>
     </div>

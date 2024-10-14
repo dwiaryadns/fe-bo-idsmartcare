@@ -87,6 +87,7 @@ const AccessPage = () => {
   );
 
   useEffect(() => {
+
     const fetchDelegateAccess = async () => {
       try {
         const response = await axiosInstance.get("/delegate-access");

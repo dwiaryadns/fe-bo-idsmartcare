@@ -23,12 +23,7 @@ export default function CreateAccessPage() {
       "Stock Opname",
       "History Stock Opname",
     ],
-    Admin: [
-      "Manajemen Gudang - semua",
-      "Fasyankes",
-      "Pengadaan - semua",
-      "Persediaan - semua",
-    ],
+    Admin: ["Manajemen Gudang", "Fasyankes", "Pengadaan", "Persediaan"],
   };
 
   const [formData, setFormData] = useState({
