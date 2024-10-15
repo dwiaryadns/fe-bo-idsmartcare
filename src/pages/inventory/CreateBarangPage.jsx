@@ -5,7 +5,7 @@ import { API_BASE_URL } from "../../dummy/const";
 import axios from "axios";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { AsyncPaginate } from "react-select-async-paginate";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 import { ToastAlert } from "../../components/Alert";
 import Layout from "../../components/Layout";
@@ -351,12 +351,12 @@ export const CreateBarangPage = () => {
                   </option>
                 ))}
               </select>
-              <Link
+              <button
                 className="bg-primary rounded-r-md rounded-l-none btn hover:bg-primary text-white"
-                to={"/supplier/create"}
+                onClick={() => navigate("/supplier", { state: { step: 1 } })}
               >
                 +
-              </Link>
+              </button>
             </div>
             {errors.supplier_id && (
               <p className="text-red-500 text-xs mt-1">{errors.supplier_id}</p>

@@ -1,23 +1,27 @@
+import { syaratDanKetentuan } from "../tc";
+
 export default function Approved({ type, dataLegal }) {
   const InputApprovedLegal = ({ label, link }) => {
     const redirectLink = () => {
       window.open(link, "_blank");
     };
     return (
-      <div className="mb-3">
+      <div className="mt-3">
         <div className="label flex flex-col justify-start items-start">
           <span className="label-text font-bold text-base">{label}</span>
         </div>
         <div className="flex">
-          <input
-            onClick={redirectLink}
-            value={link}
-            readOnly
-            className="w-full text-sm items-center text-center cursor-pointer hover:bg-blue-100 duration-300 rounded-r-none rounded-l-md input input-bordered"
-          />
-          <button className="btn bg-primary hover:bg-primary rounded-l-none rounded-r-md text-white font-bold">
-            Change File
-          </button>
+          <div className="w-full flex items-center text-center cursor-pointer hover:bg-blue-100 duration-300 rounded-lg input input-bordered">
+            <input
+              onClick={redirectLink}
+              value={`${label}.pdf`}
+              readOnly
+              className="w-full text-[16px] items-center cursor-pointer truncate"
+            />
+            <button className="h-auto mr-[-10px] py-1 w-[180px] bg-primary hover:bg-slate-400 rounded-lg text-white font-bold text-[16px]">
+              Pilih File
+            </button>
+          </div>
         </div>
       </div>
     );
@@ -36,6 +40,18 @@ export default function Approved({ type, dataLegal }) {
           ) : (
             ""
           )}
+          <div className="text-sm bg-[#DFEBFD] p-5 rounded-md">
+            <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
+            <ul className="italic  list-decimal">
+              {syaratDanKetentuan.map((tc, index) => {
+                return (
+                  <div className="ml-4" key={index}>
+                    <li>{tc}</li>
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       ) : (
         <div>
@@ -64,6 +80,18 @@ export default function Approved({ type, dataLegal }) {
           ) : (
             ""
           )}
+          <div className="text-sm bg-[#DFEBFD] p-5 rounded-md mt-5 mb-8">
+            <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
+            <ul className="italic  list-decimal">
+              {syaratDanKetentuan.map((tc, index) => {
+                return (
+                  <div className="ml-4" key={index}>
+                    <li>{tc}</li>
+                  </div>
+                );
+              })}
+            </ul>
+          </div>
         </div>
       )}
     </div>

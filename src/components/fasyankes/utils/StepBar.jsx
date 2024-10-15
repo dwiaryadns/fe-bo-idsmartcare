@@ -1,8 +1,7 @@
-
 export default function StepBar({ step }) {
   return (
     <div>
-      <ul className="max-w-7xl timeline mb-10 flex justify-center">
+      <ul className="max-w-6xl timeline mb-10 flex justify-center">
         <li className="w-1/3">
           <div className="timeline-middle">
             <svg
@@ -18,7 +17,7 @@ export default function StepBar({ step }) {
               />
             </svg>
           </div>
-          <div className="timeline-end timeline-box text-xs ">
+          <div className="timeline-end timeline-box text-[11px] md:text-xs">
             Info Fasyankes
           </div>
           <hr className={`${step >= 2 ? "bg-primary" : ""}`} />
@@ -39,7 +38,7 @@ export default function StepBar({ step }) {
               />
             </svg>
           </div>
-          <div className="timeline-end timeline-box text-xs ">
+          <div className="timeline-end timeline-box text-[11px] md:text-xs ">
             Dokumen Legal
           </div>
           <hr className={`${step >= 3 ? "bg-primary" : ""}`} />
@@ -60,8 +59,8 @@ export default function StepBar({ step }) {
               />
             </svg>
           </div>
-          <div className="timeline-end timeline-box text-xs ">
-            Pembayaran
+          <div className="timeline-end timeline-box text-[11px] md:text-xs ml-2">
+            Detail Pembayaran
           </div>
         </li>
       </ul>

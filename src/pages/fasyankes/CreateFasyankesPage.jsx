@@ -9,11 +9,11 @@ const CreateFasyankesPage = () => {
     <div>
       <div className="flex flex-row w-full">
         <Sidebar />
-        <div className="w-full">
+        <div className="w-full overflow-hidden pb-10">
           <Navbar />
-          <div className="mx-10">
+          <div className="mx-5 md:mx-10">
             <Header title="Create Fasyankes" icon={faHospital} />
-            <div className="bg-white p-3 rounded-md shadow-lg">
+            <div className="bg-white px-3 md:p-2 md:px-0 rounded-md shadow-lg pb-5">
               <FormCreateFasyankes />
             </div>
           </div>
