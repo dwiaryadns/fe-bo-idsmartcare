@@ -13,7 +13,7 @@ const CreateFasyankesPage = () => {
           <Navbar />
           <div className="mx-5 md:mx-10">
             <Header title="Create Fasyankes" icon={faHospital} />
-            <div className="bg-white px-3 md:p-2 md:px-0 rounded-md shadow-lg pb-5">
+            <div className="bg-white px-3 md:p-2 md:px-5 rounded-md shadow-lg pb-5">
               <FormCreateFasyankes />
             </div>
           </div>
