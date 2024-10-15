@@ -7,7 +7,7 @@ export const plan = {
   ],
   plus: [
     "Maks. 4 pengguna",
-    "Akses histori tanpa batas",
+    "Akses histori tak terbatas",
     "Akses data tanpa batas selama 5 tahun",
   ],
   advanced: [

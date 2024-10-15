@@ -306,7 +306,7 @@ export const VerifyOtpPage = () => {
                   </div>
                 ) : (
                   <div className="w-full max-w-2xl">
-                    <h1 className="text-5xl font-bold text-primary">
+                    <h1 className="text-2xl md:text-5xl mt-5 md:mt-0 font-bold text-primary">
                       Masukkan Email Baru
                     </h1>{" "}
                     <p className="py-6">
@@ -322,7 +322,7 @@ export const VerifyOtpPage = () => {
                             ? "input-error"
                             : "input-primary"
                         }  w-full rounded-md`}
-                        placeholder="Masukkan Email Baru"
+                        placeholder="Email Baru"
                         value={newEmail}
                         onChange={handleNewEmail}
                       />

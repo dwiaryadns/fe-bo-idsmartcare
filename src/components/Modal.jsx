@@ -697,6 +697,8 @@ export const ModalOpname = ({ id, barang }) => {
     setCheck(!check);
   };
 
+  const [errors, setErrors] = useState({});
+
   const [petugas, setPetugas] = useState(null);
   const [keterangan, setKeterangan] = useState(null);
   const [jumlahFisik, setJumlahFisik] = useState(0);
@@ -722,10 +724,12 @@ export const ModalOpname = ({ id, barang }) => {
 
   const handleChangePetugas = (e) => {
     setPetugas(e.target.value);
+    setErrors({ ...errors, petugas: "" });
   };
 
   const handleChangeKeterangan = (e) => {
     setKeterangan(e.target.value);
+    setErrors({ ...errors, keterangan: "" });
   };
 
   const token = localStorage.getItem("token");
@@ -755,6 +759,7 @@ export const ModalOpname = ({ id, barang }) => {
         ToastAlert("success", response.data.message);
       }
     } catch (error) {
+      setErrors(error.response.data.errors);
       ToastAlert("error", "Gagal Menyimpan Stock Opname");
     }
   };
@@ -789,8 +794,15 @@ export const ModalOpname = ({ id, barang }) => {
                       placeholder="Nama Petugas"
                       onChange={handleChangePetugas}
                       value={petugas}
-                      className="input input-bordered input-sm rounded-md"
+                      className={`${
+                        errors.petugas ? "input-error" : "input-bordered"
+                      } input  input-sm rounded-md`}
                     />
+                    {errors.petugas && (
+                      <div className="text-red-500 text-xs">
+                        {errors.petugas}
+                      </div>
+                    )}
                   </td>
                   <td>
                     {barang.stok} {barang.barang.satuan}
@@ -830,8 +842,15 @@ export const ModalOpname = ({ id, barang }) => {
                       placeholder="Keterangan"
                       onChange={handleChangeKeterangan}
                       value={keterangan}
-                      className="input input-bordered input-sm rounded-md"
+                      className={`${
+                        errors.keterangan ? "input-error" : "input-bordered"
+                      } input  input-sm rounded-md`}
                     />
+                    {errors.keterangan && (
+                      <div className="text-red-500 text-xs">
+                        {errors.keterangan}
+                      </div>
+                    )}
                   </td>
                   <td>
                     <input
