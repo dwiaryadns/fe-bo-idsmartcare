@@ -1,34 +1,31 @@
-import {
-  faExclamationTriangle,
-  faHourglass,
-  faLegal,
-  faSave,
-} from "@fortawesome/free-solid-svg-icons";
-import { useEffect, useState } from "react";
-import axios from "axios";
-import { API_BASE_URL } from "../dummy/const";
-import { Link } from "react-router-dom";
-import { ToastAlert } from "../components/Alert";
-import Loading from "../components/Loading";
-import Layout from "../components/Layout";
-import Status from "../components/Status";
-import Form from "../components/legaldoc/Form";
-import Approved from "../components/legaldoc/status/Approved";
-import Pending from "../components/legaldoc/status/Pending";
-import { syaratDanKetentuan } from "../components/legaldoc/tc";
+import { faExclamationTriangle, faHourglass, faLegal, faSave } from '@fortawesome/free-solid-svg-icons';
+import { useEffect, useState } from 'react';
+import axios from 'axios';
+import { API_BASE_URL } from '../dummy/const';
+import { Link } from 'react-router-dom';
+import { ToastAlert } from '../components/Alert';
+import Loading from '../components/Loading';
+import Layout from '../components/Layout';
+import Status from '../components/Status';
+import Form from '../components/legaldoc/Form';
+import Approved from '../components/legaldoc/status/Approved';
+import Pending from '../components/legaldoc/status/Pending';
+import { syaratDanKetentuan } from '../components/legaldoc/tc';
 
 const LegalDocumentPage = () => {
-  const [type, setType] = useState("");
+  const [type, setType] = useState('');
   const [loading, setLoading] = useState(true);
   const [isBoInfo, setIsBoInfo] = useState(false);
   const [files, setFiles] = useState({});
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [dataLegal, setDataLegal] = useState();
   const [status, setStatus] = useState(null);
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
 
-  const token = localStorage.getItem("token");
+  
+
+  const token = localStorage.getItem('token');
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
   };
@@ -36,7 +33,7 @@ const LegalDocumentPage = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await axios.get(API_BASE_URL + "/bo-info", headers);
+        const response = await axios.get(API_BASE_URL + '/bo-info', headers);
         const legalDoc = response.data.data.bisnis_owner.legal_doc_bo;
         if (legalDoc != null) {
           setStatus(legalDoc.status);
@@ -60,7 +57,7 @@ const LegalDocumentPage = () => {
       ...files,
       [label]: event.target.files[0],
     });
-    setErrors((prevErrors) => ({ ...prevErrors, [label]: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, [label]: '' }));
   };
 
   const handleChangePassword = (e) => {
@@ -73,52 +70,37 @@ const LegalDocumentPage = () => {
     Object.keys(files).forEach((label) => {
       formData.append(label, files[label]);
     });
-    formData.append("password", password);
-    formData.append("type", type);
-    if (status === "pending") {
-      formData.append("id", dataLegal.id);
+    formData.append('password', password);
+    formData.append('type', type);
+    if (status === 'pending') {
+      formData.append('id', dataLegal.id);
     }
 
     try {
-      const response = await axios.post(
-        API_BASE_URL + "/legal-document-bo/upload",
-        formData,
-        {
-          headers: {
-            ...headers.headers,
-            "Content-Type": "multipart/form-data",
-          },
-        }
-      );
+      const response = await axios.post(API_BASE_URL + '/legal-document-bo/upload', formData, {
+        headers: {
+          ...headers.headers,
+          'Content-Type': 'multipart/form-data',
+        },
+      });
 
       if (response.status === 200) {
-        setStatus("apply");
+        setStatus('apply');
         setLoading(false);
-        ToastAlert("success", response.data.message);
+        ToastAlert('success', response.data.message);
       }
     } catch (error) {
       setLoading(false);
       const errApi = error.response.data.errors;
-      ToastAlert("error", error.response.data.message);
+      ToastAlert('error', error.response.data.message);
       setErrors(errApi);
     }
   };
+  
 
   const renderInput = () => {
     return (
       <>
-        <div className="text-sm bg-[#DFEBFD] p-5 rounded-md">
-          <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
-          <ul className="italic  list-decimal">
-            {syaratDanKetentuan.map((tc, index) => {
-              return (
-                <div className="ml-4" key={index}>
-                  <li>{tc}</li>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
         <Form
           errors={errors}
           handleChangePassword={handleChangePassword}
@@ -129,48 +111,49 @@ const LegalDocumentPage = () => {
           password={password}
           type={type}
         />
+
       </>
     );
   };
   const renderPage = () => {
     if (status == null) {
       return renderInput();
-    } else if (status === "apply") {
+    } else if (status === 'apply') {
       return (
         <Status
-          status={"apply"}
-          desc={"Legal Document akan direview terlebih dahulu oleh Pihak Kami."}
+          status={'apply'}
+          desc={'Legal Document akan direview terlebih dahulu oleh Pihak Kami.'}
           icon={faSave}
-          message={"Dokumen Legal telah Dikirim."}
+          message={'Dokumen Legal telah Dikirim.'}
         />
       );
-    } else if (status === "on review") {
+    } else if (status === 'on review') {
       return (
         <Status
-          status={"on review"}
-          desc={"Legal Document sedang di periksa dahulu oleh Pihak Kami."}
+          status={'on review'}
+          desc={'Legal Document sedang di periksa dahulu oleh Pihak Kami.'}
           icon={faHourglass}
-          message={"Sedang Periksa"}
+          message={'Sedang Periksa'}
         />
       );
-    } else if (status === "rejected") {
+    } else if (status === 'rejected') {
       return (
         <Status
           icon={faExclamationTriangle}
           message="Data Anda telah Ditolak."
           status="rejected"
-          desc={"Data-data anda ditolak karena " + dataLegal.reason}
+          desc={'Data-data anda ditolak karena ' + dataLegal.reason}
         />
       );
-    } else if (status === "pending") {
+    } else if (status === 'pending') {
       return (
-        <Status status={"pending"}>
+        <Status status={'pending'}>
           <Pending reason={dataLegal?.reason}>{renderInput()}</Pending>
         </Status>
       );
-    } else if (status === "approved") {
+    } else if (status === 'approved') {
       return (
-        <Status status={"approved"}>
+        <Status status={'approved'}>
           <Approved type={type} dataLegal={dataLegal} />
         </Status>
       );
@@ -181,7 +164,7 @@ const LegalDocumentPage = () => {
     <Layout title="Dokumen Legal" icon={faLegal}>
       {loading ? (
         <div className="flex justify-center mt-32 text-primary">
-          <Loading type={"spinner"} size={"lg"} />
+          <Loading type={'spinner'} size={'lg'} />
         </div>
       ) : (
         <div>
@@ -203,7 +186,7 @@ const LegalDocumentPage = () => {
                 />
               </svg>
               <span>
-                Please Complete your Business Owner Info data! {"  "}
+                Please Complete your Business Owner Info data! {'  '}
                 <Link to="/bo-info" className="font-bold underline">
                   Click Here!
                 </Link>

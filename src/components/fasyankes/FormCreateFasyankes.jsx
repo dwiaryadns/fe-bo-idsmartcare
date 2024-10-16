@@ -1,4 +1,4 @@
-import { useRef, useState } from "react";
+import { useRef, useState } from 'react';
 import {
   faAngleRight,
   faHome,
@@ -9,27 +9,27 @@ import {
   faSave,
   faTag,
   faUser,
-} from "@fortawesome/free-solid-svg-icons";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import Input from "./utils/Input";
-import InputWarehouse from "../../components/warehouse/utils/Input";
-import { FormDocument } from "./FormDocument";
-import { FormPembayaranFasyankes } from "./FormPembayaranFasyankes";
-import { useLocation, useNavigate } from "react-router-dom";
-import { CardPackage } from "./utils/CardPackage";
-import { useEffect } from "react";
-import axios from "axios";
-import { ACCESS_HEADER, API_BASE_URL } from "../../dummy/const";
-import Header from "../Header";
-import StepBar from "./utils/StepBar";
-import { packagePrices, plan } from "./utils/package";
-import { ToastAlert } from "../Alert";
-import Loading from "../Loading";
-import Select from "../boInfo/Select";
+} from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Input from './utils/Input';
+import InputWarehouse from '../../components/warehouse/utils/Input';
+import { FormDocument } from './FormDocument';
+import { FormPembayaranFasyankes } from './FormPembayaranFasyankes';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { CardPackage } from './utils/CardPackage';
+import { useEffect } from 'react';
+import axios from 'axios';
+import { ACCESS_HEADER, API_BASE_URL } from '../../dummy/const';
+import Header from '../Header';
+import StepBar from './utils/StepBar';
+import { packagePrices, plan } from './utils/package';
+import { ToastAlert } from '../Alert';
+import Loading from '../Loading';
+import Select from '../boInfo/Select';
 export const FormCreateFasyankes = () => {
-  const [duration, setDuration] = useState("Monthly");
+  const [duration, setDuration] = useState('Monthly');
   const [errors, setErrors] = useState({});
-  const [type, setType] = useState("");
+  const [type, setType] = useState('');
   const [step, setStep] = useState(1);
   const [formData, setFormData] = useState({});
   const [warehouses, setWarehouse] = useState([]);
@@ -39,16 +39,16 @@ export const FormCreateFasyankes = () => {
   const [loading, setLoading] = useState(true);
   const [payment, setPayment] = useState({});
   const [files, setFiles] = useState({});
-  const [password, setPassword] = useState("");
+  const [password, setPassword] = useState('');
   const [fasyankesId, setFasyankesId] = useState(null);
   const [checkbox, setCheckbox] = useState(false);
-  const [otp, setOtp] = useState("");
+  const [otp, setOtp] = useState('');
   const [otpId, setOtpId] = useState(null);
   const [isSuccess, setIsSuccess] = useState(false);
   const [loadingOTP, setLoadingOTP] = useState(false);
   const modalRef = useRef(null);
   const navigate = useNavigate();
-  const token = localStorage.getItem("token");
+  const token = localStorage.getItem('token');
 
   const [newState, setNewState] = useState(false);
   const headers = {
@@ -56,8 +56,8 @@ export const FormCreateFasyankes = () => {
   };
   const location = useLocation();
   const [choosePlan, setChoosePlan] = useState({
-    paket: "",
-    price: "",
+    paket: '',
+    price: '',
     duration: duration,
   });
 
@@ -67,16 +67,16 @@ export const FormCreateFasyankes = () => {
       price: price,
       duration: duration,
     });
-    setErrors((prevErrors) => ({ ...prevErrors, package_plan: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, package_plan: '' }));
   };
 
   const handleSelectWarehouse = (e) => {
     setFormData({ ...formData, warehouse_id: e.target.value });
-    setErrors((prevErrors) => ({ ...prevErrors, warehouse_id: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, warehouse_id: '' }));
   };
   useEffect(() => {
     axios
-      .get(API_BASE_URL + "/warehouses", headers)
+      .get(API_BASE_URL + '/warehouses', headers)
       .then(function (response) {
         setWarehouse(response.data.data);
         setLoading(false);
@@ -95,8 +95,8 @@ export const FormCreateFasyankes = () => {
           type: newType,
           price: packagePrices[newType],
         };
-        console.log("Previous payment state:", prevPayment);
-        console.log("New payment state:", newPaymentState);
+        console.log('Previous payment state:', prevPayment);
+        console.log('New payment state:', newPaymentState);
         return newPaymentState;
       });
     }
@@ -113,30 +113,30 @@ export const FormCreateFasyankes = () => {
 
   const handleType = (e) => {
     setType(e);
-    setErrors((prevErrors) => ({ ...prevErrors, type: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, type: '' }));
   };
 
   const handleChangeDuration = (e) => {
     setDuration(e);
-    setChoosePlan("");
+    setChoosePlan('');
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
   const [selectedNames, setSelectedNames] = useState({
-    provinsi: "",
-    kabupaten: "",
-    kecamatan: "",
-    desa: "",
+    provinsi: '',
+    kabupaten: '',
+    kecamatan: '',
+    desa: '',
   });
 
-  if (selectedNames.desa === "Pilih Kelurahan") {
+  if (selectedNames.desa === 'Pilih Kelurahan') {
     setErrors((prevErrors) => ({
       ...prevErrors,
-      desa: "Kelurahan wajib diisi",
+      desa: 'Kelurahan wajib diisi',
     }));
     return;
   }
@@ -153,14 +153,14 @@ export const FormCreateFasyankes = () => {
     }));
     setErrors((prevErrors) => ({
       ...prevErrors,
-      [name]: "",
+      [name]: '',
     }));
   };
 
   const handleChangeInputWarehouse = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
-    setErrors((prevErrors) => ({ ...prevErrors, [name]: "" }));
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
   };
 
   const handleSubmitWarehouse = () => {
@@ -171,11 +171,11 @@ export const FormCreateFasyankes = () => {
       contact: formValues.picNumber,
     };
     axios
-      .post(API_BASE_URL + "/warehouses/store", payload, headers)
+      .post(API_BASE_URL + '/warehouses/store', payload, headers)
       .then(function (response) {
         if (response.data.status === true) {
-          navigate("/fasyankes/create");
-          ToastAlert("success", response.data.message);
+          navigate('/fasyankes/create');
+          ToastAlert('success', response.data.message);
           modalRef.current.close();
           setWarehouse([response.data.data]);
         } else {
@@ -186,7 +186,7 @@ export const FormCreateFasyankes = () => {
       })
       .catch(function (error) {
         const apiErrors = error.response.data.errors;
-        ToastAlert("error", error.response.data.message);
+        ToastAlert('error', error.response.data.message);
         setErrorWarehouse(apiErrors);
         return;
       });
@@ -206,9 +206,8 @@ export const FormCreateFasyankes = () => {
         longitude: formData.longitude,
         price: choosePlan.price,
         username: formData.username,
-        package_plan: choosePlan.paket == undefined ? "" : choosePlan.paket,
-        warehouse_id:
-          formData.warehouse_id == undefined ? "" : formData.warehouse_id,
+        package_plan: choosePlan.paket == undefined ? '' : choosePlan.paket,
+        warehouse_id: formData.warehouse_id == undefined ? '' : formData.warehouse_id,
         name: formData.name,
         address: formData.address,
         pic: formData.pic,
@@ -222,11 +221,11 @@ export const FormCreateFasyankes = () => {
         password_confirmation: formData.password_confirmation,
       };
       axios
-        .post(API_BASE_URL + "/fasyankes/store", payload, headers)
+        .post(API_BASE_URL + '/fasyankes/store', payload, headers)
         .then(function (response) {
           if (response.data.status === true) {
             const data = response.data.data;
-            ToastAlert("success", response.data.message);
+            ToastAlert('success', response.data.message);
             setFasyankesId(data.fasyankesId);
             setLoadingNext(false);
             setPayment({
@@ -250,7 +249,7 @@ export const FormCreateFasyankes = () => {
           setLoadingNext(false);
           const apiErrors = error.response.data.errors;
           setErrors(apiErrors);
-          ToastAlert("error", error.response.data.message);
+          ToastAlert('error', error.response.data.message);
         });
     } else {
       setLoading(true);
@@ -258,35 +257,31 @@ export const FormCreateFasyankes = () => {
       Object.keys(files).forEach((label) => {
         formData.append(label, files[label]);
       });
-      formData.append("type", type);
-      formData.append("password", password);
-      formData.append("fasyankes_id", fasyankesId);
-      formData.append(
-        "package_plan",
-        newState ? payment.package : choosePlan.paket
-      );
+      formData.append('type', type);
+      formData.append('password', password);
+      formData.append('fasyankes_id', fasyankesId);
+      formData.append('package_plan', newState ? payment.package : choosePlan.paket);
 
       axios
-        .post(API_BASE_URL + "/legal-document-fasyankes/upload", formData, {
+        .post(API_BASE_URL + '/legal-document-fasyankes/upload', formData, {
           headers: {
             ...headers.headers,
-            "Content-Type": "multipart/form-data",
+            'Content-Type': 'multipart/form-data',
           },
         })
         .then((response) => {
           if (response.data.status === true) {
             setLoading(false);
-            ToastAlert("success", "Berhasil Upload Dokument Legal");
-            const isFree =
-              newState && payment.package === "FREE" ? true : false;
-            if (choosePlan.paket === "FREE" || isFree) {
-              navigate("/fasyankes");
+            ToastAlert('success', 'Berhasil Upload Dokument Legal');
+            const isFree = newState && payment.package === 'FREE' ? true : false;
+            if (choosePlan.paket === 'FREE' || isFree) {
+              navigate('/fasyankes');
             } else {
               setStep(step + 1);
             }
           } else {
             setLoading(false);
-            ToastAlert("error", response.data.message);
+            ToastAlert('error', response.data.message);
           }
         })
         .catch((error) => {
@@ -294,7 +289,7 @@ export const FormCreateFasyankes = () => {
           setLoading(false);
           const errApi = error.response.data.errors;
           setErrors(errApi);
-          ToastAlert("error", error.response.data.message);
+          ToastAlert('error', error.response.data.message);
         });
     }
   };
@@ -307,7 +302,7 @@ export const FormCreateFasyankes = () => {
     setStep(newState ? step : step - 1);
     setLoadingNext(false);
     setErrors((prev) => {
-      return { ...prev, sia: "", sipa: "", simk: "", siok: "", password: "" };
+      return { ...prev, sia: '', sipa: '', simk: '', siok: '', password: '' };
     });
   };
 
@@ -317,35 +312,35 @@ export const FormCreateFasyankes = () => {
 
   const handleGetOtp = async () => {
     setLoadingOTP(true);
-    if (formData.email === "") {
+    if (formData.email === '') {
       setLoadingOTP(false);
-      ToastAlert("error", "Masukkan Email Anda");
+      ToastAlert('error', 'Masukkan Email Anda');
       return;
     }
     try {
       const response = await axios.post(
-        API_BASE_URL + "/fasyankes/send-otp",
+        API_BASE_URL + '/fasyankes/send-otp',
         { email: formData.email },
         {
-          headers: { Authorization: "Bearer " + localStorage.getItem("token") },
+          headers: { Authorization: 'Bearer ' + localStorage.getItem('token') },
         }
       );
       if (response.data.status === true) {
         setOtpId(response.data.otp_id);
         setLoadingOTP(false);
-        ToastAlert("success", response.data.message);
+        ToastAlert('success', response.data.message);
       } else {
         setLoadingOTP(false);
-        ToastAlert("error", response.data.message);
+        ToastAlert('error', response.data.message);
       }
     } catch (error) {
       setLoadingOTP(false);
-      ToastAlert("error", "Gagal Mengambil OTP");
+      ToastAlert('error', 'Gagal Mengambil OTP');
     }
   };
   const handleSendOtp = () => {
-    if (otp === "") {
-      ToastAlert("error", "Masukkan OTP!");
+    if (otp === '') {
+      ToastAlert('error', 'Masukkan OTP!');
       return;
     }
     const payload = {
@@ -355,7 +350,7 @@ export const FormCreateFasyankes = () => {
     };
 
     axios
-      .post(API_BASE_URL + "/store-otp", payload, {
+      .post(API_BASE_URL + '/store-otp', payload, {
         headers: {
           Authorization: `Bearer ${ACCESS_HEADER}`,
         },
@@ -363,15 +358,15 @@ export const FormCreateFasyankes = () => {
       .then(function (response) {
         if (response.data.status === true) {
           setIsSuccess(true);
-          ToastAlert("success", "Berhasil Verfikasi Email");
+          ToastAlert('success', 'Berhasil Verfikasi Email');
         } else {
           setIsSuccess(false);
-          ToastAlert("error", response.data.message);
+          ToastAlert('error', response.data.message);
         }
       })
       .catch(function (error) {
         setIsSuccess(false);
-        ToastAlert("error", error.response.data.message);
+        ToastAlert('error', error.response.data.message);
       });
   };
 
@@ -387,33 +382,26 @@ export const FormCreateFasyankes = () => {
                 <div
                   className="tooltip tooltip-info"
                   data-tip="Pilih tipe fasyankes yang akan Anda daftarkan ke idSmartCare"
-                  style={{ color: "white" }}
+                  style={{ color: 'white' }}
                 >
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    className="text-gray-500 cursor-pointer"
-                  />
+                  <FontAwesomeIcon icon={faInfoCircle} className="text-gray-500 cursor-pointer" />
                 </div>
               </span>
             </div>
             <div className="flex justify-center">
               <div className="flex md:flex-row flex-col gap-2 justify-center border border-gray-300 rounded-lg p-1 w-full items-center md:w-[750px]">
                 <button
-                  onClick={() => handleType("Apotek")}
+                  onClick={() => handleType('Apotek')}
                   className={`btn rounded-md btn-sm w-full md:w-[340px] lg:w-80 ${
-                    type === "Apotek"
-                      ? "bg-primary hover:bg-primary text-white"
-                      : "bg-grey hover:bg-grey"
+                    type === 'Apotek' ? 'bg-primary hover:bg-primary text-white' : 'bg-grey hover:bg-grey'
                   }`}
                 >
                   Apotek
                 </button>
                 <button
-                  onClick={() => handleType("Klinik")}
+                  onClick={() => handleType('Klinik')}
                   className={`btn rounded-md btn-sm w-full md:w-[340px] lg:w-80 ${
-                    type === "Klinik"
-                      ? "bg-primary hover:bg-primary text-white"
-                      : "bg-grey hover:bg-grey"
+                    type === 'Klinik' ? 'bg-primary hover:bg-primary text-white' : 'bg-grey hover:bg-grey'
                   }`}
                 >
                   Klinik
@@ -426,35 +414,25 @@ export const FormCreateFasyankes = () => {
             <div className="label">
               <span className="label-text font-bold text-base">
                 Package Plan<span className="text-red-600 mr-2">*</span>
-                <div
-                  className="tooltip tooltip-info "
-                  data-tip="Pilih plan sesuai dengan kebutuhan"
-                >
-                  <FontAwesomeIcon
-                    icon={faInfoCircle}
-                    className="text-gray-500 cursor-pointer"
-                  />
+                <div className="tooltip tooltip-info " data-tip="Pilih plan sesuai dengan kebutuhan">
+                  <FontAwesomeIcon icon={faInfoCircle} className="text-gray-500 cursor-pointer" />
                 </div>
               </span>
             </div>
             <div className="flex w-full justify-center items-center">
               <div className="flex flex-col md:flex-row gap-2 justify-center items-center border border-gray-300 rounded-lg p-1 w-full md:w-[750px]">
                 <button
-                  onClick={() => handleChangeDuration("Monthly")}
+                  onClick={() => handleChangeDuration('Monthly')}
                   className={`btn rounded-md btn-sm w-full md:w-[340px] lg:md:w-80 ${
-                    duration === "Monthly"
-                      ? "bg-secondary hover:bg-secondary text-white"
-                      : ""
+                    duration === 'Monthly' ? 'bg-secondary hover:bg-secondary text-white' : ''
                   } p-2 rounded-full hover:cursor-pointer duration-300 transition ease-in-out`}
                 >
                   Bulanan
                 </button>
                 <button
-                  onClick={() => handleChangeDuration("Annually")}
+                  onClick={() => handleChangeDuration('Annually')}
                   className={`btn rounded-md btn-sm w-full md:w-[340px] lg:md:w-80 ${
-                    duration === "Annually"
-                      ? "bg-secondary hover:bg-secondary text-white"
-                      : ""
+                    duration === 'Annually' ? 'bg-secondary hover:bg-secondary text-white' : ''
                   } p-2 rounded-full hover:cursor-pointer duration-300 transition ease-in-out`}
                 >
                   Tahunan (Disc. 20%)
@@ -485,27 +463,23 @@ export const FormCreateFasyankes = () => {
                 <CardPackage
                   icon={faTag}
                   fitur={plan.free}
-                  title={"FREE"}
+                  title={'FREE'}
                   price={packagePrices[type].free}
-                  handleChoosePlan={() =>
-                    handleChoosePlan("FREE", packagePrices[type].free, "")
-                  }
+                  handleChoosePlan={() => handleChoosePlan('FREE', packagePrices[type].free, '')}
                   isPackage={choosePlan.paket}
                 />
                 <CardPackage
                   icon={faHome}
                   fitur={plan.plus}
-                  title={"Plus"}
+                  title={'Plus'}
                   isPopular={true}
                   price={packagePrices[type].plus}
                   disc={packagePrices[type].plusAnnually}
-                  isAnually={duration === "Annually"}
+                  isAnually={duration === 'Annually'}
                   handleChoosePlan={() =>
                     handleChoosePlan(
-                      "Plus",
-                      duration === "Annually"
-                        ? packagePrices[type].plusAnnually
-                        : packagePrices[type].plus,
+                      'Plus',
+                      duration === 'Annually' ? packagePrices[type].plusAnnually : packagePrices[type].plus,
                       duration
                     )
                   }
@@ -514,16 +488,14 @@ export const FormCreateFasyankes = () => {
                 <CardPackage
                   icon={faHospital}
                   fitur={plan.advanced}
-                  title={"Advanced"}
+                  title={'Advanced'}
                   price={packagePrices[type].advanced}
                   disc={packagePrices[type].advancedAnnually}
-                  isAnually={duration === "Annually"}
+                  isAnually={duration === 'Annually'}
                   handleChoosePlan={() =>
                     handleChoosePlan(
-                      "Advanced",
-                      duration === "Annually"
-                        ? packagePrices[type].advancedAnnually
-                        : packagePrices[type].advanced,
+                      'Advanced',
+                      duration === 'Annually' ? packagePrices[type].advancedAnnually : packagePrices[type].advanced,
                       duration
                     )
                   }
@@ -532,16 +504,8 @@ export const FormCreateFasyankes = () => {
               </div>
             )}
           </div>
-          {type === "" ? (
-            <div className="flex justify-center mt-3">
-              Select Type of Fasyankes first
-            </div>
-          ) : (
-            ""
-          )}
-          {errors.package_plan && (
-            <span className="text-red-600">{errors.package_plan}</span>
-          )}
+          {type === '' ? <div className="flex justify-center mt-3">Select Type of Fasyankes first</div> : ''}
+          {errors.package_plan && <span className="text-red-600">{errors.package_plan}</span>}
           <div className="flex mt-3">
             <div className="form-control w-full flex md:flex-row flex-col md:items-center">
               <div className="label min-w-72">
@@ -551,10 +515,7 @@ export const FormCreateFasyankes = () => {
                     className="tooltip tooltip-info ms-1"
                     data-tip="Pilih Warehouse yang akan dimasukkan ke fasyankes"
                   >
-                    <FontAwesomeIcon
-                      icon={faInfoCircle}
-                      className="text-gray-500 cursor-pointer"
-                    />
+                    <FontAwesomeIcon icon={faInfoCircle} className="text-gray-500 cursor-pointer" />
                   </div>
                 </span>
               </div>
@@ -563,24 +524,20 @@ export const FormCreateFasyankes = () => {
                 <div className="w-full">
                   {loading ? (
                     <span className="text-primary">
-                      <Loading type={"dots"} size={"md"} />
+                      <Loading type={'dots'} size={'md'} />
                     </span>
                   ) : (
                     <div>
                       <button
                         className="btn btn-block rounded-md bg-primary text-white hover:bg-primary"
-                        onClick={() =>
-                          document.getElementById("my_modal_3").showModal()
-                        }
+                        onClick={() => document.getElementById('my_modal_3').showModal()}
                       >
                         <FontAwesomeIcon icon={faPlus} /> Add Warehouse
                       </button>
                       <dialog id="my_modal_3" className="modal" ref={modalRef}>
                         <div className="modal-box">
                           <form method="dialog">
-                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">
-                              ✕
-                            </button>
+                            <button className="btn btn-sm btn-circle btn-ghost absolute right-2 top-2">✕</button>
                             <InputWarehouse
                               label="Warehouse Name"
                               placeholder="Warehouse Name"
@@ -632,9 +589,7 @@ export const FormCreateFasyankes = () => {
                 <div className="form-control w-full">
                   <select
                     onChange={handleSelectWarehouse}
-                    className={`select select-info rounded-md ${
-                      errors.warehouse_id && "select-error"
-                    }`}
+                    className={`select select-info rounded-md ${errors.warehouse_id && 'select-error'}`}
                   >
                     <option disabled selected>
                       Select Warehouse
@@ -645,9 +600,7 @@ export const FormCreateFasyankes = () => {
                       </option>
                     ))}
                   </select>
-                  {errors.warehouse_id && (
-                    <span className="text-red-600">{errors.warehouse_id}</span>
-                  )}
+                  {errors.warehouse_id && <span className="text-red-600">{errors.warehouse_id}</span>}
                 </div>
               )}
             </div>
@@ -713,9 +666,7 @@ export const FormCreateFasyankes = () => {
             tooltip="Longitude yang valid dari Google Maps"
           />
 
-          <div
-            className={` ${isSuccess ? "w-full" : "flex md:flex-row flex-col"}`}
-          >
+          <div className={` ${isSuccess ? 'w-full' : 'flex md:flex-row flex-col'}`}>
             <Input
               type="email"
               label="Email Fasyankes"
@@ -728,23 +679,13 @@ export const FormCreateFasyankes = () => {
             />
             <button
               onClick={handleGetOtp}
-              className={`btn ${
-                isSuccess ? "hidden" : ""
-              } mt-3 bg-primary hover:bg-primary text-white rounded-md ml-3`}
+              className={`btn ${isSuccess ? 'hidden' : ''} mt-3 bg-primary hover:bg-primary text-white rounded-md ml-3`}
             >
-              {loadingOTP ? (
-                <Loading type={"spinner"} size={"sm"} />
-              ) : (
-                "Kirim OTP"
-              )}
+              {loadingOTP ? <Loading type={'spinner'} size={'sm'} /> : 'Kirim OTP'}
             </button>
           </div>
 
-          <div
-            className={`${
-              isSuccess ? "hidden" : "flex flex-col md:flex-row mt-2"
-            } `}
-          >
+          <div className={`${isSuccess ? 'hidden' : 'flex flex-col md:flex-row mt-2'} `}>
             <div className="form-control w-full flex flex-col md:flex-row md:items-center">
               <div className="label md:min-w-72 mb-2 md:mb-0">
                 <span className="label-text font-bold text-base"></span>
@@ -758,9 +699,7 @@ export const FormCreateFasyankes = () => {
                   placeholder="Kode OTP"
                 />
                 <button
-                  disabled={
-                    otpId === null || otpId === undefined ? "disabled" : ""
-                  }
+                  disabled={otpId === null || otpId === undefined ? 'disabled' : ''}
                   onClick={handleSendOtp}
                   className="btn bg-primary hover:bg-primary text-white rounded-md w-full md:w-auto"
                 >
@@ -769,11 +708,7 @@ export const FormCreateFasyankes = () => {
               </div>
             </div>
           </div>
-          <Select
-            formValues={formValues}
-            onSelectChange={handleSelectChange}
-            errors={errors}
-          />
+          <Select formValues={formValues} onSelectChange={handleSelectChange} errors={errors} />
 
           {isSuccess ? (
             <div>
@@ -813,27 +748,15 @@ export const FormCreateFasyankes = () => {
               />
               <div className="form-control mt-10">
                 <label className="flex items-center gap-5">
-                  <input
-                    type="checkbox"
-                    onClick={handleCheckbox}
-                    className="checkbox checkbox-primary rounded-md"
-                  />
+                  <input type="checkbox" onClick={handleCheckbox} className="checkbox checkbox-primary rounded-md" />
                   <span className="label-text">
-                    Dengan membuat akun, Anda setuju dengan{" "}
-                    <a
-                      href="/syarat-dan-ketentuan"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
+                    Dengan membuat akun, Anda setuju dengan{' '}
+                    <a href="/syarat-dan-ketentuan" target="_blank" className="font-bold italic text-primary">
                       Syarat dan Ketentuan
-                    </a>{" "}
-                    serta{" "}
-                    <a
-                      href="/kebijakan-privasi"
-                      target="_blank"
-                      className="font-bold italic text-primary"
-                    >
-                      Kebijakan Privasi{" "}
+                    </a>{' '}
+                    serta{' '}
+                    <a href="/kebijakan-privasi" target="_blank" className="font-bold italic text-primary">
+                      Kebijakan Privasi{' '}
                     </a>
                     <span className="font-bold"> idSmartCare.</span>
                   </span>
@@ -846,7 +769,7 @@ export const FormCreateFasyankes = () => {
                   className={`btn bg-primary  hover:bg-primary text-white rounded-md px-10`}
                 >
                   {loadingNext ? (
-                    <Loading type={"spinner"} size={"sm"} />
+                    <Loading type={'spinner'} size={'sm'} />
                   ) : (
                     <div>
                       Next <FontAwesomeIcon icon={faAngleRight} />
@@ -856,7 +779,7 @@ export const FormCreateFasyankes = () => {
               </div>
             </div>
           ) : (
-            ""
+            ''
           )}
         </div>
       ) : step === 2 ? (
@@ -873,10 +796,7 @@ export const FormCreateFasyankes = () => {
           loading={loading}
         />
       ) : (
-        <FormPembayaranFasyankes
-          handlePrevious={handlePrevious}
-          payment={payment}
-        />
+        <FormPembayaranFasyankes handlePrevious={handlePrevious} payment={payment} />
       )}
     </div>
   );
