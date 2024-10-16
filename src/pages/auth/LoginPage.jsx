@@ -82,6 +82,7 @@ const LoginPage = () => {
         setLoadingModal(false);
         ToastAlert(
           "error",
+          
           error.response?.data?.message || "Terjadi kesalahan"
         );
       }
