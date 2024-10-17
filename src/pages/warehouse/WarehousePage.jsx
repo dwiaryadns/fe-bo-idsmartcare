@@ -137,7 +137,6 @@ const WarehousePage = () => {
         ) : (
           <CreateWarehousePage
             setStep={setStep}
-            setLoading={setLoading}
             handlePrevious={handlePrevious}
           />
         )}

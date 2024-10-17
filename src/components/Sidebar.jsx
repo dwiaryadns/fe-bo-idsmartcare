@@ -1,13 +1,15 @@
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import logo3 from "../assets/logo.png";
 import { Link, useLocation } from "react-router-dom";
-import { sidebarItemsRev } from "../dummy/data"; // Pastikan Anda menggunakan sidebarItemsRev
+import { sidebarItemsRev } from "../dummy/data";
 import { faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import { useState, useEffect } from "react";
 
 const Sidebar = () => {
   const location = useLocation();
   const [openItems, setOpenItems] = useState({});
+  const [filteredSidebarItems, setFilteredSidebarItems] =
+    useState(sidebarItemsRev);
 
   const toggleItem = (index) => {
     setOpenItems((prevState) => ({
@@ -21,7 +23,6 @@ const Sidebar = () => {
       location.pathname.startsWith("/" + child.link)
     );
   };
-
   useEffect(() => {
     const activeItems = {};
     sidebarItemsRev.forEach((item, index) => {
@@ -30,8 +31,36 @@ const Sidebar = () => {
       }
     });
     setOpenItems(activeItems);
-  }, [location.pathname]);
 
+    const userData = JSON.parse(localStorage.getItem("dataBo"));
+
+    if (userData?.role && userData.hak_akses) {
+      const permissions = JSON.parse(userData.hak_akses.permission);
+
+      const filteredItems = sidebarItemsRev.filter((item) => {
+        if (item.list) {
+          const hasPermissionInSublist = item.list.some((subItem) =>
+            permissions.includes(subItem.title)
+          );
+
+          if (hasPermissionInSublist) {
+            item.list = item.list.filter((subItem) =>
+              permissions.includes(subItem.title)
+            );
+            return true;
+          } else {
+            return permissions.includes(item.title);
+          }
+        } else {
+          return permissions.includes(item.title);
+        }
+      });
+
+      setFilteredSidebarItems(filteredItems);
+    } else {
+      setFilteredSidebarItems(sidebarItemsRev);
+    }
+  }, [location.pathname]);
   return (
     <div className="bg-primary">
       <div className="drawer lg:drawer-open shadow h-full z-20 top-0 left-0">
@@ -45,7 +74,7 @@ const Sidebar = () => {
           <ul className="menu p-4 w-80 min-h-full bg-primary">
             <img src={logo3} className="mb-5" alt="Logo" />
             <hr className="mb-5" />
-            {sidebarItemsRev.map((sidebar, index) => (
+            {filteredSidebarItems.map((sidebar, index) => (
               <div key={index}>
                 {sidebar.list ? (
                   <div

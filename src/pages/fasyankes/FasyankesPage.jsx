@@ -13,6 +13,7 @@ const FasyankesPage = () => {
   const [step, setStep] = useState(0);
   const [data, setData] = useState();
   const navigate = useNavigate();
+  const bo = JSON.parse(localStorage.getItem("dataBo"));
   const handleStep = (fasyankes) => {
     setStep(step + 1);
     setData(fasyankes);
@@ -78,7 +79,9 @@ const FasyankesPage = () => {
             <button
               onClick={() => handleActived(row.original)}
               title="Aktifkan"
-              className="btn bg-error hover:bg-error text-white rounded-md btn-sm"
+              className={`btn bg-error ${
+                !isBo ? "hidden" : ""
+              } hover:bg-error text-white rounded-md btn-sm`}
             >
               Aktifkan
             </button>
@@ -90,7 +93,7 @@ const FasyankesPage = () => {
   );
 
   const [fasyankes, setFasyankes] = useState([]);
-
+  const [isBo, setIsBo] = useState(bo.role == null ? true : false);
   const token = localStorage.getItem("token");
   const headers = {
     headers: { Authorization: `Bearer ${token}` },
@@ -115,8 +118,13 @@ const FasyankesPage = () => {
             <div className="card-body">
               <div className="card-title flex md:flex-row flex-col justify-between">
                 <p className="text-lg ">List Fasyankes</p>
+
                 <Link to={"/fasyankes/create"}>
-                  <Button showIcon={true} icon={faPlus}>
+                  <Button
+                    custom={!isBo ? "hidden" : ""}
+                    showIcon={true}
+                    icon={faPlus}
+                  >
                     Tambah Fasyankes
                   </Button>
                 </Link>

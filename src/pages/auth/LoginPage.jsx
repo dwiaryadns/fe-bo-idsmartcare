@@ -23,7 +23,7 @@ const LoginPage = () => {
   const [errors, setErrors] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [rememberMe, setRememberMe] = useState(false);
-  const [showModal, setShowModal] = useState(false); 
+  const [showModal, setShowModal] = useState(false);
   const [otpId, setOtpId] = useState("");
   const [token, setToken] = useState("");
   const [dataUser, setDataUser] = useState({});
@@ -96,7 +96,7 @@ const LoginPage = () => {
 
       if (showModal && modalRef.current) {
         modalRef.current.showModal();
-        window.addEventListener("keydown", handleKeyDown); 
+        window.addEventListener("keydown", handleKeyDown);
       } else if (modalRef.current) {
         modalRef.current.close();
         window.removeEventListener("keydown", handleKeyDown);
@@ -157,8 +157,6 @@ const LoginPage = () => {
         setToken(response.data.token);
         setDataUser(JSON.stringify(response.data.data));
 
-        console.log("is 2fa : " + response.data.data.is_2fa);
-
         if (response.data.data.is_2fa) {
           const response = await axios.post(API_BASE_URL + "/get-otp/" + email);
           console.log(response);
@@ -175,7 +173,11 @@ const LoginPage = () => {
           ToastAlert("success", response.data.message);
           localStorage.setItem("token", response.data.token);
           localStorage.setItem("dataBo", JSON.stringify(response.data.data));
-          navigate("/dasbor");
+          if (response.data.data.role != null) {
+            navigate("/welcome");
+          } else {
+            navigate("/dasbor");
+          }
         }
       } else {
         CenterAlert("error", "Oops...", response.data.message);
@@ -188,7 +190,7 @@ const LoginPage = () => {
         console.log(message);
         if (message) {
           setErrors(message);
-          ToastAlert('error',error.response.data.message)
+          ToastAlert("error", error.response.data.message);
         } else {
           CenterAlert("error", "Oops...", error.response.data.message);
           setErrors({ email: error.response.data.message, password: "" });

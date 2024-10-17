@@ -5,14 +5,10 @@ import { faChevronLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import Button from "../../components/Button";
 import Input from "../../components/warehouse/utils/Input";
 
-export const CreateWarehousePage = ({
-  handlePrevious,
-  setStep,
-  setLoading,
-}) => {
+export const CreateWarehousePage = ({ handlePrevious, setStep }) => {
   const [formValues, setFormValues] = useState({});
   const [errors, setErrors] = useState({});
-
+  const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormValues({ ...formValues, [name]: value });
@@ -86,7 +82,12 @@ export const CreateWarehousePage = ({
       />
 
       <div className="">
-        <Button onClick={handleSubmit} showIcon={true} icon={faSave}>
+        <Button
+          loading={loading}
+          onClick={handleSubmit}
+          showIcon={true}
+          icon={faSave}
+        >
           Submit
         </Button>
       </div>

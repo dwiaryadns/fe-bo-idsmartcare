@@ -1,7 +1,4 @@
-import {
-  faChevronLeft,
-  faSave,
-} from "@fortawesome/free-solid-svg-icons";
+import { faChevronLeft, faSave } from "@fortawesome/free-solid-svg-icons";
 import { useState } from "react";
 import { Input } from "../../components/supplier/Input";
 import Select from "../../components/boInfo/Select";
@@ -15,6 +12,7 @@ export const CreateSupplierPage = ({ handlePrevious, setStep }) => {
   const [type, setType] = useState();
   const [errors, setErrors] = useState({});
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
 
   const token = localStorage.getItem("token");
   const headers = {
@@ -88,6 +86,7 @@ export const CreateSupplierPage = ({ handlePrevious, setStep }) => {
   };
 
   const handleSubmit = async () => {
+    setLoading(true);
     const updatedFormValues = {
       ...formValues,
       provinsi: selectedNames.provinsi,
@@ -114,10 +113,13 @@ export const CreateSupplierPage = ({ handlePrevious, setStep }) => {
         setFormValues({});
         navigate("/supplier");
         setStep(0);
+        setLoading(false);
       }
     } catch (error) {
+      ToastAlert("error", error.response.data.message);
       const errApi = error.response.data.errors;
       setErrors(errApi);
+      setLoading(false);
     }
   };
 
@@ -306,7 +308,12 @@ export const CreateSupplierPage = ({ handlePrevious, setStep }) => {
               onChange={handleChange}
             />
           </div>
-          <Button showIcon={true} icon={faSave} onClick={handleSubmit}>
+          <Button
+            loading={loading}
+            showIcon={true}
+            icon={faSave}
+            onClick={handleSubmit}
+          >
             Kirim
           </Button>
         </div>
