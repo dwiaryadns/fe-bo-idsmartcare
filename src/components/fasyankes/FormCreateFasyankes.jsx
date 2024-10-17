@@ -398,7 +398,7 @@ export const FormCreateFasyankes = () => {
               </span>
             </div>
             <div className="flex justify-center">
-              <div className="flex md:flex-row flex-col gap-2 justify-center border border-gray-300 rounded-lg p-1 w-full items-center md:w-[750px]">
+              <div className="flex md:flex-row flex-col gap-2 justify-center border border-gray-300 rounded-lg p-1 w-full items-center md:w-[660px]">
                 <button
                   onClick={() => handleType("Apotek")}
                   className={`btn rounded-md btn-sm w-full md:w-[340px] lg:w-80 ${
@@ -439,7 +439,7 @@ export const FormCreateFasyankes = () => {
               </span>
             </div>
             <div className="flex w-full justify-center items-center">
-              <div className="flex flex-col md:flex-row gap-2 justify-center items-center border border-gray-300 rounded-lg p-1 w-full md:w-[750px]">
+              <div className="flex flex-col md:flex-row gap-2 justify-center items-center border border-gray-300 rounded-lg p-1 w-full md:w-[660px]">
                 <button
                   onClick={() => handleChangeDuration("Monthly")}
                   className={`btn rounded-md btn-sm w-full md:w-[340px] lg:md:w-80 ${
@@ -872,6 +872,7 @@ export const FormCreateFasyankes = () => {
           password={password}
           errors={errors}
           loading={loading}
+          isNewStep={newState}
         />
       ) : (
         <FormPembayaranFasyankes

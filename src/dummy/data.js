@@ -125,9 +125,9 @@ export const navbarItems = [
     icon: faUser,
     link: "profile",
   },
-  {
-    title: "Settings",
-    icon: faGear,
-    link: "settings",
-  },
+  // {
+  //   title: "Settings",
+  //   icon: faGear,
+  //   link: "settings",
+  // },
 ];

@@ -52,14 +52,17 @@ const FasyankesPage = () => {
         accessor: "",
         Cell: ({ row }) => {
           return (
-            <span
-              className={`badge text-white ${
-                row.original.is_active ? "bg-primary" : "badge-error "
-              }`}
-            >
-              {" "}
-              {row.original.is_active ? "Aktif" : "Belum Aktif"}{" "}
-            </span>
+            <div className="flex items-center w-[130px]">
+              <span
+                className={`${
+                  row.original.is_active ? "dot-success" : "dot-error "
+                }`}
+              ></span>
+              <div className="ml-2 place-items-center">
+                {row.original.status}{" "}
+                {row.original.is_active ? "Aktif" : "Belum Aktif"}{" "}
+              </div>
+            </div>
           );
         },
       },

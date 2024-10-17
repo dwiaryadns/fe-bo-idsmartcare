@@ -13,6 +13,7 @@ export const FormDocument = ({
   typeFasyankes,
   handlePrevious,
   handleNext,
+  isNewStep,
   files,
   setFiles,
   handleChangePassword,
@@ -76,7 +77,9 @@ export const FormDocument = ({
           <div className="flex justify-end gap-3">
             <button
               onClick={handlePrevious}
-              className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+              className={`btn bg-primary p-5 content-center  ${
+                isNewStep ? "hidden" : ""
+              } hover:bg-primary text-white rounded-md btn-sm items-center`}
             >
               <FontAwesomeIcon icon={faAngleLeft} /> Previous
             </button>
@@ -142,7 +145,9 @@ export const FormDocument = ({
           <div className="flex justify-end gap-3">
             <button
               onClick={handlePrevious}
-              className="btn bg-primary p-5 content-center hover:bg-primary text-white rounded-md btn-sm items-center"
+              className={`btn bg-primary p-5 content-center  ${
+                isNewStep ? "hidden" : ""
+              } hover:bg-primary text-white rounded-md btn-sm items-center`}
             >
               <FontAwesomeIcon icon={faAngleLeft} /> Previous
             </button>
