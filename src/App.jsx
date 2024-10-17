@@ -339,7 +339,7 @@ function App() {
             }
           />
           <Route
-            path="/notification"
+            path="/notifications"
             element={
               <PrivateRoute>
                 <NotificationPage />
