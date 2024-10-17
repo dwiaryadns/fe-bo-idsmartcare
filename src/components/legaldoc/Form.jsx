@@ -1,6 +1,8 @@
 import { faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import InputFile from "./InputFile";
+import { syaratDanKetentuan } from "./tc";
+import { useState } from "react";
 
 export default function Form({
   type,
@@ -12,6 +14,12 @@ export default function Form({
   handleSubmit,
   setShowPassword,
 }) {
+  const [isChecked, setIsChecked] = useState(false);
+
+  const handleIsChecked = () => {
+    setIsChecked(!isChecked);
+  };
+
   if (type === "Perusahaan") {
     return (
       <div>
@@ -77,10 +85,40 @@ export default function Form({
             <p className="text-red-500 text-xs mt-1">{errors.password}</p>
           )}
         </label>
+
+        <div className="text-sm bg-[#DFEBFD] p-5 mt-3 rounded-md">
+          <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
+          <ul className="italic list-decimal">
+            {syaratDanKetentuan.map((tc, index) => {
+              return (
+                <div className="ml-4" key={index}>
+                  <li>{tc}</li>
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div className="form-control flex flex-row items-center mt-2">
+          <label className="label cursor-pointer">
+            <input
+              type="checkbox"
+              name="checked"
+              className="checkbox rounded-sm checkbox-info"
+              onClick={handleIsChecked}
+            />
+          </label>
+          <span className="label-text">
+            Saya telah membaca dan memahami syarat dan ketentuan dokumen legal
+            diatas.
+          </span>
+        </div>
+
         <div className="flex justify-end">
           <button
             className="btn bg-primary text-white btn-sm mb-10 mt-5 p-5 content-center rounded-md"
             onClick={handleSubmit}
+            disabled={!isChecked}
           >
             Submit
           </button>
@@ -137,10 +175,40 @@ export default function Form({
             <p className="text-red-500 text-xs mt-1">{errors.password}</p>
           )}
         </label>
+
+        <div className="text-sm bg-[#DFEBFD] p-5 mt-3 rounded-md">
+          <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
+          <ul className="italic list-decimal">
+            {syaratDanKetentuan.map((tc, index) => {
+              return (
+                <div className="ml-4" key={index}>
+                  <li>{tc}</li>
+                </div>
+              );
+            })}
+          </ul>
+        </div>
+
+        <div className="form-control flex flex-row items-center mt-2">
+          <label className="label cursor-pointer">
+            <input
+              type="checkbox"
+              name="checked"
+              className="checkbox rounded-sm checkbox-info"
+              onClick={handleIsChecked}
+            />
+          </label>
+          <span className="label-text">
+            Saya telah membaca dan memahami syarat dan ketentuan dokumen legal
+            diatas.
+          </span>
+        </div>
+
         <div className="flex justify-end">
           <button
             className="btn bg-primary text-white btn-sm mb-10 mt-5 p-5 content-center rounded-md"
             onClick={handleSubmit}
+            disabled={!isChecked}
           >
             Submit
           </button>

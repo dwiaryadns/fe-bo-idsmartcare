@@ -11,7 +11,7 @@ export const plan = {
     "Akses data tanpa batas selama 5 tahun",
   ],
   advanced: [
-    "Pengguna tak terbatas",
+    "Akses pengguna tanpa batas",
     "Akses histori tanpa batas",
     "Akses penyimpanan data tanpa batas",
   ],
