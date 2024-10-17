@@ -38,7 +38,6 @@ import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
 import NoAccessPage from "./pages/403Page";
 import CreateAccessPage from "./pages/access/CreateAccessPage";
 import SyaratPemblianPage from "./pages/SyaratPemblianPage";
-import NotificationPage from "./pages/notification/NotificationPage";
 
 function App() {
   return (
@@ -326,14 +325,6 @@ function App() {
             element={
               <PrivateRoute>
                 <ProfilePage />
-              </PrivateRoute>
-            }
-          />
-          <Route
-            path="/notifications"
-            element={
-              <PrivateRoute>
-                <NotificationPage />
               </PrivateRoute>
             }
           />

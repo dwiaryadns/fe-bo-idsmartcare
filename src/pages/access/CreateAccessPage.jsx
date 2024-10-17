@@ -11,17 +11,19 @@ import axiosInstance from "../../dummy/axiosInstance";
 import { API_BASE_URL } from "../../dummy/const";
 import { useNavigate } from "react-router";
 import { ToastAlert } from "../../components/Alert";
+import Loading from "../../components/Loading";
 
 export default function CreateAccessPage() {
+  const [loading, setLoading] = useState(false);
   const hakAksesOptions = {
     Gudang: [
       "Stok Gudang",
       "Penerimaan Barang",
       "Pemesanan Barang",
       "Distribusi Barang",
-      "Stock Fasyankes",
-      "Stock Opname",
-      "History Stock Opname",
+      "Stok Fasyankes",
+      "Stok Opname",
+      "Histori Stok Opname",
     ],
     Admin: ["Manajemen Gudang", "Fasyankes", "Pengadaan", "Persediaan"],
   };
@@ -63,7 +65,7 @@ export default function CreateAccessPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    setLoading(true);
     const submissionData = {
       ...formData,
       permission: formData.hakAkses,
@@ -78,14 +80,15 @@ export default function CreateAccessPage() {
       if (response.data.status === true) {
         ToastAlert("success", "Berhasil Menambahkan Hak Akses");
         navigate("/access");
+        setLoading(false);
       } else {
+        setLoading(false);
         ToastAlert("success", "Gagal Menambahkan Hak Akses");
       }
     } catch (error) {
-      console.error(error);
+      setLoading(false);
       ToastAlert("error", error.response.data.message);
       setErrors(error.response.data.errors);
-      console.log(errors);
     }
   };
 
@@ -192,25 +195,29 @@ export default function CreateAccessPage() {
               </div>
               <div className="flex flex-col mb-3">
                 <label className="font-bold">Role</label>
-                <div className="flex gap-4">
-                  <input
-                    type="radio"
-                    name="role"
-                    value="Admin"
-                    className="radio radio-primary"
-                    checked={formData.role === "Admin"}
-                    onChange={handleChange}
-                  />
-                  Admin
-                  <input
-                    type="radio"
-                    name="role"
-                    value="Gudang"
-                    className="radio radio-primary"
-                    checked={formData.role === "Gudang"}
-                    onChange={handleChange}
-                  />
-                  Gudang
+                <div className="flex md:flex-row flex-col gap-4">
+                  <div className="flex gap-3 items-center">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="Admin"
+                      className="radio radio-primary"
+                      checked={formData.role === "Admin"}
+                      onChange={handleChange}
+                    />
+                    Admin
+                  </div>
+                  <div className="flex gap-3 items-center">
+                    <input
+                      type="radio"
+                      name="role"
+                      value="Gudang"
+                      className="radio radio-primary"
+                      checked={formData.role === "Gudang"}
+                      onChange={handleChange}
+                    />
+                    Gudang
+                  </div>
                 </div>
               </div>
               <div className="flex flex-col mb-3">
@@ -234,11 +241,18 @@ export default function CreateAccessPage() {
               </div>
               <div className="flex justify-end mt-5">
                 <button
+                  disabled={loading}
                   type="submit"
                   className="btn btn-block bg-primary hover:bg-primary text-white rounded-md"
                 >
-                  <FontAwesomeIcon icon={faSave} />
-                  Submit
+                  {loading ? (
+                    <Loading type={"spinner"} size={"md"} />
+                  ) : (
+                    <div className="flex gap-2">
+                      <FontAwesomeIcon icon={faSave} />
+                      Submit
+                    </div>
+                  )}
                 </button>
               </div>
             </div>

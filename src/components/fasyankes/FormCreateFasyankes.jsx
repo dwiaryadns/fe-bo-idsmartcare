@@ -375,6 +375,7 @@ export const FormCreateFasyankes = () => {
       });
   };
 
+  console.log(type);
   return (
     <div>
       <StepBar step={step} />

@@ -207,7 +207,9 @@ const Navbar = () => {
         <h5 className="text-right text-base font-bold max-w-52">
           {dataBo?.name}
           <br />
-          <h6 className="text-xs font-light">Bussiness Owner</h6>
+          <p className="text-xs font-light">
+            {dataBo.role ?? "Bisnis Owner"}
+          </p>
         </h5>
         <div className="avatar">
           <div className="w-10 rounded-full">
