@@ -107,18 +107,6 @@ const LegalDocumentPage = () => {
   const renderInput = () => {
     return (
       <>
-        <div className="text-sm bg-[#DFEBFD] p-5 rounded-md">
-          <h3 className="font-bold italic mb-2">Syarat dan Ketentuan</h3>
-          <ul className="italic  list-decimal">
-            {syaratDanKetentuan.map((tc, index) => {
-              return (
-                <div className="ml-4" key={index}>
-                  <li>{tc}</li>
-                </div>
-              );
-            })}
-          </ul>
-        </div>
         <Form
           errors={errors}
           handleChangePassword={handleChangePassword}
