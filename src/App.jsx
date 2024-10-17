@@ -38,6 +38,7 @@ import { HistoryStockOpname } from "./pages/opname/HistoryStockOpname";
 import NoAccessPage from "./pages/403Page";
 import CreateAccessPage from "./pages/access/CreateAccessPage";
 import SyaratPemblianPage from "./pages/SyaratPemblianPage";
+import { WelcomePage } from "./pages/WelcomePage";
 
 function App() {
   return (
@@ -325,6 +326,14 @@ function App() {
             element={
               <PrivateRoute>
                 <ProfilePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/welcome"
+            element={
+              <PrivateRoute>
+                <WelcomePage />
               </PrivateRoute>
             }
           />
