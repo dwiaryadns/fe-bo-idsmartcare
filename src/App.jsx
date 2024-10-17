@@ -39,6 +39,7 @@ import NoAccessPage from "./pages/403Page";
 import CreateAccessPage from "./pages/access/CreateAccessPage";
 import SyaratPemblianPage from "./pages/SyaratPemblianPage";
 import { WelcomePage } from "./pages/WelcomePage";
+import NotificationPage from "./pages/notification/NotificationPage";
 
 function App() {
   return (
@@ -334,6 +335,14 @@ function App() {
             element={
               <PrivateRoute>
                 <WelcomePage />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="/notification"
+            element={
+              <PrivateRoute>
+                <NotificationPage />
               </PrivateRoute>
             }
           />
