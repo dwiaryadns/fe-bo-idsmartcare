@@ -86,7 +86,7 @@ export default function Approved({ type, dataLegal }) {
   };
 
   const triggerFileInput = (label) => {
-    if (isEligibleForUpdate(updatedAt)) {
+    if (!isEligibleForUpdate(updatedAt)) {
       ToastAlert(
         "error",
         "Maaf, Anda hanya dapat mengganti dokumen setiap 30 hari sekali."
